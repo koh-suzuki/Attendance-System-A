@@ -7,6 +7,7 @@ class User < ApplicationRecord
                     uniqueness: true
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }
+  validates :department, length: { in: 2..30 }, allow_blank: true
   
   def User.digest(string)
     cost = 
