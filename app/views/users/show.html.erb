@@ -51,12 +51,27 @@
           <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= working_time(day.started_at, day.finished_at) %>
+              <%= str_times = working_time(day.started_at, day.finished_at) %>
+              <% @total_working_time = @total_working_time.to_f + str_times.to_f %>
             <% end %>
             </td>
           <td></td>
         </tr>
       <% end %>
     </tbody>
+    
+    <tfoot>
+      <tr>
+        <th colspan="2">累計日数</th>
+        <th colspan="2">総合勤務時間</th>
+        <th colspan="2">累計在社時間</th>
+        <th rowspan="2"></th>
+      </tr>
+      <tr>
+        <td colspan="2"><%= @attendances.count %></td>
+        <td colspan="2"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
+        <td colspan="2"><%= format("%.2f", @total_working_time.to_f) %></td>
+      </tr>
+    </tfoot>
   </table>
 </div>
