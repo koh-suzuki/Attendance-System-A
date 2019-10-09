@@ -38,12 +38,16 @@
     </thead>
     
     <tbody>
-      <% (@first_day..@last_day).each do |day| %>
+      <% @attendances.each do |day| %>
         <tr>
-          <td><%= l(day, format: :short) %></td>
-          <td><%= $days_of_the_week[day.wday] %></td>
-          <td></td>
-          <td></td>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td>
+            <% if (Date.current == day.worked_on) && day.started_at.nil? %>
+              <%= link_to "出勤登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-attendance btn-primary" %>
+            <% end %>
+          </td>
+          <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
           <td></td>
           <td></td>
           <td></td>
