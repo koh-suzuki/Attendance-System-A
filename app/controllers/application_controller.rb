@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   end
   
   def admin_user
-    redirect_to rootn_url unless current_user.admin?
+    redirect_to root_url unless current_user.admin?
   end
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
