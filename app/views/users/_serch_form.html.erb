@@ -3,7 +3,7 @@
 <p>ユーザー名検索</p>
 <%= form_with(scope: :search, url: users_path, method: :get, local: true) do |f| %>
   <div class="input-group">
-    <%= f.text_field :name, class: "form-control", placeholder: 'キーワードを入力...' %>
+    <%= f.text_field :name, class: "form-control", placeholder: 'キーワードを入力...', value: (params[:search][:name] if params[:search]) %>
     <span class="input-group-btn">
       <%= f.submit "#{yield(:button_text)}", class: "btn btn-primary" %>
     </span>
