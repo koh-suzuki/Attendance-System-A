@@ -1,12 +1,11 @@
 <% provide(:button_text, '検索') %>
-<% provide(:class_text, '') %>
 
 <p>ユーザー名検索</p>
 <%= form_with(scope: :search, url: users_path, method: :get, local: true) do |f| %>
   <div class="input-group">
     <%= f.text_field :name, class: "form-control", placeholder: 'キーワードを入力...' %>
     <span class="input-group-btn">
-      <%= f.submit "#{yield(:button_text)}", class: "btn btn-primary btn-#{yield(:class_text)}" %>
+      <%= f.submit "#{yield(:button_text)}", class: "btn btn-primary" %>
     </span>
   </div>
 <% end %> 
