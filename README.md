@@ -8,4 +8,4 @@
 * Ruby
 * Rails
 * Git(HTTPSからSSH通信へ変更)
-* git clone(attendance system A 完了)
+* git clone(attendance system A ssh 完了)
