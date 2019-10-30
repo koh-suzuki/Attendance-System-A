@@ -7,11 +7,7 @@ class UsersController < ApplicationController
   before_action :admin_or_correct_user, only: :show
 
  def index
-   if params[:search]
-      @users = User.where('LOWER(name) LIKE ?', "%#{params[:search][:name].downcase}%").paginate(page: params[:page])
-   else
-      @users = User.paginate(page: params[:page])
-   end
+   
  end
  
   def new

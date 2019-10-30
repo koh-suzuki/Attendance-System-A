@@ -1,38 +1,14 @@
-<% provide(:title, "ユーザー一覧") %>
+<% provide(:title, "ユーザ一覧") %>
 
-<% if params[:search] %>
-  <h1>検索結果</h1>
-<% else %>
-  <h1>ユーザー一覧</h1>
-<% end %>
+  <h1>ユーザ一覧</h1>
 
-<div class="col-md-3 col-md-offset-9">
- <%= render 'users/serch_form' %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <%= form_tag "#", multipart: true do %>
+        <%= file_field_tag :file %>
+        <%= link_to "CSVをインポート", "#", class: "btn btn-primary btn-block" %>
+      <% end %>
+    </div>
+  </div>
 </div>
-
-<div class="col-md-10 col-md-offset-1">
-  <%= will_paginate %>
-  <table class="table table-condensed table-hover" id="table-users">
-    <thead>
-      <tr>
-        <% if current_user.admin? %>
-          <th><%= User.human_attribute_name :name %></th>
-        <% end %>
-      </tr>
-    </thead>
-    
-    <% @users.each do |user| %>
-    <tr>
-      <td>
-        <% if current_user.admin? %>
-          <%= link_to user.name, user %>
-        <% else %>
-          <%= user.name %>
-        <% end %>
-      </td>
-    </tr>
-    <% end %>
-  </table>
-  <%= will_paginate %>
-</div>
-
