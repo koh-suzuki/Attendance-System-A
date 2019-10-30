@@ -111,22 +111,26 @@
           <td rowspam="3"><%= format("%.2f", @total_working_time.to_f) %></td>
           <td colspan="5" rowspam="3"></td>
           <td>
-            <div class="dropdown">
-              <!-- 切替ボタンの設定 -->
-              <button type="button" class="btn btn-default dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                デフォルト
-              </button>
-              <!-- ドロップメニューの設定 -->
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">メニュー1</a>
-                <a class="dropdown-item" href="#">メニュー2</a>
-                <a class="dropdown-item" href="#">メニュー3</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">その他リンク</a>
-              </div><!-- /.dropdown-menu -->
-            </div>
             <div>
-              <%= link_to "申請", "#", class: "btn btn-primary btn-lg" %>
+              所属長承認　未
+              <div class="dropdown">
+                <!-- 切替ボタンの設定 -->
+                <button type="button" class="btn btn-default btn-block dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                </button>
+                <!-- ドロップメニューの設定 -->
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">メニュー1</a>
+                  <a class="dropdown-item" href="#">メニュー2</a>
+                  <a class="dropdown-item" href="#">メニュー3</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">その他リンク</a>
+                </div><!-- /.dropdown-menu -->
+              </div>
+            </div>
+            </br>
+            <div>
+              <%= link_to "申請", "#", class: "btn btn-primary btn-block btn-lg" %>
             </div>
           </td>
         </tr>
