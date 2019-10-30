@@ -29,9 +29,17 @@
     </table>
   </div>
   
-  <div>
-    
+  <% if  %>
+  <div class="superior">
+    <p>
+      【所属長承認申請のお知らせ】
+      </br>
+      【勤怠変更申請のお知らせ】
+      </br>
+      【残業申請のお知らせ】
+    </p>
   </div>
+  <% end %>
   
   <div class="btn-users-show">
     <span><%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %></span>
@@ -74,7 +82,9 @@
       <tbody>
         <% @attendances.each do |day| %>
           <tr>
-            <td></td>
+            <td>
+              <%= link_to "残業申請", "#", class: "btn btn-primary btn-md" %>
+            </td>
             <td><%= l(day.worked_on, format: :short) %></td>
             <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
@@ -111,12 +121,12 @@
           <td rowspam="3"><%= format("%.2f", @total_working_time.to_f) %></td>
           <td colspan="5" rowspam="3"></td>
           <td>
-            <div>
+            <div class="approval">
               所属長承認　未
               <div class="dropdown">
                 <!-- 切替ボタンの設定 -->
-                <button type="button" class="btn btn-default btn-block dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="caret"></span>
+                <button type="button" class="btn btn-default btn-lg btn-block dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret pull-right"></span>
                 </button>
                 <!-- ドロップメニューの設定 -->
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -127,10 +137,10 @@
                   <a class="dropdown-item" href="#">その他リンク</a>
                 </div><!-- /.dropdown-menu -->
               </div>
-            </div>
-            </br>
-            <div>
-              <%= link_to "申請", "#", class: "btn btn-primary btn-block btn-lg" %>
+               </br>
+              <div>
+                <%= link_to "申請", "#", class: "btn btn-primary btn-block btn-lg" %>
+              </div>
             </div>
           </td>
         </tr>
