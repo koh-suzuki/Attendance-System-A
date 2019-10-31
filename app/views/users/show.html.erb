@@ -29,7 +29,7 @@
     </table>
   </div>
   
-  <% if  %>
+  <% if logged_in? && current_user.superior? %>
   <div class="superior">
     <p>
       【所属長承認申請のお知らせ】
