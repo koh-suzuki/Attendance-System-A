@@ -7,7 +7,8 @@ class UsersController < ApplicationController
   before_action :admin_or_correct_user, only: :show
 
  def index
-   
+    registered_count = import_csv
+    redirect_to users_path, notice: "#{registered_count}件登録しました"
  end
  
   def new
@@ -79,4 +80,22 @@ class UsersController < ApplicationController
     # def users_serch_params
     #   params.require(:user).permit(:name)
     # end
+    
+    def import_csv
+      # 登録処理前のレコード数
+      current_email_count = ::Email.count
+      emails = []
+      # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
+      CSV.foreach(params[:emails_file].path, headers: true, encoding: "SJIS") do |row|
+        emails << ::Email.new({ name: row["name"], email: row["email"], affiliation: row["affiliation"],
+                                employee_number: row["employee_number"], uid: row["uid"], basic_time: row["basic_time"],
+                                designated_work_start_time: row["designated_work_start_time"], 
+                                designated_work_end_time: row["designated_work_end_time"], superior: row["superior"],
+                                admin: row["admin"], password: row["password"]})
+      end
+      # importメソッドでバルクインサートできる
+      ::Email.import(emails)
+      # 何レコード登録できたかを返す
+      ::Email.count - current_email_count
+    end
 end

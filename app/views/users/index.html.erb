@@ -1,14 +1,26 @@
 <% provide(:title, "ユーザ一覧") %>
+<h1>ユーザ一覧</h1>
 
-  <h1>ユーザ一覧</h1>
+<% if flash[:notice] %>
+  <div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
+<% end %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-4">
-      <%= form_tag "#", multipart: true do %>
-        <%= file_field_tag :file %>
-        <%= link_to "CSVをインポート", "#", class: "btn btn-primary btn-block" %>
-      <% end %>
+<div>
+  <%= form_tag users_path, method: :post, multipart: true do |f| %>
+    <div class="search_item">
+      <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>
+      <%= text_field_tag 'filename',"", id: "filename", disabled: true %>
+      <%= file_field_tag 'emails_file', id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
     </div>
-  </div>
+    <div>
+      <button type="submit" class="btn btn-primary">CSVインポート</button>
+    </div>
+  <% end %>
 </div>
+
+<script type="text/javascript">
+  function file_selected(file_field){
+    var filename = $(file_field)[0].files[0].name;
+    $("#filename").val(filename);
+  }
+</script>
