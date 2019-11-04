@@ -6,10 +6,20 @@ class UsersController < ApplicationController
   before_action :set_one_month, only: :show
   before_action :admin_or_correct_user, only: :show
 
- def index
-    registered_count = import_csv
-    redirect_to users_path, notice: "#{registered_count}件登録しました"
- end
+  def index
+   if params[:search]
+      @users = User.where('LOWER(name) LIKE ?', "%#{params[:search][:name].downcase}%").paginate(page: params[:page])
+   else
+      @users = User.paginate(page: params[:page])
+   end
+  end
+ 
+  def import
+ 
+  end
+  
+  def index_attendance
+  end
  
   def new
     @user = User.new
@@ -70,32 +80,10 @@ class UsersController < ApplicationController
   private
 
     def user_params
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :password)
     end
     
     def basic_params
       params.require(:user).permit(:basic_time, :work_time)
-    end
-    
-    # def users_serch_params
-    #   params.require(:user).permit(:name)
-    # end
-    
-    def import_csv
-      # 登録処理前のレコード数
-      current_email_count = ::Email.count
-      emails = []
-      # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
-      CSV.foreach(params[:emails_file].path, headers: true, encoding: "SJIS") do |row|
-        emails << ::Email.new({ name: row["name"], email: row["email"], affiliation: row["affiliation"],
-                                employee_number: row["employee_number"], uid: row["uid"], basic_time: row["basic_time"],
-                                designated_work_start_time: row["designated_work_start_time"], 
-                                designated_work_end_time: row["designated_work_end_time"], superior: row["superior"],
-                                admin: row["admin"], password: row["password"]})
-      end
-      # importメソッドでバルクインサートできる
-      ::Email.import(emails)
-      # 何レコード登録できたかを返す
-      ::Email.count - current_email_count
     end
 end

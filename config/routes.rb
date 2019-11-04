@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   delete 'logout', to: 'sessions#destroy'
 
   resources :users do
+    get 'import', to: 'users#import'
+    get 'index_attendance', to: 'users#index_attendance'
     member do
       get 'edit_basic_info'
       patch 'update_basic_info'

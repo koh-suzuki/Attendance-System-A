@@ -1,26 +1,38 @@
-<% provide(:title, "ユーザ一覧") %>
-<h1>ユーザ一覧</h1>
+<% provide(:title, "ユーザー一覧") %>
 
-<% if flash[:notice] %>
-  <div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
+<% if params[:search] %>
+  <h1>検索結果</h1>
+<% else %>
+  <h1>ユーザー一覧</h1>
 <% end %>
 
-<div>
-  <%= form_tag users_path, method: :post, multipart: true do |f| %>
-    <div class="search_item">
-      <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>
-      <%= text_field_tag 'filename',"", id: "filename", disabled: true %>
-      <%= file_field_tag 'emails_file', id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
-    </div>
-    <div>
-      <button type="submit" class="btn btn-primary">CSVインポート</button>
-    </div>
-  <% end %>
+<div class="col-md-3 col-md-offset-9">
+ <%= render 'users/serch_form' %>
 </div>
 
-<script type="text/javascript">
-  function file_selected(file_field){
-    var filename = $(file_field)[0].files[0].name;
-    $("#filename").val(filename);
-  }
-</script>
+<div class="col-md-10 col-md-offset-1">
+  <%= will_paginate %>
+  <table class="table table-condensed table-hover" id="table-users">
+    <thead>
+      <tr>
+        <% if current_user.admin? %>
+          <th><%= User.human_attribute_name :name %></th>
+        <% end %>
+      </tr>
+    </thead>
+    
+    <% @users.each do |user| %>
+    <tr>
+      <td>
+        <% if current_user.admin? %>
+          <%= link_to user.name, user %>
+        <% else %>
+          <%= user.name %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+  <%= will_paginate %>
+</div>
+
