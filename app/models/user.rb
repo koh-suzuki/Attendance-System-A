@@ -39,4 +39,18 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+  
+  def self.csv_file
+    # 登録処理前のレコード数
+    csv = []
+    # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
+    CSV.foreach(params[:csv_file].path, headers: true, encoding: "SJIS") do |row|
+      csv << User.new({ name: row["name"], email: row["email"], affiliation: row["affiliation"], employee_number: row["employee_number"],
+                          uid: row["uid"], basic_time: row["basic_time"], designated_work_start_time: row["designated_work_start_time"],
+                          designated_work_end_time: row["designated_work_end_time"], superior: row["superior"], admin: row["admin"], password: row["password"]
+                      })
+    end
+    # importメソッドでバルクインサートできる
+    User.import(csv)
+  end
 end

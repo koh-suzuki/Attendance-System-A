@@ -13,6 +13,16 @@
 }
 
 
+/* 勤怠画面上長タグ*/ 
+.superior_tag {
+  color: #333333;
+}
+
+a.superior_tag:hover {
+    color: #9d9d9d;
+    text-decoration: none;
+}
+
 /* ユーザ一覧CSVボタン */
 .search_item {
    margin-bottom: 10px;

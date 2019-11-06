@@ -11,8 +11,8 @@
           <%= link_to "→︎", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
         </td>
         <td rowspam="2">
-          指定勤務開始時間　<%=  %></br>
-          指定勤務終了時間　<%=  %>
+          指定勤務開始時間　<%= format_basic_info(@user.designated_work_start_time) %></br>
+          指定勤務終了時間　<%= format_basic_info(@user.designated_work_end_time) %>
         </td>
         <td colspan="3"><%= format_basic_info(@user.basic_time) %>　基本時間</td>
         <td>初日　<%= l(@first_day, format: :short) %></td>
@@ -32,11 +32,11 @@
   <% if logged_in? && current_user.superior? %>
   <div class="superior">
     <p>
-      【所属長承認申請のお知らせ】
+      <%= link_to "【所属長承認申請のお知らせ】", "#", class: "superior_tag" %>
       </br>
-      【勤怠変更申請のお知らせ】
+      <%= link_to "【勤怠変更申請のお知らせ】", "#", class: "superior_tag" %>
       </br>
-      【残業申請のお知らせ】
+      <%= link_to "【残業申請のお知らせ】", "#", class: "superior_tag" %>
     </p>
   </div>
   <% end %>

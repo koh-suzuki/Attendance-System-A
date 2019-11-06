@@ -15,7 +15,7 @@ class UsersController < ApplicationController
   end
  
   def import
- 
+   
   end
   
   def index_attendance
