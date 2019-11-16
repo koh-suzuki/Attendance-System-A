@@ -5,7 +5,7 @@
   <div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
 <% end %>
 
-<div>
+<div class="csv_holder">
   <%= form_tag users_path, method: :post, multipart: true do |f| %>
     <div class="search_item">
       <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>
@@ -13,13 +13,26 @@
       <%= file_field_tag 'csv_file', id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
     </div>
     <div>
-      <button type="submit" class="btn btn-primary">CSVインポート</button>
+      <button type="submit" class="btn btn-primary btn-block">CSVインポート</button>
     </div>
   <% end %>
 </div>
 <div>
   <p>Example</p>
 </div>
+<% if current_user.admin? %>
+  
+  <div class="example">
+    <div></div>
+    <div>
+      <span>|</span><%= link_to "削除", "#", method: :delete, class: "btn btn-lg, btn-primary btn-delete" %>
+    </div>
+    <div class="edit-csv">
+      <div><%= link_to "編集", "#", class: "btn btn-lg btn-primary w-10" %></div>
+    </div>
+  </div>
+  
+<% end %>
 
 <script type="text/javascript">
   function file_selected(file_field){

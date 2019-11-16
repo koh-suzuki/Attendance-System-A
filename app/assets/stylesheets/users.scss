@@ -19,14 +19,39 @@
 }
 
 a.superior_tag:hover {
-    color: #9d9d9d;
-    text-decoration: none;
+  color: #9d9d9d;
+  text-decoration: none;
 }
 
-/* ユーザ一覧CSVボタン */
-.search_item {
-   margin-bottom: 10px;
+/* ユーザ一覧 */
+.csv_holder {
+  width: 30rem;
 }
+
+.search_item {
+  margin-bottom: 10px;
+}
+
+.btn-delete {
+  margin-left: 5px;
+}
+
+.edit-csv {
+  padding: 10px 20px;
+  background-color: #eeeeee;
+}
+
+.w-10 {
+  width: 10%;
+}
+
+// .w-30 {
+//   width: 30%;
+// }
+
+// .w-25 {
+//   width: 25%;
+// }
 
 /* 出勤社員一覧 */
 #index_attendance {
