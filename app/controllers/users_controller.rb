@@ -15,7 +15,8 @@ class UsersController < ApplicationController
   end
  
   def import
-   
+    User.import(params[:file])
+    redirect_to user_import_url
   end
   
   def index_attendance

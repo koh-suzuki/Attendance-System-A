@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   delete 'logout', to: 'sessions#destroy'
 
   resources :users do
+    collection { post :import }
     get 'import', to: 'users#import'
     get 'index_attendance', to: 'users#index_attendance'
     member do

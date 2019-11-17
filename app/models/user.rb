@@ -40,7 +40,7 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
   
-  def self.import
+  def self.import(file)
     # 登録処理前のレコード数
     csv = []
     # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
