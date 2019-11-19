@@ -14,7 +14,7 @@
           指定勤務開始時間　<%= format_basic_info(@user.designated_work_start_time) %></br>
           指定勤務終了時間　<%= format_basic_info(@user.designated_work_end_time) %>
         </td>
-        <td colspan="3"><%= format_basic_info(@user.basic_time) %>　基本時間</td>
+        <td colspan="3"><%= format_basic_info(@user.basic_work_time) %>　基本時間</td>
         <td>初日　<%= l(@first_day, format: :short) %></td>
       </tr>
       
@@ -43,7 +43,7 @@
   
   <div class="btn-users-show">
     <span><%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %></span>
-    <span><%= link_to "CSV出力", "#", class: "btn btn-primary" %></span></br>
+    <span><%= link_to "CSV出力", csv_output_attendances_path(format: :csv), class: "btn btn-primary" %></span></br>
     <%= link_to "勤怠修正ログ（承認済）", "#", class: "btn btn-primary" %>
   </div>
   

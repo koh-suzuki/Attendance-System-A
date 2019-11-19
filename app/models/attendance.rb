@@ -1,5 +1,6 @@
 class Attendance < ApplicationRecord
   belongs_to :user
+  require 'csv'
   
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
@@ -17,4 +18,8 @@ class Attendance < ApplicationRecord
       errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
     end
   end
+  
+  
+
+  
 end

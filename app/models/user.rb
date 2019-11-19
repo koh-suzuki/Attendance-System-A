@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   validates :affiliation, length: { in: 2..30 }, allow_blank: true
-  validates :basic_time, presence: true
+  validates :basic_work_time, presence: true
   validates :work_time, presence: true
   
   def User.digest(string)
@@ -40,17 +40,5 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
   
-  def self.import(file)
-    # 登録処理前のレコード数
-    csv = []
-    # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
-    CSV.foreach(params[:file].path, headers: true, encoding: "SJIS") do |row|
-      csv << User.new({ name: row["name"], email: row["email"], affiliation: row["affiliation"], employee_number: row["employee_number"],
-                          uid: row["uid"], basic_time: row["basic_time"], designated_work_start_time: row["designated_work_start_time"],
-                          designated_work_end_time: row["designated_work_end_time"], superior: row["superior"], admin: row["admin"], password: row["password"]
-                      })
-    end
-    # importメソッドでバルクインサートできる
-    User.import(csv)
-  end
+  
 end

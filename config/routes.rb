@@ -7,8 +7,14 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
-
+  resources :attendances do
+    collection do
+      get 'csv_output'
+    end
+  end
+    
   resources :users do
+    
     collection { post :import }
     get 'import', to: 'users#import'
     get 'index_attendance', to: 'users#index_attendance'

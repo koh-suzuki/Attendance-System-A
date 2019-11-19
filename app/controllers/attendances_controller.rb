@@ -4,6 +4,8 @@ class AttendancesController < ApplicationController
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: :edit_one_month
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
+  require 'csv'
+  require 'rails/all'
   
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
   
@@ -23,6 +25,11 @@ class AttendancesController < ApplicationController
       end
     end
     redirect_to @user
+  end
+  
+  def csv_output
+    @attendance = Attendance.all
+    send_data render_to_string, filename: "attendances.csv", type: :csv
   end
   
   def edit_one_month
