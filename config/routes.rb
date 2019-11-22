@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   end
     
   resources :users do
-    
     collection { post :import }
     get 'import', to: 'users#import'
     get 'index_attendance', to: 'users#index_attendance'
@@ -23,6 +22,8 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
+      get 'attendances/edit_overtime_app'
+      patch 'attendances/update_over_app'
     end
     resources :attendances, only: :update
   end

@@ -4,7 +4,7 @@ CSV.generate do |csv|
   csv << csv_column_names
   @attendance.each do |product|
     csv_column_values = [
-      product.worked_on,
+      product.worked_on.strftime("%m/%d"),
       product.started_at,
       product.finished_at,
     ]

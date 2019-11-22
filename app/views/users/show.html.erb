@@ -33,7 +33,6 @@
   <div class="superior">
     <p>
       <%= link_to "【所属長承認申請のお知らせ】", "#", class: "superior_tag" %>
-      </br>
       <%= link_to "【勤怠変更申請のお知らせ】", "#", class: "superior_tag" %>
       </br>
       <%= link_to "【残業申請のお知らせ】", "#", class: "superior_tag" %>
@@ -83,7 +82,7 @@
         <% @attendances.each do |day| %>
           <tr>
             <td>
-              <%= link_to "残業申請", "#", class: "btn btn-primary btn-md" %>
+              <%= link_to "残業申請", attendances_edit_overtime_app_user_path(day), class: "btn btn-primary btn-md" %>
             </td>
             <td><%= l(day.worked_on, format: :short) %></td>
             <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
@@ -148,3 +147,5 @@
     </table>
   </div>
 </div>
+
+<div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

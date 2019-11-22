@@ -13,7 +13,7 @@ User.create!(name: "Sample User",
 User.create!(name: "Superior User",
              email: "superior@email.com",
              password: "password",
-             affiliation: "フリーランス部",
+             affiliation: "上長部",
              employee_number: 2,
              uid: "2",
              basic_work_time: Time.current.change(hour: 8, min: 0, sec: 0),
@@ -22,11 +22,16 @@ User.create!(name: "Superior User",
              superior: true,
              admin: false)
              
-60.times do |n|
+3.times do |n|
   name = Faker::Name.name
   email = "sample-#{n+1}@email.com"
   password = "password"
   User.create!(name: name,
                email: email,
-               password: password)
+               password: password,
+               affiliation: "フリーランス部",
+               employee_number: n+1,
+               uid: "sample#{n+1}",
+               superior: false,
+               admin: false)
 end               

@@ -7,15 +7,18 @@ class UsersController < ApplicationController
   before_action :admin_or_correct_user, only: :show
 
   def index
-   if params[:search]
-      @users = User.where('LOWER(name) LIKE ?', "%#{params[:search][:name].downcase}%").paginate(page: params[:page])
-   else
-      @users = User.paginate(page: params[:page])
-   end
+    @users = User.all
   end
  
   def import
-   
+    if !params[:file].blank?
+      # 保存と結果のメッセージを取得して表示
+      User.import(params[:file])
+      flash[:info] = "CSVファイルをインポートしました。"
+    else
+      flash[:danger] = "読み込むCSVファイルをセットしてください"
+    end
+      redirect_to users_path
   end
   
   def index_attendance

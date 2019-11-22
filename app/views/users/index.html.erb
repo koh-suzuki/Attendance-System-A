@@ -1,38 +1,24 @@
-<% provide(:title, "ユーザー一覧") %>
-
-<% if params[:search] %>
-  <h1>検索結果</h1>
-<% else %>
-  <h1>ユーザー一覧</h1>
-<% end %>
-
-<div class="col-md-3 col-md-offset-9">
- <%= render 'users/serch_form' %>
+<% provide(:title, "ユーザ一覧") %>
+<h1>ユーザ一覧</h1>
+<div class="csv_holder">
+  <%= form_tag import_users_path, multipart: true do %>
+    <div><%= file_field_tag :file %></div>
+    <div><%= submit_tag "CSVをインポート", class: "btn btn-block btn-primary" %></div>
+  <% end %>
 </div>
-
-<div class="col-md-10 col-md-offset-1">
-  <%= will_paginate %>
-  <table class="table table-condensed table-hover" id="table-users">
-    <thead>
-      <tr>
-        <% if current_user.admin? %>
-          <th><%= User.human_attribute_name :name %></th>
-        <% end %>
-      </tr>
-    </thead>
-    
+<div>
+  <p>Example</p>
+</div>
+<% if current_user.admin? %>
+  <div class="example">
     <% @users.each do |user| %>
-    <tr>
-      <td>
-        <% if current_user.admin? %>
-          <%= link_to user.name, user %>
-        <% else %>
-          <%= user.name %>
-        <% end %>
-      </td>
-    </tr>
+    <div><%= user.name %></div>
+    <div>
+      <span>|</span><%= link_to "削除", "#", method: :delete, class: "btn btn-lg, btn-primary btn-delete" %>
+    </div>
+    <div class="edit-csv">
+      <div><%= link_to "編集", "#", class: "btn btn-lg btn-primary w-10" %></div>
+    </div>
     <% end %>
-  </table>
-  <%= will_paginate %>
-</div>
-
+  </div>
+<% end %>
