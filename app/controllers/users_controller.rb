@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   end
  
   def import
-    if !params[:file].blank?
+    unless params[:file].blank?
       # 保存と結果のメッセージを取得して表示
       User.import(params[:file])
       flash[:info] = "CSVファイルをインポートしました。"
@@ -53,7 +53,7 @@ class UsersController < ApplicationController
   
   def destroy
     @user.destroy
-    flash[:success] = "#{@user.name}を削除しました。"
+    flash[:success] = "User deleted.."
     redirect_to users_url
   end
 

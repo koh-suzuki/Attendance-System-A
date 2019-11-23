@@ -2,7 +2,7 @@
 <h1>ユーザ一覧</h1>
 <div class="csv_holder">
   <%= form_tag import_users_path, multipart: true do %>
-    <div><%= file_field_tag :file %></div>
+    <div><%= file_field_tag :file, class: "file-csv" %></div>
     <div><%= submit_tag "CSVをインポート", class: "btn btn-block btn-primary" %></div>
   <% end %>
 </div>
@@ -14,10 +14,27 @@
     <% @users.each do |user| %>
     <div><%= user.name %></div>
     <div>
-      <span>|</span><%= link_to "削除", "#", method: :delete, class: "btn btn-lg, btn-primary btn-delete" %>
+      <span>|</span>
+        <%= link_to "削除", user, method: :delete,
+            data: { confirm: "削除してよろしいですか？" },
+            class: "btn btn-primary" %>
     </div>
-    <div class="edit-csv">
-      <div><%= link_to "編集", "#", class: "btn btn-lg btn-primary w-10" %></div>
+    <div class="accordion" id="accordion-4">
+      <div class="card">
+        <div class="edit-csv" id="header-4a">
+          <button class="btn btn-primary btn-lg w-10" type="button"
+              data-toggle="collapse" data-target="#card-4a"
+              aria-expanded="true" aria-controls="card-4a">
+            編集
+          </button>
+        </div>
+        <div id="card-4a" class="collapse"
+            aria-labelledby="header-4a" data-parent="#accordion-4">
+          <div class="card-body">
+            Card A
+          </div>
+        </div>
+      </div>
     </div>
     <% end %>
   </div>
