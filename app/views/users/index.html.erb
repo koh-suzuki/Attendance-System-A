@@ -1,6 +1,5 @@
 <% provide(:title, "ユーザ一覧") %>
-<% provide(:class_text, "user--edi") %>
-<% provide(:button_text, "編集する") %>
+
 <h1>ユーザ一覧</h1>
 <div class="csv_holder">
   <%= form_tag import_users_path, multipart: true do %>
@@ -35,7 +34,7 @@
             </h4>
           </div>
           <div id="accordion<%= user.id %>" class="panel-collapse collapse in">
-            <div class="panel-body"><%= render partial: 'users/form_user', collection: @user, as: :user %></div>
+            <div class="panel-body"><%= render 'users/form_user', { user: @user }  %></div>
           </div>
         </div>
       </div>
