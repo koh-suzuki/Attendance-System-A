@@ -22,7 +22,9 @@ class UsersController < ApplicationController
   end
   
   def index_attendance
+    @users = User.all.includes(:attendances)
   end
+  
  
   def new
     @user = User.new

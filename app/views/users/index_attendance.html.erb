@@ -10,8 +10,12 @@
       </tr>  
     </thead>
     <tbody>
-      <tr>
-      </tr>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.employee_number %></td>
+          <td><%= user.name %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>
