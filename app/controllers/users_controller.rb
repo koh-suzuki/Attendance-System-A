@@ -22,10 +22,13 @@ class UsersController < ApplicationController
   end
   
   def index_attendance
-    @users = User.all.includes(:attendances)
+    Attendance.where.not(started_at: nil).each do |attendance|
+      if (Date.current == attendance.worked_on) && attendance.finished_at.nil?
+        @users = User.all.includes(:attendances)
+      end
+    end
   end
-  
- 
+    
   def new
     @user = User.new
   end
