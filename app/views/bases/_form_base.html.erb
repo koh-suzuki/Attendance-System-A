@@ -1,4 +1,4 @@
-<%= form_with(model: @base, local: true) do |f| %>
+<%= form_with(scope: :base, url: bases_path, local: true) do |f| %>
   <%= f.label :base_number, class: "label--edit" %>
   <%= f.number_field :base_number, class: "form-control" %>
   
@@ -8,5 +8,5 @@
   <%= f.label :base_attendance, class: "label--edit" %>
   <%= f.text_field :base_attendance, class: "form-control" %>
   
-  <%= f.submit "編集する", class: "btn btn-primary btn-block btn--edit" %>
+  <%= f.submit "#{yield(:base_btn)}", class: "btn btn-primary btn-block" %>
 <% end %>

@@ -12,15 +12,17 @@
       </tr>  
     </thead>
     <tbody>
+      <% @bases.each do |base| %>
       <tr>
         <td class="col-md-3">
           <%= link_to "編集", "#", class: "btn btn-primary btn-lg" %>
         </td>
         <td><%= link_to "削除", "#", class: "btn btn-primary btn-lg"  %></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><%= base.base_number %></td>
+        <td><%= base.base_name %></td>
+        <td><%= base.base_attendance %></td>
       </tr>
+      <% end %>
       <tr>
         
       </tr>
@@ -38,7 +40,7 @@
           </h4>
         </div>
       <div id="collapse" class="panel-collapse collapse">
-        <div class="panel-body"><%= render 'bases/form_base' %></div>
+        <div class="panel-body"><%= render 'bases/new_base' %></div>
       </div>
     </div>
   </div>
