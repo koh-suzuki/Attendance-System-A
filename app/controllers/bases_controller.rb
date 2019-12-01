@@ -24,10 +24,12 @@ class BasesController < ApplicationController
   
   def update
     @base = Base.find(params[:id])
-    if update_attributes(base_params)
+    if @base.update_attributes(base_params)
       flash[:success] = "拠点情報を更新しました。"
+      redirect_to bases_url
     else
       flash[:danger] = "更新に失敗しました。"
+      render :index
     end
   end
   
