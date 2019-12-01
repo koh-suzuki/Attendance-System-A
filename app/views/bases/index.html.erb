@@ -26,7 +26,7 @@
         </td>
         <td>
           <%= link_to "削除", base, method: :delete,
-              data: { confirm: "削除してよろしいですか？" },
+              data: { confirm: "#{base.base_name}を削除してよろしいですか？" },
               class: "btn btn-primary" %>
         </td>
         <td><%= base.base_number %></td>
