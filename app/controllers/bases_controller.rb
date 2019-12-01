@@ -1,4 +1,6 @@
 class BasesController < ApplicationController
+  before_action :set_base, only: [:update, :show, :destroy]
+
   def index
     @bases = Base.all
   end
@@ -19,11 +21,9 @@ class BasesController < ApplicationController
   end
   
   def show
-    @base = Base.find(params[:id])
   end
   
   def update
-    @base = Base.find(params[:id])
     if @base.update_attributes(base_params)
       flash[:success] = "拠点情報を更新しました。"
       redirect_to bases_url
@@ -33,7 +33,17 @@ class BasesController < ApplicationController
     end
   end
   
+  def destroy
+    @base.destroy
+    flash[:success] = "#{@base.base_name}を削除しました"
+    redirect_to bases_url
+  end
+  
   private
+    def set_base
+      @base = Base.find(params[:id])
+    end
+    
     def base_params
       params.require(:base).permit(:base_number, :base_name, :base_attendance)
     end

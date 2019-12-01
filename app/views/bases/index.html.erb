@@ -24,7 +24,11 @@
             </div>
           </div>
         </td>
-        <td><%= link_to "削除", "#", class: "btn btn-primary btn-lg"  %></td>
+        <td>
+          <%= link_to "削除", base, method: :delete,
+              data: { confirm: "削除してよろしいですか？" },
+              class: "btn btn-primary" %>
+        </td>
         <td><%= base.base_number %></td>
         <td><%= base.base_name %></td>
         <td><%= base.base_attendance %></td>
