@@ -18,6 +18,19 @@ class BasesController < ApplicationController
     end
   end
   
+  def show
+    @base = Base.find(params[:id])
+  end
+  
+  def update
+    @base = Base.find(params[:id])
+    if update_attributes(base_params)
+      flash[:success] = "拠点情報を更新しました。"
+    else
+      flash[:danger] = "更新に失敗しました。"
+    end
+  end
+  
   private
     def base_params
       params.require(:base).permit(:base_number, :base_name, :base_attendance)

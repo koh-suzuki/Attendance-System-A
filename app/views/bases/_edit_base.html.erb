@@ -1,2 +1,13 @@
 <%= provide(:base_btn, "編集する") %>
-<%= render 'bases/form_base' %>
+<%= form_with(scope: base, url: basis_path(base), local: true) do |f| %>
+  <%= f.label :base_number, class: "label--edit" %>
+  <%= f.number_field :base_number, class: "form-control" %>
+  
+  <%= f.label :base_name, class: "label--edit" %>
+  <%= f.text_field :base_name, class:"form-control" %>
+  
+  <%= f.label :base_attendance, class: "label--edit" %>
+  <%= f.text_field :base_attendance, class: "form-control" %>
+  
+  <%= f.submit "#{yield(:base_btn)}", class: "btn btn-primary btn-block" %>
+<% end %>
