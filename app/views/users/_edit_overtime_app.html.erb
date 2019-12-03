@@ -1,0 +1,44 @@
+<% provide(:class_text, 'basic-info') %>
+<% provide(:button_text, '変更を送信する') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h1 class="modal-title">基本情報編集</h1>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <%= form_with(model: @user, url: update_over_app_user_path(current_user), local: true, method: :patch) do |f| %>
+           <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>曜日</th>
+                <th colspan="2">終了予定時間</th>
+                <th>翌日</th>
+                <th>業務処理内容</th>
+                <th>支持者確認㊞</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= l(@attendance.worked_on, format: :short) %></td>
+                <td class= "<%= css_class(@attendance.worked_on) %>"><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
+                <td><%= f.text_field  class: "form-control" %></td>
+                <td><%= f.select :name, {テスト用: "テスト用"} %></td>
+              </tr>
+            </tbody>
+            
+            <div class="center">
+              <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

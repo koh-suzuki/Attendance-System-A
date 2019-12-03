@@ -22,8 +22,8 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
-      get 'attendances/edit_overtime_app'
-      patch 'attendances/update_over_app'
+      get 'edit_overtime_app'
+      patch 'update_over_app'
     end
     resources :attendances, only: :update
   end

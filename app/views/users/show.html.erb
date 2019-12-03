@@ -82,7 +82,7 @@
         <% @attendances.each do |day| %>
           <tr>
             <td>
-              <%= link_to "残業申請", attendances_edit_overtime_app_user_path(day), class: "btn btn-primary btn-md" %>
+              <%= link_to "残業申請", edit_overtime_app_user_path(current_user), remote: true, class: "btn btn-primary btn-md" %>
             </td>
             <td><%= l(day.worked_on, format: :short) %></td>
             <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
@@ -123,20 +123,17 @@
             <div class="approval">
               所属長承認　未
               <div class="dropdown">
-                <!-- 切替ボタンの設定 -->
-                <button type="button" class="btn btn-default btn-lg btn-block dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 <!--切替ボタンの設定 -->
+                <button type="button" class="btn btn-default btn-lg btn-block dropdown-toggle" id="dropdownMenuButton" 
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret pull-right"></span>
                 </button>
-                <!-- ドロップメニューの設定 -->
+               
+                 <!--ドロップメニューの設定 -->
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">メニュー1</a>
-                  <a class="dropdown-item" href="#">メニュー2</a>
-                  <a class="dropdown-item" href="#">メニュー3</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">その他リンク</a>
-                </div><!-- /.dropdown-menu -->
+                  <option><%= @user.name %></option>
+                </div> 
               </div>
-               </br>
               <div>
                 <%= link_to "申請", "#", class: "btn btn-primary btn-block btn-lg" %>
               </div>
@@ -148,4 +145,4 @@
   </div>
 </div>
 
-<div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_overtime_app" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
