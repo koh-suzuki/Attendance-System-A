@@ -1,4 +1,4 @@
-<% provide(:class_text, 'basic-info') %>
+% provide(:class_text, 'basic-info') %>
 <% provide(:button_text, '変更を送信する') %>
 
 <div class="modal-dialog modal-lg modal-dialog-center">
@@ -9,10 +9,11 @@
       </button>
       <h1 class="modal-title">【残業申請】</h1>
     </div>
+
     <div class="modal-body">
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <%= form_with(model: @user, url: update_over_app_user_path(current_user), local: true, method: :patch) do |f| %>
+          <%= form_with(model: @overtime, url: user_attendance_update_over_app_path(@user, l(@overtime.worked_on, format: :short)), local: true, method: :patch) do |f| %>
            <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
               <tr>
@@ -25,19 +26,15 @@
               </tr>
             </thead>
             <tbody>
-              <% @attendances.each do |day| %>
-                <%= f.fields_for "attendances[]", day do |attendance| %>
-                <tr>
-                  <td></td>
-                  <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td><%= f.text_field  class: "form-control" %></td>
-                  <td><%= f.select :name, {テスト用: "テスト用"} %></td>
-                </tr>
-                <% end %>
-              <% end %>
+              <tr>
+                <td><%= l(@overtime.worked_on, format: :short) %></td>
+                <td class= "<%= css_class(@overtime.worked_on) %>"><%= $days_of_the_week[@overtime.worked_on.wday] %></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><%= f.text_field  class: "form-control" %></td>
+                <td><%= f.select :name, {テスト: "テスト"} %></td>
+              </tr>
             </tbody>
           </table>
           <div class="center">

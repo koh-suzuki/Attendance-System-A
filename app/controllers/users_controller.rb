@@ -73,12 +73,7 @@ class UsersController < ApplicationController
   #   end
   #   redirect_to users_url
   # end
-
-  def edit_overtime_app
-  end
   
-  def update_over_app
-  end
   
   def admin_or_correct_user
     unless current_user?(@user) || current_user.admin?

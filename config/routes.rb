@@ -22,10 +22,13 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
+    end
+    resources :attendances do
+      patch 'update'
+      # 残業申請モーダル
       get 'edit_overtime_app'
       patch 'update_over_app'
     end
-    resources :attendances, only: :update
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

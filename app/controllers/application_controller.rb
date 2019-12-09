@@ -10,6 +10,11 @@ class ApplicationController < ActionController::Base
   def set_user
     @user = User.find(params[:id])
   end
+  
+  # user_id専用
+  def edit_user_id
+    @user = User.find(params[:user_id])
+  end
 
   # ログイン済みのユーザーか確認します。
   def logged_in_user
@@ -28,6 +33,7 @@ class ApplicationController < ActionController::Base
   def admin_user
     redirect_to root_url unless current_user.admin?
   end
+  
   
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
