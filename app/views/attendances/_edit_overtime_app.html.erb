@@ -30,7 +30,7 @@
                 <td><%= l(@overtime.worked_on, format: :short) %></td>
                 <td class= "<%= css_class(@overtime.worked_on) %>"><%= $days_of_the_week[@overtime.worked_on.wday] %></td>
                 <td><%= f.time_select :finished_at, {}, ignore_data:true, class: 'form-control bootstrap-date' %></td>
-                <td></td>
+                <td><%= check_box_tag :tommorow, :as => :boolean %></td>
                 <td><%= f.text_field :memo, :size => "20", class: "form-control" %></td>
                 <td><%= f.select :name, {テスト: "テスト"} %></td>
               </tr>
