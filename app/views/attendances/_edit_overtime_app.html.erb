@@ -12,14 +12,14 @@
 
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12">
           <%= form_with(model: @overtime, url: user_attendance_update_over_app_path(@user, l(@overtime.worked_on, format: :short)), local: true, method: :patch) do |f| %>
            <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
               <tr>
                 <th>日付</th>
                 <th>曜日</th>
-                <th colspan="2">終了予定時間</th>
+                <th>終了予定時間</th>
                 <th>翌日</th>
                 <th>業務処理内容</th>
                 <th>支持者確認㊞</th>
@@ -29,10 +29,9 @@
               <tr>
                 <td><%= l(@overtime.worked_on, format: :short) %></td>
                 <td class= "<%= css_class(@overtime.worked_on) %>"><%= $days_of_the_week[@overtime.worked_on.wday] %></td>
+                <td><%= f.time_select :finished_at, {}, ignore_data:true, class: 'form-control bootstrap-date' %></td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td><%= f.text_field  class: "form-control" %></td>
+                <td><%= f.text_field :memo, :size => "20", class: "form-control" %></td>
                 <td><%= f.select :name, {テスト: "テスト"} %></td>
               </tr>
             </tbody>
