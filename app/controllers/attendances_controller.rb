@@ -57,10 +57,12 @@ class AttendancesController < ApplicationController
   
    # 残業申請のモーダル
   def edit_overtime_app
-    # @attendance = Attendance.find_by(worked_on: Date)
-    # @user = User.find(@attendance.user_id)
     @today = Date.today
     @overtime = Attendance.find(params[:attendance_id])
+    @superiors= User.where(superior: true)
+    @superiors.each do |superior|
+      @superior_name = User.find_by(name: superior.name)
+    end  
   end
   
   def update_over_app

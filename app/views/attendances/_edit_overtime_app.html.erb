@@ -32,7 +32,9 @@
                 <td><%= f.time_select :finished_at, {}, ignore_data:true, class: 'form-control bootstrap-date' %></td>
                 <td><%= check_box_tag :tommorow, :as => :boolean %></td>
                 <td><%= f.text_field :memo, :size => "20", class: "form-control" %></td>
-                <td><%= f.select :name, {テスト: "テスト"} %></td>
+                <td>
+                  <%= f.select :superior_name, [[@superior_name.name, 1]], { include_blank: true, selected: 1 }, {} %>
+                </td>
               </tr>
             </tbody>
           </table>
