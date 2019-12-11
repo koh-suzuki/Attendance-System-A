@@ -61,7 +61,7 @@ class AttendancesController < ApplicationController
     @overtime = Attendance.find(params[:attendance_id])
     @superiors= User.where(superior: true)
     @superiors.each do |superior|
-      @superior_name = User.find_by(name: superior.name)
+      @superior = User.find_by(name: superior.name)
     end  
   end
   

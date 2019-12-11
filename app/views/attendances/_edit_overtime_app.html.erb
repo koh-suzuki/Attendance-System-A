@@ -33,7 +33,7 @@
                 <td><%= check_box_tag :tommorow, :as => :boolean %></td>
                 <td><%= f.text_field :memo, :size => "20", class: "form-control" %></td>
                 <td>
-                  <%= f.select :superior_name, [[@superior_name.name, 1]], { include_blank: true, selected: 1 }, {} %>
+                  <%= f.select :superior_name, [[@superior.name, 1]], { include_blank: true, selected: 1 }, {} %>
                 </td>
               </tr>
             </tbody>
