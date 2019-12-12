@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :edit_user_id, only: :edit_overtime_app
+  before_action :edit_user_id, only: [:edit_overtime_app, :update_over_app]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_overtime_app]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -59,18 +59,25 @@ class AttendancesController < ApplicationController
   def edit_overtime_app
     @today = Date.today
     @overtime = Attendance.find(params[:attendance_id])
-    @superiors= User.where(superior: true)
-    @superiors.each do |superior|
-      @superior = User.find_by(name: superior.name)
-    end  
   end
   
   def update_over_app
+    @overtime = Attendance.find(params[:attendance_id])
+      if @overtime.update_attributes(overtime_params)
+        flash[:success] = "残業申請しました"
+        redirect_to @user
+      else
+        render @user
+      end
   end
   
   private
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+    end
+    
+    def overtime_params
+      params.require(:attendance).permit(:finished_at, :tommorow_index, :overtime_memo, :name)
     end
     
     def admin_or_correct_user
