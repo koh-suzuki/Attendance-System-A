@@ -67,7 +67,7 @@ class AttendancesController < ApplicationController
         flash[:success] = "残業申請しました"
         redirect_to @user
       else
-        render @user
+        redirect_to @user
       end
   end
   
