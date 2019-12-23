@@ -18,4 +18,9 @@ class Attendance < ApplicationRecord
       errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
     end
   end
+
+  REGISTRABLE_ATTRIBUTES = %i(
+    attendance
+    finished_at(1i) finished_at(2i) finished_at(3i) finished_at(4i) finished_at(5i)
+    )
 end

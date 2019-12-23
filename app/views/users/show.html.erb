@@ -106,8 +106,9 @@
               <% end %>
             </td>
             <td><%= day.note %></td>
-            <td></td>
-            <td></td>
+            <!-- 終了予定時間 -->
+            <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+            <td><%= l(day.finished_at.floor_to(60*15), format: :minute) if day.finished_at.present? %></td>
             <td></td>
             <td></td>
             <td></td>

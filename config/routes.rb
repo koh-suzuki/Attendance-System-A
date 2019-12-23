@@ -28,6 +28,8 @@ Rails.application.routes.draw do
       # 残業申請モーダル
       get 'edit_overtime_app'
       patch 'update_over_app'
+      # datetimeのnew
+      get 'new'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
