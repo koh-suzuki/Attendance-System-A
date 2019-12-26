@@ -70,7 +70,7 @@ class AttendancesController < ApplicationController
         params[:attendance]["finished_at(4i)"].to_i,
         params[:attendance]["finished_at(5i)"].to_i
         )
-      if @overtime.update_attributes(overtime_params)
+      if @overtime.save
         flash[:success] = "残業申請しました"
         redirect_to @user
       else
