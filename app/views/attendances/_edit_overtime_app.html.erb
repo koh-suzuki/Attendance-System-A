@@ -13,7 +13,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-          <%= form_with(model: @overtime, url: user_attendance_update_over_app_path(@user, l(@overtime.worked_on, format: :short)), local: true, method: :patch) do |f| %>
+          <%= form_with(model: @overtime, url: user_attendance_update_over_app_path(@user, @overtime.id), local: true, method: :patch) do |f| %>
            <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
               <tr>
