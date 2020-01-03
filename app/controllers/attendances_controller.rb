@@ -63,14 +63,13 @@ class AttendancesController < ApplicationController
   
   def update_over_app
     @overtime = Attendance.find(params[:attendance_id])
-    @overtime.update(finished_at: DateTime.new(
-        params[:attendance]["finished_at(1i)"].to_i,
-        params[:attendance]["finished_at(2i)"].to_i,
-        params[:attendance]["finished_at(3i)"].to_i,
-        params[:attendance]["finished_at(4i)"].to_i,
-        params[:attendance]["finished_at(5i)"].to_i
-        )) 
-        
+    @overtime.update(endtime_at: DateTime.new(
+        params[:attendance]["endtime_at(1i)"].to_i,
+        params[:attendance]["endtime_at(2i)"].to_i,
+        params[:attendance]["endtime_at(3i)"].to_i,
+        params[:attendance]["endtime_at(4i)"].to_i,
+        params[:attendance]["endtime_at(5i)"].to_i
+        ))
         flash[:success] = "残業申請しました"
         redirect_to @user
   end

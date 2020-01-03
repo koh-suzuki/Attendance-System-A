@@ -108,13 +108,13 @@
             <td><%= day.note %></td>
             <!-- 終了予定時間 -->
             <td>
-              <% if @overtime.present? %>
-                <%= l(@overtime.finished_at, format: :hour, default: '') %>
+              <% if day.endtime_at.present? %>
+                <%= l(day.endtime_at, format: :hour, default: '') %>
               <% end %>
             </td>
             <td>
-              <% if @overtime.present? %>
-                <%= l(@overtime.finished_at, format: :minute, default: '') %>
+              <% if day.endtime_at.present? %>
+                <%= l(day.endtime_at, format: :minute, default: '') %>
               <% end %>
             </td>
             <td></td>
