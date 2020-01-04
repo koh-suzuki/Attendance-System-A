@@ -15,6 +15,11 @@ class ApplicationController < ActionController::Base
   def edit_user_id
     @user = User.find(params[:user_id])
   end
+  
+  #attendance_id専用
+  def set_attendance_id
+    @overtime = Attendance.find(params[:attendance_id])
+  end
 
   # ログイン済みのユーザーか確認します。
   def logged_in_user
