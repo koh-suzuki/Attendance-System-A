@@ -69,7 +69,7 @@ class AttendancesController < ApplicationController
         params[:attendance]["endtime_at(3i)"].to_i,
         params[:attendance]["endtime_at(4i)"].to_i,
         params[:attendance]["endtime_at(5i)"].to_i
-        ))
+        ) - 9.hours)
         flash[:success] = "残業申請しました"
         redirect_to @user
   end
@@ -77,10 +77,6 @@ class AttendancesController < ApplicationController
   private
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
-    end
-    
-    def overtime_params
-      params.require(:attendance).permit(:finished_at, :tommorow_index, :overtime_memo, :name)
     end
     
     def admin_or_correct_user

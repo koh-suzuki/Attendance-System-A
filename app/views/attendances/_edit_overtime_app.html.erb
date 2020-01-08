@@ -29,7 +29,7 @@
               <tr>
                 <td><%= l(@overtime.worked_on, format: :short) %></td>
                 <td class= "<%= css_class(@overtime.worked_on) %>"><%= $days_of_the_week[@overtime.worked_on.wday] %></td>
-                <td><%= f.time_select :endtime_at, {}, ignore_data:true, class: 'form-control bootstrap-date' %></td>
+                <td><%= f.time_select :endtime_at, {}, class: 'form-control bootstrap-date' %></td>
                 <td><%= f.check_box :tommorow_index, {class: "tommorow_index"}, "true", "false" %></td>
                 <td><%= f.text_field :overtime_memo, :size => "20", class: "form-control" %></td>
                 <td><%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>

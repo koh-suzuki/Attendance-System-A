@@ -108,16 +108,12 @@
             <td><%= day.note %></td>
             <!-- 終了予定時間 -->
             <td>
-              <% if day.endtime_at.present? %>
-                <%= l(day.endtime_at, format: :hour, default: '') %>
-              <% end %>
+              <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
             </td>
             <td>
-              <% if day.endtime_at.present? %>
-                <%= l(day.endtime_at, format: :minute, default: '') %>
-              <% end %>
+              <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
             </td>
-            <td></td>
+            <td><%= day.endtime_at if day.endtime_at.present? %></td>
             <td></td>
             <td></td>
           </tr>
