@@ -113,8 +113,8 @@
             <td>
               <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
             </td>
-            <td><%= day.endtime_at if day.endtime_at.present? %></td>
-            <td></td>
+            <td><%=  %></td>
+            <td><%= day.try(:overtime_memo) %></td>
             <td></td>
           </tr>
         <% end %>
