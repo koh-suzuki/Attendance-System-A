@@ -8,6 +8,10 @@ module AttendacesHelper
     false
   end
   
+  def enabled?(attendance)
+    ActiveRecord::Type::Boolean.new.cast(attendance[:tommorow_index])
+  end
+  
   def working_time(start, finish)
     format("%.2f", (((finish - start) / 60) / 60.0))
   end

@@ -108,14 +108,22 @@
             <td><%= day.note %></td>
             <!-- 終了予定時間 -->
             <td>
-              <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
+              <% if day.tommorow_index == true %>
+                <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
+              <% else %>
+                <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
+              <% end %>
             </td>
             <td>
-              <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
+              <% if day.tommorow_index == true %>
+                <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
+              <% else %>
+                <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
+              <% end %>
             </td>
             <td><%=  %></td>
             <td><%= day.try(:overtime_memo) %></td>
-            <td></td>
+            <td><%= day.name if day.name.present? %></td>
           </tr>
         <% end %>
       </tbody>
