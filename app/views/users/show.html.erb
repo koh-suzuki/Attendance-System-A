@@ -109,14 +109,14 @@
             <!-- 終了予定時間 -->
             <td>
               <% if day.tommorow_index == true %>
-                <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
+                <%= day.endtime_at.tomorrow.strftime("%H") if day.endtime_at.present? %>
               <% else %>
                 <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
               <% end %>
             </td>
             <td>
               <% if day.tommorow_index == true %>
-                <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
+                <%= day.endtime_at.tomorrow.strftime("%M") if day.endtime_at.present? %>
               <% else %>
                 <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
               <% end %>
