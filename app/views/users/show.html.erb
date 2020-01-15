@@ -121,7 +121,11 @@
                 <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
               <% end %>
             </td>
-            <td><%=  %></td>
+            <td>
+              <% if day.endtime_at.present? %>
+                <%= work_end_time = l(day.endtime_at, format: :time).to_f - format_basic_info(@user.designated_work_end_time).to_f %>
+              <% end %>
+            </td>
             <td><%= day.try(:overtime_memo) %></td>
             <td><%= day.name if day.name.present? %></td>
           </tr>

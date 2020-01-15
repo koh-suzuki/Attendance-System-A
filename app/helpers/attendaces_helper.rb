@@ -12,6 +12,11 @@ module AttendacesHelper
     format("%.2f", (((finish - start) / 60) / 60.0))
   end
   
+  # 時間外時間の計算
+  def over_time(endtime)
+    format("%.2f", (((endtime) / 60) / 60.0))
+  end
+  
   def css_class(wo)
     case $days_of_the_week[wo.wday]
     when '土'
