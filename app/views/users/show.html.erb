@@ -123,12 +123,8 @@
             </td>
             <td>
               <% if day.endtime_at.present? && day.finished_at.present? %>
-                <% work_end_time = l(day.endtime_at, format: :time).to_f - l(day.finished_at, format: :time).to_f %>
-                <% if day.tommorow_index == true %>
-                  <%= work_end_time + 24 %>
-                <% else %>
-                  <%= work_end_time %>
-                <% end %>
+                <% we_time = work_end_time(day.endtime_at, day.finished_at) %>
+                <%= we_time %>
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>
