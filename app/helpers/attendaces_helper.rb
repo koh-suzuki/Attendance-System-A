@@ -14,11 +14,7 @@ module AttendacesHelper
   
   # 時間外時間の計算
   def work_end_time(attendance)
-    if attendance.tommorow_index == true
-      format("%.2f", (((attendance.endtime_at - attendance.finished_at) / 60) / 60.0) + 24)
-    else
-      format("%.2f", (((attendance.endtime_at - attendance.finished_at) / 60) / 60.0))
-    end
+    attendance.endtime_at - @user.designated_work_end_time
   end
   
   def css_class(wo)

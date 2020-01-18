@@ -63,6 +63,7 @@ class AttendancesController < ApplicationController
   end
   
   def update_over_app
+    @worktime = @user.designated_work_end_time
     @overtime.update(endtime_at: DateTime.new(
         params[:attendance]["endtime_at(1i)"].to_i,
         params[:attendance]["endtime_at(2i)"].to_i,

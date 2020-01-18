@@ -123,7 +123,7 @@
             </td>
             <td>
               <% if day.endtime_at.present? && day.finished_at.present? %>
-                <%= work_end_time(day) %>
+                <%= format("%.2f", Time.at(work_end_time(day)).utc.strftime('%H')) %>
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>
