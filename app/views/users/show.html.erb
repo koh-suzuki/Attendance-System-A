@@ -123,8 +123,7 @@
             </td>
             <td>
               <% if day.endtime_at.present? && day.finished_at.present? %>
-                <% we_time = work_end_time(day.endtime_at, day.finished_at) %>
-                <%= we_time %>
+                <%= work_end_time(day) %>
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>
