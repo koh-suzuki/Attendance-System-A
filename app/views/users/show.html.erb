@@ -4,7 +4,7 @@
     <table class="table table-bordered table-condensed user-table" id="table-attendances">
       <tr>
         <td>
-          <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
+          <%= link_to "←", user_path(date: @first_day.prev_month.strftime('%Y年%m月%d日')), class: "btn btn-primary" %>
           &emsp;&emsp;
           <%= l(@first_day, format: :middle) %>&emsp;時間管理表
           &emsp;&emsp;
