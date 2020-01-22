@@ -127,7 +127,7 @@
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>
-            <td><%= day.name if day.name.present? %></td>
+            <td><%= "申請中：#{day.name}" if day.name.present? %></td>
           </tr>
         <% end %>
       </tbody>
