@@ -4,7 +4,7 @@
     <table class="table table-bordered table-condensed user-table" id="table-attendances">
       <tr>
         <td>
-          <%= link_to "←", user_path(date: @first_day.prev_month.strftime('%Y年%m月%d日')), class: "btn btn-primary" %>
+          <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
           &emsp;&emsp;
           <%= l(@first_day, format: :middle) %>&emsp;時間管理表
           &emsp;&emsp;
@@ -85,10 +85,10 @@
         <% @attendances.each do |day| %>
           <tr>
             <td>
-             <%= link_to "残業申請", user_attendance_edit_overtime_app_path(@user, day), remote: true, class: "btn btn-primary btn-md", date_id: l(day.worked_on, format: :short) %>
+             <%= link_to "残業申請", user_attendance_edit_overtime_app_path(@user, day), remote: true, class: "btn btn-primary btn-md", date: day.worked_on %>
             </td>
             <td><%= l(day.worked_on, format: :short) %></td>
-            <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+            <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
             <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
             <td>
