@@ -72,13 +72,18 @@ class AttendancesController < ApplicationController
         params[:attendance]["endtime_at(5i)"].to_i
         ) - 9.hours)
     @overtime.update(overtime_params)
+    if @overtime.name.blank?
+      flash[:danger] = "上長が選択されていません"
+      redirect_to @user
+    else
       flash[:success] = "残業申請しました"
       redirect_to @user
+    end
   end
   
   private
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :tommorow_index, :note, :name])[:attendances]
     end
     
     def overtime_params
