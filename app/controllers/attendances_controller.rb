@@ -81,6 +81,11 @@ class AttendancesController < ApplicationController
     end
   end
   
+  def attendance_edit_log
+  end
+
+  
+  
   private
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :tommorow_index, :note, :name])[:attendances]
