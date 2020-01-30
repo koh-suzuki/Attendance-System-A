@@ -60,6 +60,7 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
+    @notice_overtime_sum = @attendances.where.not(endtime_at: params[:endtime_at]).count
   end
   
   def admin_or_correct_user

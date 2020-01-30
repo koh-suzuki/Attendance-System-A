@@ -30,17 +30,20 @@
   </div>
   
   <% if logged_in? && current_user.superior? %>
-    <div class="superior">
-      <p class="notice">
-        <%= link_to "【所属長承認申請のお知らせ】", "#", class: "superior_tag" %>
-      </p>
-      <p class="notice">
-        <%= link_to "【勤怠変更申請のお知らせ】", "#", class: "superior_tag" %>
-      </p>
-      <p class="notice">
-        <%= link_to "【残業申請のお知らせ】", "#", class: "superior_tag" %>
-      </p>
-    </div>
+      <div class="superior">
+        <p class="notice">
+          <%= link_to "【所属長承認申請のお知らせ】", "#", class: "superior_tag" %>
+        </p>
+        <p class="notice">
+          <%= link_to "【勤怠変更申請のお知らせ】", "#", class: "superior_tag" %>
+        </p>
+        <% if current_user.superior? %>
+          <p class="notice">
+            <%= link_to "【残業申請のお知らせ】", "#", :style=>"color:red;", class: "superior_tag" %>
+            <span><strong><%= "#{@notice_overtime_sum}件の通知があります" %></strong></span>
+          </p>
+        <% end %>
+      </div>
   <% end %>
   
   <div class="btn-users-show">
@@ -166,3 +169,4 @@
 </div>
 
 <div id="edit_overtime_app" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_notice_overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

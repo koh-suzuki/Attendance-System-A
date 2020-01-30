@@ -1,8 +1,8 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :edit_user_id, only: [:edit_overtime_app, :update_over_app]
-  before_action :set_attendance_id, only: [:edit_overtime_app, :update_over_app]
+  before_action :edit_user_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime, :update_notice_overtime]
+  before_action :set_attendance_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_overtime_app]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -74,11 +74,17 @@ class AttendancesController < ApplicationController
     @overtime.update(overtime_params)
     if @overtime.name.blank?
       flash[:danger] = "上長が選択されていません"
-      redirect_to @user
+      render edit_overtime_app
     else
       flash[:success] = "残業申請しました"
       redirect_to @user
     end
+  end
+  
+  def edit_notice_overtime
+  end
+  
+  def update_notice_overtime
   end
   
   def attendance_edit_log
