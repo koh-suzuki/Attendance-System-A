@@ -6,12 +6,12 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h1 class="modal-title">【<%= @overtime.name %>からの残業申請】</h1>
     </div>
 
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
+          <h3 class="modal-notice-title">【<%= @notice_user %>からの残業申請】</h3>
           <%= form_with(model: @overtime, url: user_attendance_update_over_app_path(@user, @overtime.id), local: true, method: :patch) do |f| %>
            <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
@@ -32,14 +32,10 @@
                 <td class= "<%= css_class(@overtime.worked_on) %>"><%= $days_of_the_week[@overtime.worked_on.wday] %></td>
                 <td><%= @overtime.endtime_at %></td>
                 <td><%= format_basic_info(@user.designated_work_end_time) %></td>
-                <td>
-                  <% if day.endtime_at.present? && day.finished_at.present? %>
-                    <%= format("%.2f", Time.at(work_end_time(day)).utc.strftime('%H')) %>
-                  <% end %>
-                </td>
                 <td><%=  %></td>
                 <td><%=  %></td>
                 <td><%=  %></td>
+                <td><%= f.submit "確認", class: "btn btn-primary btn-md" %></td>
               </tr>
             </tbody>
           </table>
