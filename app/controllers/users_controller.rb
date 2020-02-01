@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :set_notice, only: [:show]
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update, :edit_basic_info]
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info]
@@ -60,7 +61,7 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @notice_overtime_sum = @attendances.where.not(endtime_at: params[:endtime_at]).count
+    @notice_overtime_sum = @user.attendances.where.not(endtime_at: :endtime_at).count
   end
   
   def admin_or_correct_user
