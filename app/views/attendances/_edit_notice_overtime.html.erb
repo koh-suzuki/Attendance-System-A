@@ -11,8 +11,8 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-          <h3 class="modal-notice-title">【<%= @notice_user %>からの残業申請】</h3>
-          <%= form_with(model: @overtime, url: user_attendance_update_over_app_path(@user, @overtime), local: true, method: :patch) do |f| %>
+          <h3 class="modal-notice-title">【<%= @user.name %>からの残業申請】</h3>
+          <%= form_with(model: @overtime, url: user_attendance_update_notice_overtime_path(@user, @overtime), local: true, method: :patch) do |f| %>
            <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
               <tr>
@@ -30,11 +30,11 @@
               <tr>
                 <td><%= l(@overtime.worked_on, format: :short) %></td>
                 <td class= "<%= css_class(@overtime.worked_on) %>"><%= $days_of_the_week[@overtime.worked_on.wday] %></td>
-                <td><%= @overtime.endtime_at %></td>
+                <td><%= l(@overtime.endtime_at, format: :time) %></td>
                 <td><%= format_basic_info(@user.designated_work_end_time) %></td>
                 <td><%=  %></td>
-                <td><%=  %></td>
-                <td><%=  %></td>
+                <td><%= @overtime.overtime_memo %></td>
+                <td><%= @overtime.name %></td>
                 <td><%= f.submit "確認", class: "btn btn-primary btn-md" %></td>
               </tr>
             </tbody>

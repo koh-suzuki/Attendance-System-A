@@ -39,6 +39,7 @@
         <% else %>
           <p class="not_notice">【所属長承認申請のお知らせ】</p>
         <% end %>
+        
         <% if current_user == "sample" %>
           <p class="notice">
             <%= link_to "【勤怠変更申請のお知らせ】", "#", :style=>"color:red;", class: "superior_tag" %>
@@ -47,9 +48,10 @@
         <% else %>
           <p class="not_notice">【勤怠変更申請のお知らせ】</p>
         <% end %>
-        <% if current_user %>
+        
+        <% if current_user.superior? %>
           <p class="notice">
-            <%= link_to "【残業申請のお知らせ】", user_attendance_edit_notice_overtime_path(@user, @user.user_id.@attendance), remote: true, class: "superior_tag" %>
+            <%= link_to "【残業申請のお知らせ】", user_attendance_edit_notice_overtime_path(@user, @attendance), remote: true, class: "superior_tag" %>
             <span><strong><%= "#{@notice_overtime_sum}件の通知があります" %></strong></span>
           </p>
         <% else %>
