@@ -83,12 +83,11 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    # @attendance = Attendance.find(params[:id])
-    # @at_endtimes = Attendances.where(endtime_at: :endtime_at)
+    @users = User.all
+    @users_notice = @user.attendances.where.not(endtime_at: :not)
   end
   
   def update_notice_overtime
-    # @attendance = Attendance.find(params[:id])
   end
   
   def attendance_edit_log
