@@ -61,7 +61,6 @@ class UsersController < ApplicationController
 
   def show
     @users = User.all
-    @attendance = @user.attendances.find(params[:id])
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
   

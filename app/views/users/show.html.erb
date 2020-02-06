@@ -51,17 +51,22 @@
         
         <% if current_user.superior? %>
           <% @users.each do |user| %>
-            <% if current_user.superior == user.superior %>
-              <% @attendances = Attendance.where(user_id: user.id) %>
-              <% @notice_overtime_sum = @attendances.where.not(endtime_at: nil).count %>
-              <p class="notice">
-                <%= link_to "【残業申請のお知らせ】", user_attendance_edit_notice_overtime_path(user, @attendance), remote: true, class: "superior_tag" %>
-                <span>
-                  <strong>
-                      <%= "#{@notice_overtime_sum}件の通知があります" %>
-                  </strong>
-                </span>
-              </p>
+            <% @at_users = Attendance.where(user_id: user.id) %>
+            <% @at_users.each do |at| %>
+              <% if at.user_id == current_user.id %>
+                <% if at.endtime_at %>
+                  <p class="notice">
+                    <%= link_to "【残業申請のお知らせ】", user_attendance_edit_notice_overtime_path(user, at), remote: true, class: "superior_tag" %>
+                    <span>
+                      <strong>
+                        <% @notice_overtime_sum = @attendances.where.not(endtime_at: nil).count %>
+                        <%= "#{@notice_overtime_sum}件の通知があります" %>
+                      </strong>
+                    </span>
+                  </p>
+                  <% break %>
+                <% end %>
+              <% end %>
             <% end %>
           <% end %>
         <% else %>
