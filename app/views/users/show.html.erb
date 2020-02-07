@@ -59,8 +59,9 @@
                     <%= link_to "【残業申請のお知らせ】", user_attendance_edit_notice_overtime_path(user, at), remote: true, class: "superior_tag" %>
                     <span>
                       <strong>
-                        <% @notice_overtime_sum = @attendances.where.not(endtime_at: nil).count %>
-                        <%= "#{@notice_overtime_sum}件の通知があります" %>
+                        <% @notices = Attendance.where.not(endtime_at: nil) %>
+                        <% @notice_sum = @notices.where.not(user_id: at).count %>
+                        <%= "#{@notice_sum}件の通知があります" %>
                       </strong>
                     </span>
                   </p>

@@ -54,6 +54,12 @@
               <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
              </div>
             <% end %>
+            
+            <% @users.each do |user| %>
+              <% @attendances = Attendance.where(user_id: user.id) %>
+              <% @at = @attendances.where.not(endtime_at: nil) %>
+                <%= @at.count %>
+            <% end %>
         </div>
       </div>
     </div>
