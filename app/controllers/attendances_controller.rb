@@ -84,7 +84,7 @@ class AttendancesController < ApplicationController
   
   def edit_notice_overtime
     @users = User.all
-    @users_notice = @user.attendances.where.not(endtime_at: :not)
+    @users_notice = @user.attendances.where.not(endtime_at: :nil)
   end
   
   def update_notice_overtime
@@ -101,7 +101,7 @@ class AttendancesController < ApplicationController
     end
     
     def overtime_params
-      params.require(:attendance).permit(:tommorow_index, :overtime_memo, :name)
+      params.require(:attendance).permit(:tommorow_index, :overtime_memo, :name, :suppoter)
     end
     
     def admin_or_correct_user
