@@ -13,13 +13,13 @@ class ApplicationController < ActionController::Base
   
   # user_id専用
   def edit_user_id
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:id])
   end
   
   #attendance_id専用
-  def set_attendance_id
-    @overtime = Attendance.find(params[:attendance_id])
-  end
+  # def set_attendance_id
+  #   @overtime = Attendance.find(params[:attendance_id])
+  # end
 
   # def set_notice
   #   @attendance = @user.attendances.find(params[:id])

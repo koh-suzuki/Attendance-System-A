@@ -3,7 +3,7 @@ class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month]
   before_action :edit_user_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime, :update_notice_overtime]
   # before_action :set_notice, only: [:edit_notice_overtime]
-  before_action :set_attendance_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime,]
+  # before_action :set_attendance_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime,]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_overtime_app, :edit_notice_overtime, :update_notice_overtime]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -83,8 +83,9 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    @users = User.all
-    @users_notice = @user.attendances.where.not(endtime_at: :nil)
+    @attendances = Attendance.where(endtime_at: nil).includes(:user)
+    @attendances_user_name = Attendance.where(endtime_at: nil).pluck(:user_id).uniq
+    @attendances_user = User.where(id: @attendances_user_name)
   end
   
   def update_notice_overtime

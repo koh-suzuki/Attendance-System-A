@@ -48,26 +48,15 @@
         <% else %>
           <p class="not_notice">【勤怠変更申請のお知らせ】</p>
         <% end %>
-        
-        <% if current_user.superior? %>
-          <% @users.each do |user| %>
-            <% @attendances_id = Attendance.where(user_id: user.id) %>
-            <% @attendances_id.each do |at| %>
-              <% if at.name %>
+        <% if current_user.superior? && @attendances_list.present? %>
                 <p class="notice">
-                  <%= link_to "【残業申請のお知らせ】", user_attendance_edit_notice_overtime_path(user, at), remote: true, class: "superior_tag" %>
-                  <span>
-                    <strong>
-                      <% @notices = Attendance.where.not(endtime_at: nil) %>
-                      <% @notice_sum = @notices.where.not(user_id: at).count %>
-                      <%= "#{@notice_sum}件の通知があります" %>
-                    </strong>
-                  </span>
+                  <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, class: "superior_tag" %>
+                  <!--<span>-->
+                  <!--  <strong>-->
+                  
+                  <!--  </strong>-->
+                  <!--</span>-->
                 </p>
-              <% break %>
-              <% end %>
-            <% end %>
-          <% end %>
         <% else %>
             <p class="not_notice">【残業申請のお知らせ】</p>
         <% end %>
