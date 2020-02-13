@@ -2,18 +2,23 @@
 
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
+    <% @users = User.all %>
+    <% @users.each do |user| %>
+      <% @notice_users = User.where(user_id: user.id) %>
+      <% @notice_at_lists = Attendance.where.not(endtime_at: nil).where(user_id: @notice_users) %>
+        <% @notice_at_lists.each do |at_user| %>
+          <h3 class="modal-title">【<%= at_user.name %>】からの残業申請</h1>
+        <% end %>
+        
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-
+      
     <div class="modal-body">
       <div class="row">
-        <% @attendances_user_name.each do |at_user| %>
         <div class="col-md-12">
-          <%= @at_user_count = @attendances_user.count - 1 %>
-          <% end %>
            <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
               <tr>
@@ -28,42 +33,40 @@
                 <th>勤怠を確認する</th>
               </tr>
             </thead>
-            <% @attendances.each do |attendance| %>
-            <tbody>
-              <div>
+            
+            <% @notice_attendances.each do |attendance| %>
+              <tbody>
+                <div>
                   <tr>
                     <%= form_with(model: @overtime, url: attendances_update_notice_overtime_user_path(attendance), local: true, method: :patch) do |f| %>
-                    <td><%= l(attendance.worked_on, format: :short) %></td>
-                    <td class = "<%= css_class(attendance.worked_on) %>"><%= $days_of_the_week[attendance.worked_on.wday] %></td>
-                    <td>
-                      <% if attendance.tommorow_index == true %>
-                        <%= attendance.endtime_at.tomorrow.strftime("%H") if attendance.endtime_at.present? %>
-                     <% else %>
-                        <%= attendance.endtime_at.strftime("%H") if attendance.endtime_at.present? %>
-                      <% end %>
-                    </td>
-                    <td><%= format_basic_info(@user.designated_work_end_time) %></td>
-                    <td>
-                      <% if attendance.endtime_at.present? && attendance.finished_at.present? %>
-                        <%= format("%.2f", Time.at(work_end_time(attendance)).utc.strftime('%H')) %>
-                      <% end %>
-                    </td>
-                    <td><%= attendance.try(:overtime_memo) %></td>
-                    <td><%= "申請中：#{attendance.name}" if attendance.name.present? %></td>
-                    <td></td>
-                    <td><%  %></td>
-                  </tr>
-                    <div class="center">
-                      <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
-                    </div>
+                      <td><%= l(attendance.worked_on, format: :short) %></td>
+                      <td class = "<%= css_class(attendance.worked_on) %>"><%= $days_of_the_week[attendance.worked_on.wday] %></td>
+                      <td>
+                        <% if attendance.tommorow_index == true %>
+                          <%= attendance.endtime_at.tomorrow.strftime("%H") if attendance.endtime_at.present? %>
+                        <% else %>
+                          <%= attendance.endtime_at.strftime("%H") if attendance.endtime_at.present? %>
+                        <% end %>
+                      </td>
+                      <td><%= format_basic_info(@user.designated_work_end_time) %></td>
+                      <td>
+                        <% if attendance.endtime_at.present? && attendance.finished_at.present? %>
+                          <%= format("%.2f", Time.at(work_end_time(attendance)).utc.strftime('%H')) %>
+                        <% end %>
+                      </td>
+                      <td><%= attendance.try(:overtime_memo) %></td>
+                      <td><%= "申請中：#{attendance.name}" if attendance.name.present? %></td>
+                      <td></td>
+                      <td></td>
                     <% end %>
+                  </tr>
                 </div>
               </tbody>
             <% end %>
            </table>
         </div>
-        <% end %>
       </div>
     </div>
+    <% end %>
   </div>
 </div>
