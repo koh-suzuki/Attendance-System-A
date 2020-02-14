@@ -4,11 +4,16 @@
   <div class="modal-content">
     <% @users = User.all %>
     <% @users.each do |user| %>
-      <% @notice_users = User.where(user_id: user.id) %>
-      <% @notice_at_lists = Attendance.where.not(endtime_at: nil).where(user_id: @notice_users) %>
-        <% @notice_at_lists.each do |at_user| %>
-          <h3 class="modal-title">【<%= at_user.name %>】からの残業申請</h1>
-        <% end %>
+        <% @notice_at_lists = Attendance.where.not(endtime_at: nil) %>
+          <% @notice_at_lists.each do |at_user| %>
+            <% @notice_name_lists = Attendance.where(name: at_user.name) %>
+            <% @notice_name_lists.each do |n_user| %>
+              <% @notice_user_lists = User.includes(:attendances).where(id: n_user.user_id) %>
+              <% @notice_user_lists.each do |n_u|
+                <h3 class="modal-title">【<%= n_u.name %>】からの残業申請</h3>
+              <% end %>
+            <% end %>
+          <% end %>
         
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
