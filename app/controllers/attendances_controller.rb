@@ -58,9 +58,9 @@ class AttendancesController < ApplicationController
   end
   
    # 残業申請のモーダル
-   ## attendance_id は application_controller.rb
   def edit_overtime_app
     @today = Date.today
+    @overtime = Attendance.first
   end
   
   def update_over_app
@@ -104,6 +104,10 @@ class AttendancesController < ApplicationController
     def overtime_params
       params.require(:attendance).permit(:tommorow_index, :overtime_memo, :name, :suppoter)
     end
+    
+     def test_params
+      params.permit(:tommorow_index, :overtime_memo, :name, :suppoter)
+     end
     
     def admin_or_correct_user
       @user = User.find(params[:user_id]) if @user.blank?
