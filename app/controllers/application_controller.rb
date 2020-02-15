@@ -12,9 +12,9 @@ class ApplicationController < ActionController::Base
   end
   
   # user_id専用
-  def edit_user_id
-    @user = User.find(params[:user_id])
-  end
+  # def edit_user_id
+  #   @user = User.find(params[:user_id])
+  # end
   
   #attendance_id専用
   # def set_attendance_id
