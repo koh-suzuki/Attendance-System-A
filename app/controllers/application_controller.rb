@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   
   #attendance_id専用
   # def set_attendance_id
-  #   @attendance_ids = Attendance.find(params[:attendance_id])
+  #   @overtime = Attendance.find(params[:id])
   # end
 
   # def set_notice
@@ -66,4 +66,8 @@ class ApplicationController < ActionController::Base
     flash[:danger] = "ページ情報の取得に失敗しました、再アクセスしてください。"
     redirect_to root_url
   end
+  
+  # def set_one_day
+  #   @one_day = Attendance.find_by(user_id: @user.id)
+  # end
 end

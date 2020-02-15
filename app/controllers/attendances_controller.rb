@@ -60,7 +60,7 @@ class AttendancesController < ApplicationController
    # 残業申請のモーダル
   def edit_overtime_app
     @today = Date.today
-    @overtime = Attendance.first
+    @overtime = Attendance.find_by(params[:id])
   end
   
   def update_over_app
