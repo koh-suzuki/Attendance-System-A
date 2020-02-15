@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
-  # before_action :set_notice, only: [:show]
+  # before_action :edit_user_id, only: :show
+  # before_action :set_attendance_id, only: :show
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update, :edit_basic_info]
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info]
@@ -60,8 +61,6 @@ class UsersController < ApplicationController
   end
 
   def show
-    @users = User.all
-    @user = @users.find(params[:id])
     @attendances_list = Attendance.where(name: current_user.name).where.not(user_id: params[:id])
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
