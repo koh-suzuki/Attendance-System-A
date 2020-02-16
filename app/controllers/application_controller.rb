@@ -67,7 +67,23 @@ class ApplicationController < ActionController::Base
     redirect_to root_url
   end
   
-  # def set_one_day
-  #   @one_day = Attendance.find_by(user_id: @user.id)
-  # end
+  def set_one_day
+    @user = User.find(params[:id])
+    @beginning_of_day = params[:day].nil? ? Date.current.beginning_of_day : params[:day].to_date
+    one_day = [@beginning_of_day] # 対象の日付を代入します。
+    # ユーザーに紐付く一ヶ月分のレコードを検索し取得します。
+    @days = @user.attendances.where(worked_on: @beginning_of_day)
+
+    unless one_day.count == @days.count # それぞれの件数（日）が一致するか評価します。
+      ActiveRecord::Base.transaction do # トランザクションを開始します。
+        # 繰り返し処理により、1ヶ月分の勤怠データを生成します。
+        one_day.each { |day| @user.attendances.create!(worked_on: day) }
+      end
+    @days = @user.attendances.where(worked_on: @beginning_of_day)
+    end
+
+  rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
+    flash[:danger] = "ページ情報の取得に失敗しました、再アクセスしてください。"
+    redirect_to root_url
+  end
 end

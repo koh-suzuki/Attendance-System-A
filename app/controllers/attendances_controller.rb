@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month]
-  # before_action :edit_user_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime, :update_notice_overtime]
+  before_action :set_one_day, only: [:edit_overtime_app, :update_over_app]
   # before_action :set_notice, only: [:edit_notice_overtime]
   # before_action :set_attendance_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime,]
   before_action :logged_in_user, only: [:update, :edit_one_month]
@@ -60,7 +60,6 @@ class AttendancesController < ApplicationController
    # 残業申請のモーダル
   def edit_overtime_app
     @today = Date.today
-    @overtime = Attendance.find_by(params[:id])
   end
   
   def update_over_app

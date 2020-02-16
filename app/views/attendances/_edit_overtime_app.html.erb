@@ -25,7 +25,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @attendances.each do |day| %>
+                  <% @days.each do |day| %>
                   <tr>
                     <td><%= l(day.worked_on, format: :short) %></td>
                     <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
