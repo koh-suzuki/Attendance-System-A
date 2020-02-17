@@ -1,11 +1,10 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :set_one_day, only: [:edit_overtime_app, :update_over_app]
-  # before_action :set_notice, only: [:edit_notice_overtime]
-  # before_action :set_attendance_id, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime,]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
+  # before_action :set_one_day, only: [:edit_overtime_app, :update_over_app]
+  before_action :set_attendance, only: [:edit_overtime_app]
   before_action :logged_in_user, only: [:update, :edit_one_month]
-  before_action :set_one_month, only: [:edit_one_month, :edit_overtime_app, :edit_notice_overtime, :update_notice_overtime]
+  before_action :set_one_month, only: [:edit_one_month, :edit_notice_overtime, :update_notice_overtime]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   require 'csv'
   require 'rails/all'
@@ -59,7 +58,9 @@ class AttendancesController < ApplicationController
   
    # 残業申請のモーダル
   def edit_overtime_app
+    @attendances = Attendance.where(id: params[:id], user_id: params[:user_id])
     @today = Date.today
+    # @overtime = Attendance.find_by(user_id: user, worked_on: day)
   end
   
   def update_over_app

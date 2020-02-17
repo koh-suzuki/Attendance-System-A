@@ -48,6 +48,7 @@
         <% else %>
           <p class="not_notice">【勤怠変更申請のお知らせ】</p>
         <% end %>
+        
         <% if current_user.superior? && @attendances_list.present? %>
                 <p class="notice">
                   <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, class: "superior_tag" %>
@@ -106,7 +107,7 @@
         <% @attendances.each do |day| %>
           <tr>
             <td>
-              <%= link_to "残業申請", attendances_edit_overtime_app_user_path(@user), remote: true, class: "btn btn-primary btn-md" %>
+              <%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %>
             </td>
             <td><%= l(day.worked_on, format: :short) %></td>
             <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>

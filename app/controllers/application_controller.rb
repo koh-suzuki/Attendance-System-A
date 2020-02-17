@@ -11,20 +11,10 @@ class ApplicationController < ActionController::Base
     @user = User.find(params[:id])
   end
   
-  # user_id専用
-  # def edit_user_id
-  #   @user = User.find(params[:user_id])
-  # end
+  def set_attendance
+    @user = User.find(params[:user_id])
+  end
   
-  #attendance_id専用
-  # def set_attendance_id
-  #   @overtime = Attendance.find(params[:id])
-  # end
-
-  # def set_notice
-  #   @attendance = @user.attendances.find(params[:id])
-  # end
-
   # ログイン済みのユーザーか確認します。
   def logged_in_user
     unless logged_in?
@@ -60,26 +50,6 @@ class ApplicationController < ActionController::Base
         one_month.each { |day| @user.attendances.create!(worked_on: day) }
       end
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
-    end
-
-  rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
-    flash[:danger] = "ページ情報の取得に失敗しました、再アクセスしてください。"
-    redirect_to root_url
-  end
-  
-  def set_one_day
-    @user = User.find(params[:id])
-    @beginning_of_day = params[:day].nil? ? Date.current.beginning_of_day : params[:day].to_date
-    one_day = [@beginning_of_day] # 対象の日付を代入します。
-    # ユーザーに紐付く一ヶ月分のレコードを検索し取得します。
-    @days = @user.attendances.where(worked_on: @beginning_of_day)
-
-    unless one_day.count == @days.count # それぞれの件数（日）が一致するか評価します。
-      ActiveRecord::Base.transaction do # トランザクションを開始します。
-        # 繰り返し処理により、1ヶ月分の勤怠データを生成します。
-        one_day.each { |day| @user.attendances.create!(worked_on: day) }
-      end
-    @days = @user.attendances.where(worked_on: @beginning_of_day)
     end
 
   rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。

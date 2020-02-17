@@ -12,7 +12,6 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-            <%= form_with(url: update_over_app_user_path(current_user), local: true, method: :patch) do |f| %>
                <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
                 <thead>
                   <tr>
@@ -25,7 +24,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @days.each do |day| %>
+                  <% @attendances.each do |day| %>
+                  <%= form_with(model: @attendances, url: update_over_app_user_attendance_path(@user, day), local: true, method: :patch) do |f| %>
                   <tr>
                     <td><%= l(day.worked_on, format: :short) %></td>
                     <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
@@ -34,12 +34,12 @@
                     <td><%= f.text_field :overtime_memo, :size => "20", class: "form-control" %></td>
                     <td><%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
                   </tr>
-                  <% end %>
                 </tbody>
               </table>
             <div class="center">
               <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
             </div>
+            <% end %>
             <% end %>
         </div>
       </div>
