@@ -83,9 +83,10 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    @notice_attendances = Attendance.where.not(endtime_at: nil).includes(:user)
-    @attendances_user_name = Attendance.where(endtime_at: nil).pluck(:user_id).uniq
-    @attendances_user = User.where(id: @attendances_user_name)
+    @endtime_tests = Attendance.where.not(endtime_at: nil)
+    # @notice_attendances = Attendance.where.not(endtime_at: nil).includes(:user)
+    # @attendances_user_name = Attendance.where(endtime_at: nil).pluck(:user_id).uniq
+    # @attendances_user = User.where(id: @attendances_user_name)
   end
   
   def update_notice_overtime
