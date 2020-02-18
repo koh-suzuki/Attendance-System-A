@@ -2,7 +2,7 @@ class AttendancesController < ApplicationController
   include AttendacesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
   # before_action :set_one_day, only: [:edit_overtime_app, :update_over_app]
-  before_action :set_attendance, only: [:edit_overtime_app]
+  before_action :set_attendance, only: [:edit_overtime_app, :update_over_app]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_notice_overtime, :update_notice_overtime]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -65,15 +65,15 @@ class AttendancesController < ApplicationController
   
   def update_over_app
     @worktime = @user.designated_work_end_time
-    @overtime.update(endtime_at: DateTime.new(
+    @attendances.update(endtime_at: DateTime.new(
         params[:attendance]["endtime_at(1i)"].to_i,
         params[:attendance]["endtime_at(2i)"].to_i,
         params[:attendance]["endtime_at(3i)"].to_i,
         params[:attendance]["endtime_at(4i)"].to_i,
         params[:attendance]["endtime_at(5i)"].to_i
         ) - 9.hours)
-    @overtime.update(overtime_params)
-    if @overtime.name.blank?
+    @attendances.update(overtime_params)
+    if @attendances.name.blank?
       flash[:danger] = "上長が選択されていません"
       render edit_overtime_app
     else
@@ -83,7 +83,7 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    @endtime_tests = Attendance.where.not(endtime_at: nil)
+    @endtime_tests = Attendance.where(name: @user.name)
     # @notice_attendances = Attendance.where.not(endtime_at: nil).includes(:user)
     # @attendances_user_name = Attendance.where(endtime_at: nil).pluck(:user_id).uniq
     # @attendances_user = User.where(id: @attendances_user_name)
