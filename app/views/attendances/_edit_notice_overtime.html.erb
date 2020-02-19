@@ -3,64 +3,73 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <% @endtime_tests.each do |end_test| %>
-      <% @users = User.where(id: end_test.user_id) %>
-      <% @users.each do |user| %>
-        <div class="modal-header">
-          <h3 class="modal-title">【<%= user.name %>】からの残業申請</h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-          
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-               <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
-                <thead>
-                  <tr>
-                    <th>日付</th>
-                    <th>曜日</th>
-                    <th>終了予定時間</th>
-                    <th>指定勤務終了時間</th>
-                    <th>時間外時間</th>
-                    <th>業務処理内容</th>
-                    <th>指示者確認㊞</th>
-                    <th>変更</th>
-                    <th>勤怠を確認する</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <div>
-                      <tr>
-                        <%= form_with(model: @overtime, url: attendances_update_notice_overtime_user_path(end_test), local: true, method: :patch) do |f| %>
-                          <td><%= l(end_test.worked_on, format: :short) %></td>
-                          <td class = "<%= css_class(end_test.worked_on) %>"><%= $days_of_the_week[end_test.worked_on.wday] %></td>
-                          <td>
-                            <% if end_test.tommorow_index == true %>
-                              <%= end_test.endtime_at.tomorrow.strftime("%H") if end_test.endtime_at.present? %>
-                            <% else %>
-                              <%= end_test.endtime_at.strftime("%H") if end_test.endtime_at.present? %>
-                            <% end %>
-                          </td>
-                          <td><%= format_basic_info(@user.designated_work_end_time) %></td>
-                          <td>
-                            <% if end_test.endtime_at.present? && end_test.finished_at.present? %>
-                              <%= format("%.2f", Time.at(work_end_time(end_test)).utc.strftime('%H')) %>
-                            <% end %>
-                          </td>
-                          <td><%= end_test.try(:overtime_memo) %></td>
-                          <td><%= "申請中：#{end_test.name}" if end_test.name.present? %></td>
-                          <td></td>
-                          <td></td>
-                        <% end %>
-                      </tr>
-                    </div>
-                  </tbody>
-               </table>
+      <% @notice_users = User.where(name: end_test.name) %>
+        <% @notice_users.each do |user| %>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h1 class="modal-title">【<%= user.name %>】からの残業申請</h1>
+          </div>
+        <% end %>
+              
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                 <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+                  <thead>
+                    <tr>
+                      <th>日付</th>
+                      <th>曜日</th>
+                      <th>終了予定時間</th>
+                      <th>指定勤務終了時間</th>
+                      <th>時間外時間</th>
+                      <th>業務処理内容</th>
+                      <th>指示者確認㊞</th>
+                      <th>変更</th>
+                      <th>勤怠を確認する</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <div>
+                        <tr>
+                          <%= form_with(model: @overtime, url: attendances_update_notice_overtime_user_path(end_test), local: true, method: :patch) do |f| %>
+                            <!-- 日付 -->
+                            <td><%= l(end_test.worked_on, format: :short) %></td>
+                            <!-- 曜日 -->
+                            <td class = "<%= css_class(end_test.worked_on) %>"><%= $days_of_the_week[end_test.worked_on.wday] %></td>
+                            <!-- 終了予定時間 -->
+                            <td>
+                              <% if end_test.tommorow_index == true %>
+                                <%= end_test.endtime_at.tomorrow.strftime("%H") if end_test.endtime_at.present? %>
+                              <% else %>
+                                <%= end_test.endtime_at.strftime("%H") if end_test.endtime_at.present? %>
+                              <% end %>
+                            </td>
+                            <!-- 指定勤務終了時間 -->
+                            <td><%= format_basic_info(@user.designated_work_end_time) %></td>
+                            <!-- 時間外時間 -->
+                            <td>
+                              <% if end_test.endtime_at.present? && end_test.finished_at.present? %>
+                                <%= format("%.2f", Time.at(work_end_time(end_test)).utc.strftime('%H')) %>
+                              <% end %>
+                            </td>
+                            <!-- 業務処理内容 -->
+                            <td><%= end_test.try(:overtime_memo) %></td>
+                            <!-- 指示者確認㊞ -->
+                            <td><%= "申請中：#{end_test.name}" if end_test.name.present? %></td>
+                            <!-- 変更 -->
+                            <td></td>
+                            <!-- 勤怠を確認する -->
+                            <td></td>
+                          <% end %>
+                        </tr>
+                      </div>
+                    </tbody>
+                 </table>
+              </div>
             </div>
           </div>
-        </div>
-      <% end %>
     <% end %>
   </div>
 </div>
