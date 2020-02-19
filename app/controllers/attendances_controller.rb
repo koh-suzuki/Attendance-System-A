@@ -1,7 +1,6 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
-  # before_action :set_one_day, only: [:edit_overtime_app, :update_over_app]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_notice_overtime, :update_notice_overtime]
@@ -60,20 +59,14 @@ class AttendancesController < ApplicationController
   def edit_overtime_app
     @attendances = Attendance.where(id: params[:id], user_id: params[:user_id])
     @today = Date.today
-    # @overtime = Attendance.find_by(user_id: user, worked_on: day)
   end
   
   def update_over_app
     @worktime = @user.designated_work_end_time
-    # @attendances.update(endtime_at: DateTime.new(
-    #     params[:attendance]["endtime_at(1i)"].to_i,
-    #     params[:attendance]["endtime_at(2i)"].to_i,
-    #     params[:attendance]["endtime_at(3i)"].to_i,
-    #     params[:attendance]["endtime_at(4i)"].to_i,
-    #     params[:attendance]["endtime_at(5i)"].to_i
-    #     ) - 9.hours)
-    @user.update(overtime_params)
-    if @user.name.blank?
+    # 残業申請の更新処理
+    @attendance = Attendance.find(params[:id])
+    @attendance.update(overtime_params)
+    if @attendance.name.blank?
       flash[:danger] = "上長が選択されていません"
       render edit_overtime_app
     else
@@ -103,7 +96,7 @@ class AttendancesController < ApplicationController
     end
     
     def overtime_params
-      params.require(:user).permit(attendances:[:endtime_at, :tommorow_index, :overtime_memo, :name, :suppoter])
+      params.require(:attendance).permit(:endtime_at, :tommorow_index, :overtime_memo, :name)
     end
     
      def test_params
