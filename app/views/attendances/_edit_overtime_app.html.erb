@@ -9,7 +9,7 @@
       <h1 class="modal-title">【残業申請】</h1>
     </div>
     <% @attendances.each do |day| %>
-      <%= form_with(model: [@attendances, @user], url: update_over_app_user_attendance_path(@user, day), local: true, method: :patch) do |f| %>
+      <%= form_with(model: @attendances, url: update_over_app_user_attendance_path(@user, day), local: true, method: :patch) do |f| %>
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">

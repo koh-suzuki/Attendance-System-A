@@ -65,15 +65,15 @@ class AttendancesController < ApplicationController
   
   def update_over_app
     @worktime = @user.designated_work_end_time
-    @attendances.update(endtime_at: DateTime.new(
-        params[:attendance]["endtime_at(1i)"].to_i,
-        params[:attendance]["endtime_at(2i)"].to_i,
-        params[:attendance]["endtime_at(3i)"].to_i,
-        params[:attendance]["endtime_at(4i)"].to_i,
-        params[:attendance]["endtime_at(5i)"].to_i
-        ) - 9.hours)
-    @attendances.update(overtime_params)
-    if @attendances.name.blank?
+    # @attendances.update(endtime_at: DateTime.new(
+    #     params[:attendance]["endtime_at(1i)"].to_i,
+    #     params[:attendance]["endtime_at(2i)"].to_i,
+    #     params[:attendance]["endtime_at(3i)"].to_i,
+    #     params[:attendance]["endtime_at(4i)"].to_i,
+    #     params[:attendance]["endtime_at(5i)"].to_i
+    #     ) - 9.hours)
+    @user.update(overtime_params)
+    if @user.name.blank?
       flash[:danger] = "上長が選択されていません"
       render edit_overtime_app
     else
@@ -103,7 +103,7 @@ class AttendancesController < ApplicationController
     end
     
     def overtime_params
-      params.require(:attendance).permit(:tommorow_index, :overtime_memo, :name, :suppoter)
+      params.require(:user).permit(attendances:[:endtime_at, :tommorow_index, :overtime_memo, :name, :suppoter])
     end
     
      def test_params
