@@ -76,9 +76,8 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    @endtime_tests = User.where(id: Attendance.where(name: @user.name).select(:user_id))
-    @attendance_lists = Attendance.where(name: @user.name).select(:user_id)
-    byrbug
+    @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
+    @attendance_lists = Attendance.where(name: @user.name)
   end
   
   def update_notice_overtime

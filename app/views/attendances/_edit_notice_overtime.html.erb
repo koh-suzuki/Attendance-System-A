@@ -2,76 +2,71 @@
 
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
-    <% @endtime_tests.each do |end_test| %>
-      <% @notice_users = User.where(name: end_test.name) %>
-      <% @notice_users.each do |user| %>
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h1 class="modal-title">【<%= user.name %>】からの残業申請</h1>
-        </div>
-      
-              
-            
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12">
-                 <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
-                  <thead>
+    <% @notice_users.each do |user| %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h1 class="modal-title">【<%= user.name %>】からの残業申請</h1>
+      </div>
+    
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+             <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>曜日</th>
+                  <th>終了予定時間</th>
+                  <th>指定勤務終了時間</th>
+                  <th>時間外時間</th>
+                  <th>業務処理内容</th>
+                  <th>指示者確認㊞</th>
+                  <th>変更</th>
+                  <th>勤怠を確認する</th>
+                </tr>
+              </thead>
+              <% @attendance_lists.each do |attendance| %>
+                <tbody>
+                  <div>
                     <tr>
-                      <th>日付</th>
-                      <th>曜日</th>
-                      <th>終了予定時間</th>
-                      <th>指定勤務終了時間</th>
-                      <th>時間外時間</th>
-                      <th>業務処理内容</th>
-                      <th>指示者確認㊞</th>
-                      <th>変更</th>
-                      <th>勤怠を確認する</th>
+                      <!-- 日付 -->
+                      <td><%= l(attendance.worked_on, format: :short) %></td>
+                        <!-- 曜日 -->
+                        <td class = "<%= css_class(attendance.worked_on) %>"><%= $days_of_the_week[attendance.worked_on.wday] %></td>
+                        <!-- 終了予定時間 -->
+                        <td>
+                          <% if attendance.tommorow_index == true %>
+                            <%= attendance.endtime_at.tomorrow.strftime("%H") if attendance.endtime_at.present? %>
+                          <% else %>
+                            <%= attendance.endtime_at.strftime("%H") if attendance.endtime_at.present? %>
+                          <% end %>
+                        </td>
+                        <!-- 指定勤務終了時間 -->
+                        <td><%= format_basic_info(@user.designated_work_end_time) %></td>
+                        <!-- 時間外時間 -->
+                        <td>
+                          <% if attendance.endtime_at.present? && attendance.finished_at.present? %>
+                            <%= format("%.2f", Time.at(work_end_time(attendance)).utc.strftime('%H')) %>
+                          <% end %>
+                        </td>
+                        <!-- 業務処理内容 -->
+                        <td><%= attendance.try(:overtime_memo) %></td>
+                        <!-- 指示者確認㊞ -->
+                        <td><%= "申請中：#{attendance.name}" if attendance.name.present? %></td>
+                        <!-- 変更 -->
+                        <td></td>
+                        <!-- 勤怠を確認する -->
+                        <td></td>
                     </tr>
-                  </thead>
-                  <% @attendance_lists.each do |attendance| %>
-                    <tbody>
-                      <div>
-                        <tr>
-                          <!-- 日付 -->
-                          <td><%= l(attendance.worked_on, format: :short) %></td>
-                            <!-- 曜日 -->
-                            <td class = "<%= css_class(attendance.worked_on) %>"><%= $days_of_the_week[attendance.worked_on.wday] %></td>
-                            <!-- 終了予定時間 -->
-                            <td>
-                              <% if attendance.tommorow_index == true %>
-                                <%= attendance.endtime_at.tomorrow.strftime("%H") if attendance.endtime_at.present? %>
-                              <% else %>
-                                <%= attendance.endtime_at.strftime("%H") if attendance.endtime_at.present? %>
-                              <% end %>
-                            </td>
-                            <!-- 指定勤務終了時間 -->
-                            <td><%= format_basic_info(@user.designated_work_end_time) %></td>
-                            <!-- 時間外時間 -->
-                            <td>
-                              <% if attendance.endtime_at.present? && attendance.finished_at.present? %>
-                                <%= format("%.2f", Time.at(work_end_time(attendance)).utc.strftime('%H')) %>
-                              <% end %>
-                            </td>
-                            <!-- 業務処理内容 -->
-                            <td><%= attendance.try(:overtime_memo) %></td>
-                            <!-- 指示者確認㊞ -->
-                            <td><%= "申請中：#{attendance.name}" if attendance.name.present? %></td>
-                            <!-- 変更 -->
-                            <td></td>
-                            <!-- 勤怠を確認する -->
-                            <td></td>
-                        </tr>
-                      </div>
-                    </tbody>
-                  <% end %>
-                 </table>
-              </div>
-            </div>
+                  </div>
+                </tbody>
+              <% end %>
+             </table>
           </div>
-      <% end %>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
