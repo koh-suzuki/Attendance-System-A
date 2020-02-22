@@ -55,7 +55,7 @@
                         <!-- 業務処理内容 -->
                         <td><%= att_notice.try(:overtime_memo) %></td>
                         <!-- 指示者確認㊞ -->
-                        <td><%= "申請中：#{att_notice.name}" if att_notice.name.present? %></td>
+                        <td><%= select :confirm, Attendance.confirms.keys.to_a, { include_blank: true } %></td>
                         <!-- 変更 -->
                         <td></td>
                         <!-- 勤怠を確認する -->
