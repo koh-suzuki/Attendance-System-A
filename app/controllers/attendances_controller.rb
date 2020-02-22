@@ -76,8 +76,13 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
+    # @notice_users = 上長の名前が「上長A」の全ての勤怠情報から
+    # user_idが同じ勤怠情報を取得して「attendancesのuser_id」と「usersのid」が
+    # 紐づいているidを全て取得
     @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
+    # @attendance_lists = 上長の名前が「上長A」の勤怠情報を全て取得
     @attendance_lists = Attendance.where(name: @user.name)
+    @users = User.all
   end
   
   def update_notice_overtime

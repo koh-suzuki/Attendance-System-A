@@ -27,34 +27,35 @@
                   <th>勤怠を確認する</th>
                 </tr>
               </thead>
-              <% @attendance_lists.each do |attendance| %>
+              <% @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil) %>
+              <% @attendance_notices.each do |att_notice| %>
                 <tbody>
                   <div>
                     <tr>
                       <!-- 日付 -->
-                      <td><%= l(attendance.worked_on, format: :short) %></td>
+                      <td><%= l(att_notice.worked_on, format: :short) %></td>
                         <!-- 曜日 -->
-                        <td class = "<%= css_class(attendance.worked_on) %>"><%= $days_of_the_week[attendance.worked_on.wday] %></td>
+                        <td class = "<%= css_class(att_notice.worked_on) %>"><%= $days_of_the_week[att_notice.worked_on.wday] %></td>
                         <!-- 終了予定時間 -->
                         <td>
-                          <% if attendance.tommorow_index == true %>
-                            <%= attendance.endtime_at.tomorrow.strftime("%H") if attendance.endtime_at.present? %>
+                          <% if att_notice.tommorow_index == true %>
+                            <%= att_notice.endtime_at.tomorrow.strftime("%H") if att_notice.endtime_at.present? %>
                           <% else %>
-                            <%= attendance.endtime_at.strftime("%H") if attendance.endtime_at.present? %>
+                            <%= att_notice.endtime_at.strftime("%H") if att_notice.endtime_at.present? %>
                           <% end %>
                         </td>
                         <!-- 指定勤務終了時間 -->
                         <td><%= format_basic_info(@user.designated_work_end_time) %></td>
                         <!-- 時間外時間 -->
                         <td>
-                          <% if attendance.endtime_at.present? && attendance.finished_at.present? %>
-                            <%= format("%.2f", Time.at(work_end_time(attendance)).utc.strftime('%H')) %>
+                          <% if att_notice.endtime_at.present? && att_notice.finished_at.present? %>
+                            <%= format("%.2f", Time.at(work_end_time(att_notice)).utc.strftime('%H')) %>
                           <% end %>
                         </td>
                         <!-- 業務処理内容 -->
-                        <td><%= attendance.try(:overtime_memo) %></td>
+                        <td><%= att_notice.try(:overtime_memo) %></td>
                         <!-- 指示者確認㊞ -->
-                        <td><%= "申請中：#{attendance.name}" if attendance.name.present? %></td>
+                        <td><%= "申請中：#{att_notice.name}" if att_notice.name.present? %></td>
                         <!-- 変更 -->
                         <td></td>
                         <!-- 勤怠を確認する -->
