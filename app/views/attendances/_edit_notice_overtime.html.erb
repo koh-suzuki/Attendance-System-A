@@ -7,7 +7,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h1 class="modal-title">【<%= user.name %>】からの残業申請</h1>
+        <h3 class="modal-title text-center">【<%= user.name %>】からの残業申請</h3>
       </div>
     
       <div class="modal-body">
@@ -55,11 +55,11 @@
                         <!-- 業務処理内容 -->
                         <td><%= att_notice.try(:overtime_memo) %></td>
                         <!-- 指示者確認㊞ -->
-                        <td><%= select :confirm, Attendance.confirms.keys.to_a, { include_blank: true } %></td>
+                        <td><%= select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
                         <!-- 変更 -->
-                        <td></td>
+                        <td><%= check_box_tag :change, 'true', 'false' %></td>
                         <!-- 勤怠を確認する -->
-                        <td></td>
+                        <td><%= submit_tag "確認", class: "btn btn-primary btn-md" %></td>
                     </tr>
                   </div>
                 </tbody>
@@ -69,5 +69,6 @@
         </div>
       </div>
     <% end %>
+    <div class="notice_update_submit"><%= submit_tag yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
   </div>
 </div>
