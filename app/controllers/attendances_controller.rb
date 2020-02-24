@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :update_notice_overtime]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_notice_overtime, :update_notice_overtime]
@@ -80,12 +80,10 @@ class AttendancesController < ApplicationController
     # user_idが同じ勤怠情報を取得して「attendancesのuser_id」と「usersのid」が
     # 紐づいているidを全て取得
     @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
-    # @attendance_lists = 上長の名前が「上長A」の勤怠情報を全て取得
-    @attendance_lists = Attendance.where(name: @user.name)
-    @users = User.all
   end
   
   def update_notice_overtime
+    byebug
   end
   
   def attendance_edit_log

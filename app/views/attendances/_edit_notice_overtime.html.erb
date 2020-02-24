@@ -2,6 +2,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
+    <%= form_with(model: @attendances, url: update_over_app_user_attendance_path(@user), local: true, method: :patch) do |f| %>
     <% @notice_users.each do |user| %>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -55,11 +56,11 @@
                         <!-- 業務処理内容 -->
                         <td><%= att_notice.try(:overtime_memo) %></td>
                         <!-- 指示者確認㊞ -->
-                        <td><%= select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
+                        <td><%= f.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
                         <!-- 変更 -->
-                        <td><%= check_box_tag :change, 'true', 'false' %></td>
+                        <td><%= f.check_box :change %></td>
                         <!-- 勤怠を確認する -->
-                        <td><%= submit_tag "確認", class: "btn btn-primary btn-md" %></td>
+                        <td><%= f.submit "確認", class: "btn btn-primary btn-md" %></td>
                     </tr>
                   </div>
                 </tbody>
@@ -70,5 +71,6 @@
       </div>
     <% end %>
     <div class="notice_update_submit"><%= submit_tag yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
+    <% end %>
   </div>
 </div>

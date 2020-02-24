@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20200222231542) do
     t.datetime "endtime_at"
     t.boolean "change"
     t.integer "suppoter"
-    t.integer "confirm"
+    t.integer "confirm", default: 0
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
