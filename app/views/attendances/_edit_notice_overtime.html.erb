@@ -58,9 +58,9 @@
                           <!-- 指示者確認㊞ -->
                           <td><%= f.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
                           <!-- 変更 -->
-                          <td><%= f.check_box :change %></td>
+                          <td><%= f.check_box :change, {class: "change"}, 'true', 'false' %></td>
                           <!-- 勤怠を確認する -->
-                          <td><%= submit_tag "確認", class: "btn btn-primary btn-md" %></td>
+                          <td><%= link_to "確認", "#", class: "btn btn-primary btn-md" %></td>
                       </tr>
                     </div>
                   </tbody>
