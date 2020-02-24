@@ -83,7 +83,6 @@ class AttendancesController < ApplicationController
   end
   
   def update_notice_overtime
-    byebug
   end
   
   def attendance_edit_log
