@@ -52,11 +52,11 @@
         <% if current_user.superior? && @attendances_list.present? %>
                 <p class="notice">
                   <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, class: "superior_tag" %>
-                  <!--<span>-->
-                  <!--  <strong>-->
-                  
-                  <!--  </strong>-->
-                  <!--</span>-->
+                  <span>
+                    <strong>
+                      <%= @attendance_notice_sum.count %>件の通知があります
+                    </strong>
+                  </span>
                 </p>
         <% else %>
             <p class="not_notice">【残業申請のお知らせ】</p>

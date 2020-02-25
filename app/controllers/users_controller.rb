@@ -63,6 +63,7 @@ class UsersController < ApplicationController
   def show
     @attendances_list = Attendance.where(name: current_user.name).where.not(user_id: params[:id])
     @worked_sum = @attendances.where.not(started_at: nil).count
+    @attendance_notice_sum = Attendance.where.not(endtime_at: nil)
   end
   
   def admin_or_correct_user

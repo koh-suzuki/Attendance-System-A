@@ -83,6 +83,15 @@ class AttendancesController < ApplicationController
   end
   
   def update_notice_overtime
+    @attendance = Attendance.find(params[:id])
+    @attendance.update(overtime_notice_params)
+    if @attendance.change.blank?
+      flash[:danger] = "変更にチェックを付けてください"
+      #error# 2/25:時点 モーダル表示に遷移できていません。
+    else
+      flash[:success] = "変更しました"
+    end
+    redirect_to @user
   end
   
   def attendance_edit_log
@@ -99,8 +108,8 @@ class AttendancesController < ApplicationController
       params.require(:attendance).permit(:endtime_at, :tommorow_index, :overtime_memo, :name)
     end
     
-     def test_params
-      params.permit(:tommorow_index, :overtime_memo, :name, :suppoter)
+     def overtime_notice_params
+      params.require(:attendance).permit(:confirm, :change)
      end
     
     def admin_or_correct_user
