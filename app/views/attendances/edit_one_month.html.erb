@@ -34,8 +34,13 @@
                   <%= working_time(day.started_at, day.finished_at) %>
                 <% end %>
               </td>
-              <td><%= attendance.text_field :note, class: "form-control" %></td>
-              <td><%= attendance.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
+              <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>
+                <td><%= attendance.text_field :note, readonly: true, class: "form-control" %></td>
+                <td><%= attendance.collection_select :name, User.where(superior: true), :name, :name, :prompt => {}, disabled: true %></td>
+              <% else %>
+                <td><%= attendance.text_field :note, class: "form-control" %></td>
+                <td><%= attendance.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
+              <% end %>
             </tr>
           <% end %>
         <% end %>
