@@ -31,7 +31,11 @@
                   <td><%= f.time_select :endtime_at, {}, class: 'form-control bootstrap-date' %></td>
                   <td><%= f.check_box :tommorow_index, {class: "tommorow_index"}, 'true', 'false' %></td>
                   <td><%= f.text_field :overtime_memo, :size => "20", class: "form-control" %></td>
-                  <td><%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
+                  <% unless current_user.superior? %>
+                    <td><%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
+                  <% else %>
+                    <td><%= f.collection_select :name, User.where.not(name: @user.name).where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
+                  <% end %>
                 </tr>
               </tbody>
             </table>
