@@ -9,6 +9,8 @@ class Attendance < ApplicationRecord
   validate :finished_at_is_invalid_without_a_started_at
   validate :started_at_than_finished_at_fast_if_invalid
   
+  # 残業申請お知らせモーダルの「変更」チェックがない場合は無効
+  # validate :change_is_invalid_no_check
 
   def finished_at_is_invalid_without_a_started_at
     errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present?
@@ -19,6 +21,10 @@ class Attendance < ApplicationRecord
       errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
     end
   end
+  
+  # def change_is_invalid_no_check
+  #   errors.add(:change, "変更にチェックを付けなければ無効です") if change.blank?
+  # end
   
   enum confirm: { "なし" => 1, "申請中" => 2, "承認" => 3, "否認" => 4 }
 

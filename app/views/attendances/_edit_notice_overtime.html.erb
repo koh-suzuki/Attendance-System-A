@@ -60,7 +60,7 @@
                           <!-- 変更 -->
                           <td><%= f.check_box :change, {class: "change"}, 'true', 'false' %></td>
                           <!-- 勤怠を確認する -->
-                          <td><%= link_to "確認", "#", class: "btn btn-primary btn-md" %></td>
+                          <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
                       </tr>
                     </div>
                   </tbody>
@@ -69,8 +69,8 @@
             </div>
           </div>
         </div>
-      <% end %><!-- @notice_users.each do |user|の「end」 -->
+      <% end %>
       <div class="notice_update_submit"><%= f.submit yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
-    <% end %><!-- form_withの「end」 -->
+    <% end %>
   </div>
 </div>

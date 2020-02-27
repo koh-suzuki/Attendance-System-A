@@ -26,6 +26,7 @@ module AttendacesHelper
     end
   end
   
+ 
   
    # 不正な値があるか確認する
   def attendances_invalid?

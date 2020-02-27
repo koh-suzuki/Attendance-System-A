@@ -3,13 +3,17 @@
   <div>
     <table class="table table-bordered table-condensed user-table" id="table-attendances">
       <tr>
-        <td>
-          <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
-          &emsp;&emsp;
-          <%= l(@first_day, format: :middle) %>&emsp;時間管理表
-          &emsp;&emsp;
-          <%= link_to "→︎", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
-        </td>
+        <% if current_user.superior? && @user.superior == false %>
+          <td><%= l(@first_day, format: :middle) %>&emsp;時間管理表</td>
+        <% else %>
+          <td>
+            <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
+            &emsp;&emsp;
+            <%= l(@first_day, format: :middle) %>&emsp;時間管理表
+            &emsp;&emsp;
+            <%= link_to "→︎", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
+          </td>
+        <% end %>
         <td rowspam="2">
           指定勤務開始時間　<%= format_basic_info(@user.designated_work_start_time) %></br>
           指定勤務終了時間　<%= format_basic_info(@user.designated_work_end_time) %>
@@ -29,7 +33,10 @@
     </table>
   </div>
   
-  <% if logged_in? && current_user.superior? %>
+    <% if logged_in? && current_user.superior? %>
+      <% if current_user.superior? && @user.superior == false  %>
+    
+      <% else %>
       <div class="superior">
         <% if current_user == "sample" %>
           <p class="notice">
@@ -54,7 +61,7 @@
                   <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, class: "superior_tag" %>
                   <span>
                     <strong>
-                      <%= @attendance_notice_sum.count %>件の通知があります
+                      <%= link_to "#{@attendance_notice_sum.count}件の通知があります", attendances_edit_notice_overtime_user_path(@user), remote: true, class: "superior_tag" %>
                     </strong>
                   </span>
                 </p>
@@ -62,22 +69,30 @@
             <p class="not_notice">【残業申請のお知らせ】</p>
         <% end %>
       </div>
-  <% end %>
-  
-  
-  <div class="btn-users-show">
-    <span><%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %></span>
-    <span><%= link_to "CSV出力", csv_output_attendances_path(format: :csv), class: "btn btn-primary" %></span></br>
-    <%= link_to "勤怠修正ログ（承認済）", attendances_attendance_edit_log_user_path(@user), class: "btn btn-primary" %>
-  </div>
+      <% end %>
+    <% end %>
+    
+    <% if current_user.superior? && @user.superior == false  %>
+    <% else %>
+    <div class="btn-users-show">
+      <span><%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %></span>
+      <span><%= link_to "CSV出力", csv_output_attendances_path(format: :csv), class: "btn btn-primary" %></span></br>
+      <%= link_to "勤怠修正ログ（承認済）", attendances_attendance_edit_log_user_path(@user), class: "btn btn-primary" %>
+    </div>
+    <% end %>
   
   <div>
     <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
       <thead>
         <tr>
-          <th rowspan="3">残業申請</th>
-          <th rowspan="3">日付</th>
-          <th rowspan="3">曜日</th>
+          <% if current_user.superior? && @user.superior == false  %>
+            <th rowspan="3" colspan="3">日付</th>
+            <th rowspan="3" colspan="3">曜日</th>
+          <% else %>
+            <th rowspan="3">残業申請</th>
+            <th rowspan="3">日付</th>
+            <th rowspan="3">曜日</th>
+          <% end %>
           <th colspan="7">【実績】</th>
           <th colspan="6">所定外勤務</th>
         </tr>
@@ -94,7 +109,11 @@
         <tr>
           <th>時</th>
           <th>分</th>
-          <th></th>
+          <% if current_user.superior? && @user.superior == false  %>
+            <th width="80px"></th>
+          <% else %>
+            <th></th>
+          <% end %>
           <th>時</th>
           <th>分</th>
           <th></th>
@@ -105,18 +124,27 @@
       <tbody>
         <% @attendances.each do |day| %>
           <tr>
-            <td>
-              <%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %>
-            </td>
-            <td><%= l(day.worked_on, format: :short) %></td>
-            <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+            <% if current_user.superior? && @user.superior == false  %>
+              <td colspan="3"><%= l(day.worked_on, format: :short) %></td>
+              <td colspan="3" class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+            <% else %>
+              <td>
+                <%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %>
+              </td>
+              <td><%= l(day.worked_on, format: :short) %></td>
+              <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+            <% end %>
             <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
             <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
-            <td>
-              <% if btn_text = attendance_state(day) %>
-                <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-block" %>
-              <% end %>
-            </td>
+            <% if current_user.superior? && @user.superior == false  %>
+              <td></td>
+            <% else %>
+              <td>
+                <% if btn_text = attendance_state(day) %>
+                  <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-block" %>
+                <% end %>
+              </td>
+            <% end %>
             <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
             <td><%= l(day.finished_at.floor_to(60*15), format: :minute) if day.finished_at.present? %></td>
             <td></td>
@@ -142,28 +170,36 @@
                 <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
               <% end %>
             </td>
-            <td>
-              <% if day.endtime_at.present? && day.finished_at.present? %>
-                <%= format("%.2f", Time.at(work_end_time(day)).utc.strftime('%H')) %>
-              <% end %>
-            </td>
-            <td><%= day.try(:overtime_memo) %></td>
-            <td><%= "申請中：#{day.name}" if day.name.present? %></td>
+              <td>
+                <% if day.endtime_at.present? && day.finished_at.present? %>
+                  <%= format("%.2f", Time.at(work_end_time(day)).utc.strftime('%H')) %>
+                <% end %>
+              </td>
+              <td><%= day.try(:overtime_memo) %></td>
+              <td><%= "申請中：#{day.name}" if day.name.present? %></td>
           </tr>
         <% end %>
       </tbody>
       
       <tfoot>
         <tr>
-          <td rowspan="3"></td>
-          <td colspan="2" rowspam="3"></td>
+          <% if current_user.superior? && @user.superior == false %>
+            <td rowspan="3" colspan="3"></td>
+            <td colspan="3" rowspam="3"></td>
+          <% else %>
+            <td rowspan="3"></td>
+            <td colspan="2" rowspam="3"></td>
+          <% end %>
           <td colspan="6" rowspam="3"></td>
           <td rowspam="3"><%= format("%.2f", @total_working_time.to_f) %></td>
           <td colspan="5" rowspam="3"></td>
           <td>
+            <% if current_user.superior? && @user.superior == false %>
+            <% else %>
             <div class="approval">
               所属長承認　未
               <div class="dropdown">
+                
                  <!--切替ボタンの設定 -->
                 <button type="button" class="btn btn-default btn-lg btn-block dropdown-toggle" id="dropdownMenuButton" 
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -179,6 +215,7 @@
                 <%= link_to "申請", "#", class: "btn btn-primary btn-block btn-lg" %>
               </div>
             </div>
+            <% end %>
           </td>
         </tr>
       </tfoot>

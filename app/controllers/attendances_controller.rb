@@ -76,22 +76,40 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    # @notice_users = 上長の名前が「上長A」の全ての勤怠情報から
-    # user_idが同じ勤怠情報を取得して「attendancesのuser_id」と「usersのid」が
-    # 紐づいているidを全て取得
     @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
+    # @notice_users = 「usersテーブルのid」を全て取り出す。
+    # 条件：attendancesテーブルの上長名カラム（name）と「ユーザーの名前」が同じ
+    #     　全ての勤怠情報からuser_idが重複しないようにセレクトする。
+    #       セレクトした「attendancesテーブルのuser_id」が「usersテーブルのid」として
+    #       全て取得。
   end
   
   def update_notice_overtime
-    @attendance = Attendance.find(params[:id])
-    @attendance.update(overtime_notice_params)
-    if @attendance.change.blank?
-      flash[:danger] = "変更にチェックを付けてください"
-      #error# 2/25:時点 モーダル表示に遷移できていません。
-    else
-      flash[:success] = "変更しました"
+    # 前提:form_withのurl引数（@user）はbefore_actionの
+    #      set_userによって「上長」のユーザー情報を得る。
+    
+    @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
+    @notice_users.each do |n_user|
+      @attendance_notices = Attendance.where(user_id: n_user.id).where.not(endtime_at: nil)
+      @attendance_notices.each do |att_notice| 
+        if att_notice.change == true
+          att_notice.update(overtime_notice_params)
+          flash[:success] = "残業申請のお知らせを変更しました"
+          redirect_to @user
+        else
+          flash[:danger] = "変更にチェックを付けてください"
+          redirect_to @user and return
+        end
+      end
     end
-    redirect_to @user
+    # if @attendance.change == false
+    #   @attendance.update(overtime_notice_params)
+    #   flash[:success] = "残業申請のお知らせを変更しました"
+    #   redirect_to user_url(@user)
+    # else
+    #   flash[:danger] = "変更にチェックを付けてください"
+    #   redirect_to user_url(@user)
+    # end
   end
   
   def attendance_edit_log
