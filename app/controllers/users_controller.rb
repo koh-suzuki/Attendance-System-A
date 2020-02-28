@@ -66,7 +66,7 @@ class UsersController < ApplicationController
     # user_idが同じ勤怠情報を取得して「attendancesのuser_id」と「usersのid」が
     # 紐づいているidを全て取得
     # @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
-    @attendance_notice_sum = Attendance.where.not(endtime_at: nil)
+    @endtime_notice_sum = Attendance.where.not(endtime_at: nil)
   end
   
   def admin_or_correct_user
