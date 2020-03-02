@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
       get 'attendances/attendance_edit_log'
+      get 'attendances/edit_notice_overtime'
     end
     resources :attendances do
       patch 'update'
@@ -33,7 +34,6 @@ Rails.application.routes.draw do
         get 'edit_overtime_app'
         patch 'update_over_app'
         # 残業申請のお知らせモーダル
-        get 'edit_notice_overtime'
         patch 'update_notice_overtime'
      end
     end

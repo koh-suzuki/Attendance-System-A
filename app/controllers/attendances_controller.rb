@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :edit_notice_overtime, :update_notice_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
+  before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -76,7 +76,6 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    @attendance = Attendance.find(params[:id])
     @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
     # @notice_users = 「usersテーブルのid」を全て取り出す。
     # 条件：attendancesテーブルの上長名カラム（name）と「ユーザーの名前」が同じ
@@ -88,14 +87,14 @@ class AttendancesController < ApplicationController
   def update_notice_overtime
     # 前提:form_withのurl引数（@user）はbefore_actionの
     #      set_userによって「上長」のユーザー情報を得る。
-   @attendance = Attendance.find(params[:id])
-    if @attendance.change == true
-      @attendance.update(overtime_notice_params)
+    @attendance = Attendance.find(params[:id])
+    @attendance.update(overtime_notice_params)
+    if params[:change] == true
       flash[:success] = "残業申請のお知らせを変更しました"
       redirect_to @user
-    else
-      flash[:danger] = "変更にチェックを付けてください"
-      redirect_to @user and return
+    # else
+    #   flash[:danger] = "変更にチェックを付けてください"
+    #   redirect_to @user and return
     end
   end
   
