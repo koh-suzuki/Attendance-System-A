@@ -89,12 +89,12 @@ class AttendancesController < ApplicationController
     #      set_userによって「上長」のユーザー情報を得る。
     @attendance = Attendance.find(params[:id])
     @attendance.update(overtime_notice_params)
-    if params[:change] == true
+    if @attendance.change == true
       flash[:success] = "残業申請のお知らせを変更しました"
       redirect_to @user
-    # else
-    #   flash[:danger] = "変更にチェックを付けてください"
-    #   redirect_to @user and return
+    else
+      flash[:danger] = "変更にチェックを付けてください"
+      redirect_to @user and return
     end
   end
   
