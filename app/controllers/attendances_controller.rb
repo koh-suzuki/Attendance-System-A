@@ -82,19 +82,25 @@ class AttendancesController < ApplicationController
     #     　全ての勤怠情報からuser_idが重複しないようにセレクトする。
     #       セレクトした「attendancesテーブルのuser_id」が「usersテーブルのid」として
     #       全て取得。
+    @attendance_notices = Attendance.where.not(endtime_at: nil)
+    @attendance_notices.each do |att_notice|
+      @att_notice = att_notice
+    end
   end
   
   def update_notice_overtime
     # 前提:form_withのurl引数（@user）はbefore_actionの
     #      set_userによって「上長」のユーザー情報を得る。
-    @attendance = Attendance.find(params[:id])
-    @attendance.update(overtime_notice_params)
-    if @attendance.change == true
-      flash[:success] = "残業申請のお知らせを変更しました"
-      redirect_to @user
-    else
-      flash[:danger] = "変更にチェックを付けてください"
-      redirect_to @user and return
+    @attendance_notices = Attendance.where.not(endtime_at: nil)
+    @attendance_notices.update(overtime_notice_params)
+    @attendance_notices.each do |att_notice|
+      if att_notice.change == true
+        flash[:success] = "残業申請のお知らせを変更しました"
+        redirect_to @user and return
+      else
+        flash[:danger] = "変更にチェックを付けてください"
+        redirect_to @user and return
+      end
     end
   end
   

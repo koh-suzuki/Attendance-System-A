@@ -2,17 +2,14 @@
 
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
-    <% @notice_users.each do |user| %>
-      <% @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil) %>
-      <% @attendance_notices.each do |att_notice| %>
-        <%= form_with(model: @attendance_notices, url: update_notice_overtime_user_attendance_path(@user, att_notice), local: true, method: :patch) do |f| %>
+    <%= form_with(model: @attendance_notices, url: update_notice_overtime_user_attendance_path(@user, @att_notice), local: true, method: :patch) do |f| %>
+      <% @notice_users.each do |user| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h3 class="modal-title text-center">【<%= user.name %>】からの残業申請</h3>
         </div>
-      
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12">
@@ -30,6 +27,8 @@
                     <th>勤怠を確認する</th>
                   </tr>
                 </thead>
+                <% @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil) %>
+                <% @attendance_notices.each do |att_notice| %>
                 <tbody>
                   <div>
                     <tr>
@@ -64,13 +63,13 @@
                     </tr>
                   </div>
                 </tbody>
+                <% end %>
                </table>
             </div>
           </div>
         </div>
-        <div class="notice_update_submit"><%= f.submit yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
-        <% end %>
       <% end %>
+      <div class="notice_update_submit"><%= f.submit yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
     <% end %>
   </div>
 </div>
