@@ -194,19 +194,16 @@
           <td rowspam="3"><%= format("%.2f", @total_working_time.to_f) %></td>
           <td colspan="5" rowspam="3"></td>
           <td>
-          <%= form_with(model: @attendance, url: attendances_update_month_request_user_path(@user), local: true, method: :patch) do |f| %>
             <% if current_user.superior? && @user.superior == false %>
             <% else %>
-              <div class="approval">
-                所属長承認　未
-                <div class="dropdown">
-                  <%= f.collection_select :name, User.where.not(name: @user.name).where(superior: true), :name, :name %>
-                <div>
-                  <%= f.submit "申請", class: "btn btn-primary btn-block btn-md" %>
+              <%= form_with(model: [@attendance, @user], url: attendances_update_month_request_user_path(@user), local: true, method: :patch) do |f| %>
+                <div class="approval">
+                  <p>所属長承認　未</p>
+                    <%= f.collection_select :name, User.where.not(id: @user.id).where(superior: true), :name, :name, include_blank: true %>
+                    <%= f.submit "申請", class: "btn btn-primary btn-block btn-md" %>
                 </div>
-              </div>
+              <% end %>
             <% end %>
-          <% end %>
           </td>
         </tr>
       </tfoot>

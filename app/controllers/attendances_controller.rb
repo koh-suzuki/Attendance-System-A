@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :update_month_request]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :create_month_request]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month]
@@ -104,7 +104,9 @@ class AttendancesController < ApplicationController
     end
   end
   
-  def update_month_request
+  def create_month_request
+    @attendance = Attendance.find(params[:id])
+    @attendance.update(month_request_params)
     flash[:success] = "所属長承認を申請しました。"
     redirect_to @user
   end
@@ -125,6 +127,10 @@ class AttendancesController < ApplicationController
     
      def overtime_notice_params
       params.require(:attendance).permit(:confirm, :change)
+     end
+     
+     def month_request_params
+      params.require(:attendance).permit(:name)
      end
     
     def admin_or_correct_user
