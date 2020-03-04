@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :update_month_request]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month]
@@ -54,7 +54,7 @@ class AttendancesController < ApplicationController
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
       redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
-  
+
    # 残業申請のモーダル
   def edit_overtime_app
     @attendances = Attendance.where(id: params[:id], user_id: params[:user_id])
@@ -102,6 +102,11 @@ class AttendancesController < ApplicationController
         redirect_to @user and return
       end
     end
+  end
+  
+  def update_month_request
+    flash[:success] = "所属長承認を申請しました。"
+    redirect_to @user
   end
   
   def attendance_edit_log

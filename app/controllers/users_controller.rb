@@ -61,12 +61,9 @@ class UsersController < ApplicationController
   def show
     @attendances_list = Attendance.where(name: current_user.name).where.not(user_id: params[:id])
     @worked_sum = @attendances.where.not(started_at: nil).count
-    
-    # @notice_users = 上長の名前が「上長A」の全ての勤怠情報から
-    # user_idが同じ勤怠情報を取得して「attendancesのuser_id」と「usersのid」が
-    # 紐づいているidを全て取得
-    # @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
     @endtime_notice_sum = Attendance.where.not(endtime_at: nil).count
+    @attendance_update_list = Attendance.includes(:user).where(name: @user.name).where.not(updated_at: nil)
+    @attendance_update_sum = @attendance_update_list.count
   end
   
   def admin_or_correct_user
