@@ -196,7 +196,7 @@
           <td>
             <% if current_user.superior? && @user.superior == false %>
             <% else %>
-              <%= form_with(model: [@attendance, @user], url: attendances_update_month_request_user_path(@user), local: true, method: :patch) do |f| %>
+              <%= form_with(model: @attendances, url: user_attendances_path(@user), local: true, method: :post) do |f| %>
                 <div class="approval">
                   <p>所属長承認　未</p>
                     <%= f.collection_select :name, User.where.not(id: @user.id).where(superior: true), :name, :name, include_blank: true %>
