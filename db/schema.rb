@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200222231542) do
+ActiveRecord::Schema.define(version: 20200307085402) do
+
+  create_table "approvals", force: :cascade do |t|
+    t.integer "superior_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -27,6 +33,9 @@ ActiveRecord::Schema.define(version: 20200222231542) do
     t.boolean "change"
     t.integer "suppoter"
     t.integer "confirm", default: 0
+    t.integer "approval_id"
+    t.datetime "updated_started_at"
+    t.datetime "updated_finished_at"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 

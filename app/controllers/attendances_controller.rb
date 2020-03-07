@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
-  before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime, :create]
+  before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -42,9 +42,19 @@ class AttendancesController < ApplicationController
         attendances_params.each do |id, item|
           attendance = Attendance.find(id)
           attendance.update_attributes!(item)
+          if attendance.started_at == attendance.updated_started_at && 
+             attendance.finished_at == attendance.updated_finished_at
+            flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+            redirect_to user_url(date: params[:date])
+          else
+            attendance.update_attributes(updated_started_at: Time.current.change(sec: 0))
+            attendance.update_attributes(updated_finished_at: Time.current.change(sec: 0))
+            flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+            redirect_to user_url(date: params[:date]) and return
+          end
         end
-        flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-        redirect_to user_url(date: params[:date])
+            # flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+            # redirect_to user_url(date: params[:date])
       else
         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
         redirect_to attendances_edit_one_month_user_url(date: params[:date])
@@ -105,9 +115,8 @@ class AttendancesController < ApplicationController
   end
   
   def create
-    
-    @attendance = @user.attendances.create(approval_params)
-    flash[:success] = "所属長承認を申請しました。"
+    @attendance = Attendance.find(params[:id])
+    # flash[:success] = "所属長承認を申請しました。"
     redirect_to @user
   end
   
@@ -129,8 +138,8 @@ class AttendancesController < ApplicationController
       params.require(:attendance).permit(:confirm, :change)
      end
      
-     def approval_params
-      params.require(:attendance).permit(:approval_id)
+     def updated_time_params
+       params.require(:attendance).permit(:updated_started_at, :updated_finished_at)
      end
     
     def admin_or_correct_user

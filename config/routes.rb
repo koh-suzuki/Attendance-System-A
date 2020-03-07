@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :bases
 
   root 'static_pages#top'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
       patch 'attendances/update_one_month'
       get 'attendances/attendance_edit_log'
       get 'attendances/edit_notice_overtime'
+      post 'attendances/create'
     end
     resources :attendances do
       patch 'update'

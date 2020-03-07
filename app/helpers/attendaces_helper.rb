@@ -44,4 +44,9 @@ module AttendacesHelper
     end
     return attendances
   end
+  
+  # def update_attendance_invalid?
+  #   @attendance = Attendance.find(params[:id])
+    
+  # end
 end
