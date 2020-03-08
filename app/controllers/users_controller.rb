@@ -62,9 +62,9 @@ class UsersController < ApplicationController
     @attendances_list = Attendance.where(name: current_user.name).where.not(user_id: params[:id])
     @worked_sum = @attendances.where.not(started_at: nil).count
     @endtime_notice_sum = Attendance.where.not(endtime_at: nil).count
-    @superior_user = User.where(superior: true)
-    @attendance_update_list = Attendance.includes(:user).where(id: current_user.id).where.not(updated_started_at: nil)
-    @attendance_update_sum = @attendance_update_list.count
+    @att_update_list = User.where(superior: true).where(id: current_user.id) && 
+                          Attendance.where.not(updated_started_at: nil)
+    @att_update_sum = @att_update_list.count
   end
   
   def admin_or_correct_user

@@ -47,10 +47,10 @@
           <p class="not_notice">【所属長承認申請のお知らせ】</p>
         <% end %>
         
-        <% if current_user.superior? && @attendance_update_list.present? %>
+        <% if current_user.superior? && @att_update_list.present? %>
           <p class="notice">
             <%= link_to "【勤怠変更申請のお知らせ】", "#", :style=>"color:red;", class: "superior_tag" %>
-            <span><strong><%= "#{@attendance_update_sum}件の通知があります" %></strong></span>
+            <span><strong><%= "#{@att_update_sum}件の通知があります" %></strong></span>
           </p>
         <% else %>
           <p class="not_notice">【勤怠変更申請のお知らせ】</p>
