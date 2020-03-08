@@ -114,6 +114,10 @@ class AttendancesController < ApplicationController
     end
   end
   
+  def edit_attendance_up
+    @attendances = Attendance.where(id: params[:id], user_id: params[:user_id])
+  end
+  
   def create
     @attendance = Attendance.find(params[:id])
     # flash[:success] = "所属長承認を申請しました。"

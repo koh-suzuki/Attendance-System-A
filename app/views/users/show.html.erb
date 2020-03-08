@@ -49,7 +49,7 @@
         
         <% if current_user.superior? && @att_update_list.present? %>
           <p class="notice">
-            <%= link_to "【勤怠変更申請のお知らせ】", "#", :style=>"color:red;", class: "superior_tag" %>
+            <%= link_to "【勤怠変更申請のお知らせ】", attendances_edit_attendance_up_user_path(@user), :style=>"color:red;", class: "superior_tag" %>
             <span><strong><%= "#{@att_update_sum}件の通知があります" %></strong></span>
           </p>
         <% else %>
@@ -215,6 +215,5 @@
 
 
 <div id="edit_notice_overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-
 <div id="edit_overtime_app" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-<div id="edit_overtime_app" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_attendance_up" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
