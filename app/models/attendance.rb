@@ -22,9 +22,7 @@ class Attendance < ApplicationRecord
     end
   end
   
-  # def change_is_invalid_no_check
-  #   errors.add(:change, "変更にチェックを付けなければ無効です") if change.blank?
-  # end
+ 
   
   enum confirm: { "なし" => 1, "申請中" => 2, "承認" => 3, "否認" => 4 }
 

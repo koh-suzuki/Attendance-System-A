@@ -114,8 +114,18 @@ class AttendancesController < ApplicationController
     end
   end
   
-  def edit_attendance_up
-    @attendances = Attendance.where(id: params[:id], user_id: params[:user_id])
+  def edit_change_attendance
+    @superior_users = User.where(superior: true).where(id: current_user.id)
+    @att_update_lists = @superior_users && Attendance.where.not(updated_started_at: nil) || 
+                                           Attendance.where.not(updated_finished_at: nil)
+    @att_update_lists.each do |att_up|
+      @att_up = att_up
+      @user = att_up.user_id
+    end
+    @users = User.where(id: @att_up.user_id)
+  end
+  
+  def update_change_attendance
   end
   
   def create
