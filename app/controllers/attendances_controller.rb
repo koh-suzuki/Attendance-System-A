@@ -41,20 +41,20 @@ class AttendancesController < ApplicationController
       if attendances_invalid?
         attendances_params.each do |id, item|
           attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
           if attendance.started_at == attendance.updated_started_at && 
-             attendance.finished_at == attendance.updated_finished_at
-            flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-            redirect_to user_url(date: params[:date])
+               attendance.finished_at == attendance.updated_finished_at
+              attendance.update_attributes!(item)
           else
-            attendance.update_attributes(updated_started_at: Time.current.change(sec: 0))
-            attendance.update_attributes(updated_finished_at: Time.current.change(sec: 0))
-            flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-            redirect_to user_url(date: params[:date]) and return
+            updated_time_params.each do |id, item|
+              attendance = Attendance.find(id)
+              attendance.update_attributes!(item)
+              attendance.update_attributes(updated_started_at: attendance.started_at)
+              attendance.update_attributes(updated_finished_at: attendance.finished_at)
+            end
           end
         end
-            # flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-            # redirect_to user_url(date: params[:date])
+        flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+        redirect_to user_url(date: params[:date])
       else
         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
         redirect_to attendances_edit_one_month_user_url(date: params[:date])
@@ -115,9 +115,9 @@ class AttendancesController < ApplicationController
   end
   
   def edit_change_attendance
-    @superior_users = User.where(superior: true).where(id: current_user.id)
-    @att_update_lists = @superior_users && Attendance.where.not(updated_started_at: nil) || 
-                                           Attendance.where.not(updated_finished_at: nil)
+    @superior_users = User.where(superior: true)
+    @att_update_lists = Attendance.where.not(updated_started_at: nil) || 
+                        Attendance.where.not(updated_finished_at: nil)
     @att_update_lists.each do |att_up|
       @att_up = att_up
       @user = att_up.user_id
@@ -153,7 +153,7 @@ class AttendancesController < ApplicationController
      end
      
      def updated_time_params
-       params.require(:attendance).permit(:updated_started_at, :updated_finished_at)
+       params.require(:user).permit(attendances: [:tommorow_index, :note, :name])[:attendances]
      end
     
     def admin_or_correct_user
