@@ -26,7 +26,7 @@
                 <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
               <% else %>
                 <!-- 勤怠編集された出退勤時間を判別 -->
-                <% unless day.updated_started_at.present? || day.updated_finished_at.present? %>
+                <% if day.started_at.present? || day.finished_at.present? && day.updated_started_at.blank? || day.updated_finished_at.blank? %>
                   <td><%= attendance.time_field :started_at, class: "form-control" %></td>
                   <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
                 <% else %>

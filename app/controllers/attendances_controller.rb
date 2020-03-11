@@ -3,7 +3,7 @@ class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
-  before_action :set_one_month, only: [:edit_one_month]
+  before_action :set_one_month, only: [:edit_one_month, :update_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   require 'csv'
   require 'rails/all'
@@ -38,17 +38,25 @@ class AttendancesController < ApplicationController
   
   def update_one_month
     ActiveRecord::Base.transaction do
-      if attendances_invalid?
-        attendances_params.each do |id, item|
-          attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
-        end
-        flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-        redirect_to user_url(date: params[:date])
-      else
-        flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-        redirect_to attendances_edit_one_month_user_url(date: params[:date])
-      end
+          if attendances_invalid?
+            attendances_params.each do |id, item|
+              attendance = Attendance.find(id)
+              if attendance.started_at.present? || attendance.finished_at.present?
+                attendance.update_attributes!(item)
+                attendance.update_attributes(updated_started_at: attendance.started_at)
+                attendance.update_attributes(updated_finished_at: attendance.finished_at)
+              else
+                if attendances_updated_invalid?
+                  updated_time_params.each do |id, item|
+                    attendance = Attendance.find(id)
+                    attendance.update_attributes!(item)
+                  end
+                end
+              end
+            end
+          end
+      flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+      redirect_to user_url(date: params[:date])
     end
   rescue ActiveRecord::RecordInvalid
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"

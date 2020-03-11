@@ -45,6 +45,22 @@ module AttendacesHelper
     return attendances
   end
   
+  def attendances_updated_invalid?
+    attendances = true
+    attendances_params.each do |id, item|
+      if item[:updated_started_at].blank? && item[:updated_finished_at].blank?
+        next
+      elsif item[:updated_started_at].blank? || item[:updated_finished_at].blank?
+        attendances = false
+        break
+      elsif item[:updated_started_at] > item[:updated_finished_at]
+        attendances = false
+        break
+      end
+    end
+    return attendances
+  end
+  
   # def update_attendance_invalid?
   #   @attendance = Attendance.find(params[:id])
     
