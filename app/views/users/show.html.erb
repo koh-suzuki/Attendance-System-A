@@ -136,8 +136,13 @@
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <% end %>
-            <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-            <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
+              <% if day.updated_started_at.present? %>
+                <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
+                <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
+              <% else %>
+                <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
+                <td><%= l(day.updated_started_at.floor_to(60*15), format: :minute) if day.updated_started_at.present? %></td>
+              <% end %>
             <% if current_user.superior? && @user.superior == false  %>
               <td></td>
             <% else %>

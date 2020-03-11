@@ -39,19 +39,9 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       if attendances_invalid?
-        attendances_params.each do |id, item|
+        updated_time_params.each do |id, item|
           attendance = Attendance.find(id)
-          if attendance.started_at == attendance.updated_started_at && 
-               attendance.finished_at == attendance.updated_finished_at
-              attendance.update_attributes!(item)
-          else
-            updated_time_params.each do |id, item|
-              attendance = Attendance.find(id)
-              attendance.update_attributes!(item)
-              attendance.update_attributes(updated_started_at: attendance.started_at)
-              attendance.update_attributes(updated_finished_at: attendance.finished_at)
-            end
-          end
+          attendance.update_attributes!(item)
         end
         flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
         redirect_to user_url(date: params[:date])
@@ -153,7 +143,7 @@ class AttendancesController < ApplicationController
      end
      
      def updated_time_params
-       params.require(:user).permit(attendances: [:tommorow_index, :note, :name])[:attendances]
+       params.require(:user).permit(attendances: [:updated_started_at, :updated_finished_at, :tommorow_index, :note, :name])[:attendances]
      end
     
     def admin_or_correct_user
