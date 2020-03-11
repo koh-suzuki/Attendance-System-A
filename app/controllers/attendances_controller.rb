@@ -39,7 +39,7 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       if attendances_invalid?
-        updated_time_params.each do |id, item|
+        attendances_params.each do |id, item|
           attendance = Attendance.find(id)
           attendance.update_attributes!(item)
         end

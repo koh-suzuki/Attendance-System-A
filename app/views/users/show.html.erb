@@ -136,13 +136,13 @@
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <% end %>
-              <% if day.updated_started_at.present? %>
-                <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-                <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
-              <% else %>
-                <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
-                <td><%= l(day.updated_started_at.floor_to(60*15), format: :minute) if day.updated_started_at.present? %></td>
-              <% end %>
+            <% unless day.updated_started_at.present? %>
+              <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
+              <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
+            <% else %>
+              <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
+              <td><%= l(day.updated_started_at.floor_to(60*15), format: :minute) if day.updated_started_at.present? %></td>
+            <% end %>
             <% if current_user.superior? && @user.superior == false  %>
               <td></td>
             <% else %>
@@ -152,8 +152,13 @@
                 <% end %>
               </td>
             <% end %>
-            <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
-            <td><%= l(day.finished_at.floor_to(60*15), format: :minute) if day.finished_at.present? %></td>
+            <% unless day.updated_finished_at.present? %>
+              <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+              <td><%= l(day.finished_at.floor_to(60*15), format: :minute) if day.finished_at.present? %></td>
+            <% else %>
+              <td><%= l(day.updated_finished_at, format: :hour) %></td>
+              <td><%= l(day.updated_finished_at.floor_to(60*15), format: :minute) %></td>
+            <% end %>
             <td></td>
             <td>
               <% if day.started_at.present? && day.finished_at.present? %>
