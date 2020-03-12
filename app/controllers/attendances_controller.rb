@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :edit_change_attendance]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :update_one_month]
@@ -33,28 +33,29 @@ class AttendancesController < ApplicationController
     send_data render_to_string, filename: "attendances.csv", type: :csv
   end
   
-  def edit_one_month
+  def edit_one_month  
   end
   
   def update_one_month
     ActiveRecord::Base.transaction do
+      params[:user][:attendances].each do |id|
+        if params[:user][:attendances][id][:started_at].present? &&
+           params[:user][:attendances][id][:updated_started_at].blank?
           if attendances_invalid?
             attendances_params.each do |id, item|
               attendance = Attendance.find(id)
-              if attendance.started_at.present? || attendance.finished_at.present?
-                attendance.update_attributes!(item)
-                attendance.update_attributes(updated_started_at: attendance.started_at)
-                attendance.update_attributes(updated_finished_at: attendance.finished_at)
-              else
-                if attendances_updated_invalid?
-                  updated_time_params.each do |id, item|
-                    attendance = Attendance.find(id)
-                    attendance.update_attributes!(item)
-                  end
-                end
-              end
+              attendance.update_attributes!(item)
             end
           end
+        else  
+          if attendances_updated_invalid?
+            updated_time_params.each do |id, item|
+               attendance = Attendance.find(id)
+                attendance.update_attributes!(item)
+            end
+          end
+        end
+      end
       flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
       redirect_to user_url(date: params[:date])
     end
@@ -113,14 +114,13 @@ class AttendancesController < ApplicationController
   end
   
   def edit_change_attendance
+    @users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
     @superior_users = User.where(superior: true)
     @att_update_lists = Attendance.where.not(updated_started_at: nil) || 
                         Attendance.where.not(updated_finished_at: nil)
     @att_update_lists.each do |att_up|
       @att_up = att_up
-      @user = att_up.user_id
     end
-    @users = User.where(id: @att_up.user_id)
   end
   
   def update_change_attendance
@@ -139,7 +139,7 @@ class AttendancesController < ApplicationController
   
   private
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :tommorow_index, :note, :name])[:attendances]
+      params.require(:user).permit(attendances: [:updated_started_at, :updated_finished_at, :started_at, :finished_at, :tommorow_index, :note, :name])[:attendances]
     end
     
     def overtime_params

@@ -40,7 +40,8 @@
             <th>分</th>
           </tr>
         </thead>
-        <% @att_update_lists.each do |day| %>
+        <% @users_changed_at = Attendance.where.not(updated_started_at: nil) || where.not(updated_finished_at: nil) %>
+        <% @users_changed_at.each do |day| %>
           <tbody>
             <!-- 日付 -->
             <td colspan="3"><%= l(day.worked_on, format: :short) %></td>
@@ -63,13 +64,13 @@
             <td><%= l(day.updated_finished_at, format: :hour) if day.finished_at.present? %></td>
             <td><%= l(day.updated_finished_at.floor_to(60*15), format: :minute) if day.finished_at.present? %></td>
             <!-- 備考 -->
-            <td></td>
+            <td><%= f.text_field :note, class: "form-control" %></td>
             <!-- 支持者確認㊞ -->
-            <td></td>
+            <td><%= f.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
             <!-- 変更 -->
-            <td></td>
+            <td><%= f.check_box :change, {class: "change"}, 'true', 'false' %></td>
             <!-- 勤怠を確認する -->
-            <td></td>
+            <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
           </tbody>
         <% end %>
       </table>
