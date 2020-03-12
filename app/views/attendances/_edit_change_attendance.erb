@@ -40,7 +40,7 @@
             <th>分</th>
           </tr>
         </thead>
-        <% @users_changed_at = Attendance.where.not(updated_started_at: nil) || where.not(updated_finished_at: nil) %>
+        <% @users_changed_at = Attendance.where(user_id: user.id).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil) %>
         <% @users_changed_at.each do |day| %>
           <tbody>
             <!-- 日付 -->

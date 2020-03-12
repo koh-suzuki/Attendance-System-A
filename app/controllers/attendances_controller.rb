@@ -85,7 +85,7 @@ class AttendancesController < ApplicationController
   end
   
   def edit_notice_overtime
-    @notice_users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
+    @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
     # @notice_users = 「usersテーブルのid」を全て取り出す。
     # 条件：attendancesテーブルの上長名カラム（name）と「ユーザーの名前」が同じ
     #     　全ての勤怠情報からuser_idが重複しないようにセレクトする。
@@ -114,7 +114,7 @@ class AttendancesController < ApplicationController
   end
   
   def edit_change_attendance
-    @users = User.where(id: Attendance.where(name: @user.name).select(:user_id))
+    @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id))
     @superior_users = User.where(superior: true)
     @att_update_lists = Attendance.where.not(updated_started_at: nil) || 
                         Attendance.where.not(updated_finished_at: nil)
