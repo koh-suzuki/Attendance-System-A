@@ -14,12 +14,14 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     if @attendance.started_at.nil?
       if @attendance.update_attributes(started_at: Time.current.change(sec: 0))
+        @attendance.update_attributes(updated_started_at: @attendance.started_at)
         flash[:info] = "おはようございます！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     elsif @attendance.finished_at.nil? 
       if @attendance.update_attributes(finished_at: Time.current.change(sec: 0))
+        @attendance.update_attributes(updated_finished_at: @attendance.finished_at)
         flash[:info] = "お疲れ様でした！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
@@ -42,17 +44,27 @@ class AttendancesController < ApplicationController
         if params[:user][:attendances][id][:started_at].present? &&
            params[:user][:attendances][id][:updated_started_at].blank?
           if attendances_invalid?
+            attendances = []
+            values = []
             attendances_params.each do |id, item|
               attendance = Attendance.find(id)
-              attendance.update_attributes!(item)
+              value = item
+              attendances << attendance
+              values << value
             end
+            Attendance.import attendances.values_at, on_duplicate_key_update: [:updated_started_at, :updated_finished_at, :tommorow_index, :note, :name]
           end
         else  
           if attendances_updated_invalid?
+            attendances = []
+            values = []
             updated_time_params.each do |id, item|
-               attendance = Attendance.find(id)
-                attendance.update_attributes!(item)
+              attendance = Attendance.find(id)
+              value = item
+              attendances << attendance
+              values << value
             end
+            Attendance.import attendances, on_duplicate_key_update: [:updated_started_at, :updated_finished_at, :tommorow_index, :note, :name]
           end
         end
       end

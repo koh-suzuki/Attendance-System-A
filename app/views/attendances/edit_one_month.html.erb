@@ -26,13 +26,8 @@
                 <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
               <% else %>
                 <!-- 勤怠編集された出退勤時間を判別 -->
-                <% if day.started_at.present? && day.updated_started_at.blank? %>
-                  <td><%= attendance.time_field :started_at, class: "form-control" %></td>
-                  <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
-                <% else %>
                   <td><%= attendance.time_field :updated_started_at, class: "form-control" %></td>
                   <td><%= attendance.time_field :updated_finished_at, class: "form-control" %></td>
-                <% end %>
               <% end %>
               <td><%= attendance.check_box :tommorow_index, {class: "tommorow_index"}, 'true', 'false' %></td>
               <td>
