@@ -40,15 +40,12 @@ class AttendancesController < ApplicationController
   
   def update_one_month
     ActiveRecord::Base.transaction do
-      params[:user][:attendances].each do |id|
-        if attendances_updated_invalid?
-          attendances = []
-          updated_time_params.each do |id, item|
-            attendance = Attendance.find(id)
-            attendances << attendance.item
-          end
-          Attendance.import attendances, on_duplicate_key_update: [:updated_started_at, :updated_finished_at, :tommorow_index, :note, :name]
+      if attendances_updated_invalid?
+        updated_time_params.each do |id, item|
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(item)
         end
+      end
       flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
       redirect_to user_url(date: params[:date])
     end
