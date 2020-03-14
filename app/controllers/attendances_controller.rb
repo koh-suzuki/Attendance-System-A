@@ -1,9 +1,9 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :edit_change_attendance]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :edit_change_attendance, :update_one_month]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
-  before_action :set_one_month, only: [:edit_one_month, :update_one_month]
+  before_action :set_one_month, only: [:edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   require 'csv'
   require 'rails/all'
@@ -43,7 +43,12 @@ class AttendancesController < ApplicationController
       if attendances_updated_invalid?
         updated_time_params.each do |id, item|
           attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
+          if attendance.name.blank? || present? && item[:name].present?
+            attendance.update_attributes!(item)
+          else
+            flash[:danger] = "支持者を選択してください。"
+            redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+          end
         end
       end
       flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
