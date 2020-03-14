@@ -31,8 +31,8 @@
               <% end %>
               <td><%= attendance.check_box :tommorow_index, {class: "tommorow_index"}, 'true', 'false' %></td>
               <td>
-                <% if day.started_at.present? && day.finished_at.present? %>
-                  <%= working_time(day.started_at, day.finished_at) %>
+                <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
+                  <%= working_time(day.updated_started_at, day.updated_finished_at) %>
                 <% end %>
               </td>
               <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>

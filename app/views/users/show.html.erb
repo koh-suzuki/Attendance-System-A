@@ -161,8 +161,8 @@
             <% end %>
             <td></td>
             <td>
-              <% if day.started_at.present? && day.finished_at.present? %>
-                <%= str_times = working_time(day.started_at, day.finished_at) %>
+              <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
+                <%= str_times = working_time(day.updated_started_at, day.updated_finished_at) %>
                 <% @total_working_time = @total_working_time.to_f + str_times.to_f %>
               <% end %>
             </td>
