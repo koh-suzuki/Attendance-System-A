@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info]
   before_action :set_one_month, only: :show
   before_action :admin_or_correct_user, only: :show
+  before_action :superior_user, only: :show
 
   def index
     @users = User.all
@@ -59,10 +60,13 @@ class UsersController < ApplicationController
   end
 
   def show
-    @attendances_list = Attendance.where(name: current_user.name).where.not(user_id: params[:id])
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @endtime_notice_sum = Attendance.where.not(endtime_at: nil).count
-    @att_update_list = Attendance.where.not(updated_started_at: nil) || Attendance.where.not(updated_finished_at: nil)
+    # 残業申請のお知らせ合計
+    @attendances_list = Attendance.where(user_id: @superior_user).where.not(endtime_at: nil).present?
+    @endtime_notice_sum = Attendance.where(user_id: @superior_user).where.not(endtime_at: nil).count
+    # 勤怠変更申請のお知らせ合計
+    @att_update_list = Attendance.where(name: current_user.name) && 
+                       Attendance.where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
     @att_update_sum = @att_update_list.count
   end
   

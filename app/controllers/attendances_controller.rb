@@ -110,7 +110,6 @@ class AttendancesController < ApplicationController
   
   def edit_change_attendance
     @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id))
-    @superior_users = User.where(superior: true)
     @att_update_lists = Attendance.where.not(updated_started_at: nil) || 
                         Attendance.where.not(updated_finished_at: nil)
     @att_update_lists.each do |att_up|
@@ -119,12 +118,6 @@ class AttendancesController < ApplicationController
   end
   
   def update_change_attendance
-  end
-  
-  def create
-    @attendance = Attendance.find(params[:id])
-    # flash[:success] = "所属長承認を申請しました。"
-    redirect_to @user
   end
   
   def attendance_edit_log

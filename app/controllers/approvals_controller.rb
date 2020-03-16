@@ -1,17 +1,21 @@
 class ApprovalsController < ApplicationController
-  before_action :set_one_month, only: [:create]
 
   def create
     @user = User.find(params[:id])
-    @superior_users = User.where(superior: true)
-    @superior = Approval.create(approval_params)
-    flash[:success] = "所属長承認を申請しました。"
-    redirect_to @user
+    @attendance = @user.attendances.find_by(user_id: @user.id)
+    @approval = @user.approvals.build(superior_id: params[:name], month_at: @attendance.worked_on)
+    if @approval.save
+      flash[:success] = "1ヶ月分の勤怠申請をしました。"
+      redirect_to user_path(@user)
+    else
+      flash[:danger] = "申請できませんでした。"
+      redirect_to user_path(@user)
+    end
   end
-
+  
     private
 
     def approval_params
-      params.require(:approval).permit(:superior_id)
+      params.require(:approval).permit(:superior_id, :month_at, :approval_flag)
     end
 end

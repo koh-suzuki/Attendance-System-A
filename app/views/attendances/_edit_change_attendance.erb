@@ -59,8 +59,8 @@
               <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
               <!-- 変更後(出/退) -->
                 <!-- 出勤 -->
-              <td><%= l(day.updated_started_at, format: :hour) if day.started_at < day.updated_started_at %></td>
-              <td><%= l(day.updated_started_at, format: :minute) if day.started_at < day.updated_started_at %></td>
+              <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
+              <td><%= l(day.updated_started_at, format: :minute) if day.updated_started_at.present? %></td>
                 <!-- 退勤 -->
               <td><%= l(day.updated_finished_at, format: :hour) if day.updated_finished_at.present? %></td>
               <td><%= l(day.updated_finished_at, format: :minute) if day.updated_finished_at.present? %></td>

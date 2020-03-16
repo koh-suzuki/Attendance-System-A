@@ -33,7 +33,12 @@ class ApplicationController < ActionController::Base
     redirect_to root_url unless current_user.admin?
   end
   
-  
+  def superior_user
+    # 現在のユーザーが上長であるユーザーを取得
+    @superior_user = User.where(superior: true).where(id: current_user)
+    # 上長ユーザーを取得
+    @superiors = User.where.not(id: current_user.id).where(superior: true)
+  end
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
   def set_one_month
