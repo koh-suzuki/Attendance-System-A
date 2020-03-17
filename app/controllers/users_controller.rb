@@ -68,6 +68,10 @@ class UsersController < ApplicationController
     @att_update_list = Attendance.where(name: current_user.name) && 
                        Attendance.where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
     @att_update_sum = @att_update_list.count
+    # 所属長承認申請（今のユーザーに申請分）の合計
+    @approval_list = Approval.where(superior_id: current_user)
+    @approval_sum = @approval_list.count
+    @approval = Approval.find(params[:id])
   end
   
   def admin_or_correct_user

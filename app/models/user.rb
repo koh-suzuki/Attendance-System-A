@@ -57,5 +57,5 @@ class User < ApplicationRecord
      "designated_work_start_time", "designated_work_end_time", "superior", "admin", "password"]
   end
   
-
+  enum confirm: { "なし" => 1, "申請中" => 2, "承認" => 3, "否認" => 4 }
 end

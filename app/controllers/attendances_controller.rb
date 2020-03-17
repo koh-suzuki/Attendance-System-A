@@ -108,6 +108,7 @@ class AttendancesController < ApplicationController
     end
   end
   
+  # 勤怠変更申請のお知らせ
   def edit_change_attendance
     @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id))
     @att_update_lists = Attendance.where.not(updated_started_at: nil) || 

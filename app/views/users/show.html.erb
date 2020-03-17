@@ -38,10 +38,11 @@
     
       <% else %>
         <div class="superior">
-          <% if current_user == "sample" %>
+          <!-- 所属長承認申請のお知らせボタン -->
+          <% if @approval_list.present? %>
             <p class="notice">
               <%= link_to "【所属長承認申請のお知らせ】", "#", :style=>"color:red;", class: "superior_tag" %>
-              <span><strong><%= "#{}件の通知があります" %></strong></span>
+              <span><strong><%= "#{@approval_sum}件の通知があります" %></strong></span>
             </p>
           <% else %>
             <p class="not_notice">【所属長承認申請のお知らせ】</p>
@@ -211,7 +212,12 @@
               <%= form_with(model: @approval, url: approvals_create_user_path(@user), local: true) do |f| %>
                 <div class="approval">
                   <p>
-                    所属長承認:　<%  %>
+                    所属長承認: 
+                    <% if @approval.user_id.present? %>
+                      <%= "申請中" %>
+                    <% else %>
+                      <%= "未" %>
+                    <% end %>
                   </p>
                     <%= f.collection_select :name, @superiors, :id, :name, include_blank: true %>
                     <%= f.submit "申請", class: "btn btn-primary btn-block btn-md" %>
