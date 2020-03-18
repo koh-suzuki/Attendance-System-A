@@ -1,10 +1,13 @@
 class AttendancesController < ApplicationController
   include AttendacesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime, :edit_change_attendance, :update_one_month]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime,
+                                  :edit_change_attendance, :update_one_month, :attendance_edit_log]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
+  before_action :superior_user, only: [:edit_change_attendance]
+  
   require 'csv'
   require 'rails/all'
   
@@ -110,7 +113,7 @@ class AttendancesController < ApplicationController
   
   # 勤怠変更申請のお知らせ
   def edit_change_attendance
-    @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id))
+    @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
     @att_update_lists = Attendance.where.not(updated_started_at: nil) || 
                         Attendance.where.not(updated_finished_at: nil)
     @att_update_lists.each do |att_up|
@@ -119,6 +122,7 @@ class AttendancesController < ApplicationController
   end
   
   def update_change_attendance
+    
   end
   
   def attendance_edit_log
