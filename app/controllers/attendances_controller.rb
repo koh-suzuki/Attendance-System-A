@@ -31,7 +31,7 @@ class AttendancesController < ApplicationController
   end
   
   def csv_output
-    @attendance = Attendance.all
+    @attendance = Attendance.joins(:user).where(id: Attendance.where(user_id: current_user))
     send_data render_to_string, filename: "attendances.csv", type: :csv
   end
   
