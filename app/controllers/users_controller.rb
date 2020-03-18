@@ -62,8 +62,8 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     # 残業申請のお知らせ合計
-    @attendances_list = Attendance.where(user_id: @superior_user).where.not(endtime_at: nil).present?
-    @endtime_notice_sum = Attendance.where(user_id: @superior_user).where.not(endtime_at: nil).count
+    @attendances_list = Attendance.where.not(endtime_at: nil).where(name: @user.name)
+    @endtime_notice_sum = @attendances_list.count
     # 勤怠変更申請のお知らせ合計
     @att_update_list = Attendance.where(name: current_user.name) && 
                        Attendance.where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)

@@ -39,17 +39,19 @@
                         <!-- 終了予定時間 -->
                         <td>
                           <% if att_notice.tommorow_index == true %>
-                            <%= att_notice.endtime_at.tomorrow.strftime("%H") if att_notice.endtime_at.present? %>
+                            <%= att_notice.endtime_at.tomorrow.strftime("%H.%M") if att_notice.endtime_at.present? %>
                           <% else %>
-                            <%= att_notice.endtime_at.strftime("%H") if att_notice.endtime_at.present? %>
+                            <%= att_notice.endtime_at.strftime("%H.%M") if att_notice.endtime_at.present? %>
                           <% end %>
                         </td>
                         <!-- 指定勤務終了時間 -->
-                        <td><%= format_basic_info(@user.designated_work_end_time) %></td>
+                        <td><%= format_basic_info(user.designated_work_end_time) %></td>
                         <!-- 時間外時間 -->
                         <td>
-                          <% if att_notice.endtime_at.present? && att_notice.finished_at.present? %>
-                            <%= format("%.2f", Time.at(work_end_time(att_notice)).utc.strftime('%H')) %>
+                          <% if att_notice.endtime_at.present? %>
+                            <%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), user.designated_work_end_time.strftime("%H:%M:%S")) %>
+                          <% else %>
+                            <!-- endtime_atはありません。 -->
                           <% end %>
                         </td>
                         <!-- 業務処理内容 -->
