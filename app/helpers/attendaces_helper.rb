@@ -13,8 +13,8 @@ module AttendacesHelper
   end
   
   # 時間外時間の計算
-  def work_end_time(attendance)
-    attendance.endtime_at - @user.designated_work_end_time
+  def over_time(endtime, designated_work_end_time)
+    format("%.2f", (((Time.parse(endtime) - Time.parse(designated_work_end_time)) / 60) / 60.0))
   end
   
   def css_class(wo)

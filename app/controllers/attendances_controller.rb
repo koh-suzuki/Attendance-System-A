@@ -68,9 +68,9 @@ class AttendancesController < ApplicationController
     @today = Date.today
   end
   
+  # 残業申請の更新処理
   def update_over_app
     @worktime = @user.designated_work_end_time
-    # 残業申請の更新処理
     @attendance = Attendance.find(params[:id])
     @attendance.update(overtime_params)
     if @attendance.name.blank?
