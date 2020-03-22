@@ -8,6 +8,8 @@ class Attendance < ApplicationRecord
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at
   validate :started_at_than_finished_at_fast_if_invalid
+  # 変更にチェックが無い場合、変更は無効
+  validate :change_true_if_invalid
   
 
   def finished_at_is_invalid_without_a_started_at
@@ -20,9 +22,11 @@ class Attendance < ApplicationRecord
     end
   end
   
- 
+  def change_true_if_invalid
+    errors.add(:change, "にチェックが必要です") if change == "true"
+  end
   
   enum confirm: { "なし" => 1, "申請中" => 2, "承認" => 3, "否認" => 4 }
-
+  
   
 end

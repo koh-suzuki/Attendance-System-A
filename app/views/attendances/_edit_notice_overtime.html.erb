@@ -27,10 +27,10 @@
                     <th>勤怠を確認する</th>
                   </tr>
                 </thead>
-                <% @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil) %>
-                <% @attendance_notices.each do |att_notice| %>
+                
                 <tbody>
-                  <div>
+                  <% @attendance_notices.each do |att_notice| %>
+                   <%= f.fields_for "notice_attendances[]", att_notice do |attendance| %>
                     <tr>
                       <!-- 日付 -->
                       <td><%= l(att_notice.worked_on, format: :short) %></td>
@@ -57,15 +57,15 @@
                         <!-- 業務処理内容 -->
                         <td><%= att_notice.try(:overtime_memo) %></td>
                         <!-- 指示者確認㊞ -->
-                        <td><%= f.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
+                        <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
                         <!-- 変更 -->
-                        <td><%= f.check_box :change, {class: "change"}, 'true', 'false' %></td>
+                        <td><%= attendance.check_box :change, {class: "change"}, 'true', 'false' %></td>
                         <!-- 勤怠を確認する -->
                         <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
                     </tr>
-                  </div>
+                    <% end %>
+                  <% end %>
                 </tbody>
-                <% end %>
                </table>
             </div>
           </div>

@@ -18,5 +18,6 @@ ja:
           worked_on: 日付
           started_at: 出勤時間
           finished_at: 退勤時間
+          change: 変更
           note: 備考
           user: ユーザーID

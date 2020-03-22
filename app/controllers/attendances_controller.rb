@@ -82,6 +82,7 @@ class AttendancesController < ApplicationController
     end
   end
   
+  # 残業申請のお知らせモーダル
   def edit_notice_overtime
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
     # @notice_users = 「usersテーブルのid」を全て取り出す。
@@ -89,26 +90,37 @@ class AttendancesController < ApplicationController
     #     　全ての勤怠情報からuser_idが重複しないようにセレクトする。
     #       セレクトした「attendancesテーブルのuser_id」が「usersテーブルのid」として
     #       全て取得。
-    @attendance_notices = Attendance.where.not(endtime_at: nil)
+    @attendance_notices = Attendance.includes(:user).where.not(endtime_at: nil)
     @attendance_notices.each do |att_notice|
       @att_notice = att_notice
     end
   end
   
+  # 残業申請の更新
   def update_notice_overtime
     # 前提:form_withのurl引数（@user）はbefore_actionの
     #      set_userによって「上長」のユーザー情報を得る。
-    @attendance_notices = Attendance.where.not(endtime_at: nil)
-    @attendance_notices.update(overtime_notice_params)
-    @attendance_notices.each do |att_notice|
-      if att_notice.change == true
-        flash[:success] = "残業申請のお知らせを変更しました"
-        redirect_to @user and return
-      else
-        flash[:danger] = "変更にチェックを付けてください"
-        redirect_to @user and return
+    @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
+    @notice_users.each do |user|
+      @attendance_notices = Attendance.where.not(endtime_at: nil).where(user_id: user.id)
+      notice_overtime_params.each do |id, item|
+        attendance = Attendance.find(id)
+        attendance.update_attributes!(item)
       end
+      flash[:success] = "残業申請のお知らせを変更しました"
+      redirect_to @user
     end
+      
+    
+    # Attendance.import update_change_overtime on_duplicate_key_update:[:confirm, :change]
+
+    #   if update(id, item)
+    #     flash[:success] = "残業申請のお知らせを変更しました"
+    #     redirect_to @user and return
+    #   else
+        
+    #   end
+    # end
   end
   
   # 勤怠変更申請のお知らせ
@@ -139,8 +151,8 @@ class AttendancesController < ApplicationController
       params.require(:attendance).permit(:endtime_at, :tommorow_index, :overtime_memo, :name)
     end
     
-     def overtime_notice_params
-      params.require(:attendance).permit(:confirm, :change)
+     def notice_overtime_params
+      params.require(:attendance).permit(notice_attendances: [:confirm, :change])[:notice_attendances]
      end
      
      def updated_time_params
