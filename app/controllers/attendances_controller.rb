@@ -103,24 +103,19 @@ class AttendancesController < ApplicationController
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
     @notice_users.each do |user|
       @attendance_notices = Attendance.where.not(endtime_at: nil).where(user_id: user.id)
+    end
       notice_overtime_params.each do |id, item|
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+        if params[:attendance][:notice_attendances][id][:change] == "true"
+          attendance.update_attributes!(item)
+          next
+        else
+          flash[:danger] = "変更にチェックを入れてください"
+          redirect_to @user and return
+        end
       end
       flash[:success] = "残業申請のお知らせを変更しました"
       redirect_to @user
-    end
-      
-    
-    # Attendance.import update_change_overtime on_duplicate_key_update:[:confirm, :change]
-
-    #   if update(id, item)
-    #     flash[:success] = "残業申請のお知らせを変更しました"
-    #     redirect_to @user and return
-    #   else
-        
-    #   end
-    # end
   end
   
   # 勤怠変更申請のお知らせ
