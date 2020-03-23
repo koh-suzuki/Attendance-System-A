@@ -84,15 +84,12 @@ class AttendancesController < ApplicationController
   
   # 残業申請のお知らせモーダル
   def edit_notice_overtime
-    @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
-    # @notice_users = 「usersテーブルのid」を全て取り出す。
-    # 条件：attendancesテーブルの上長名カラム（name）と「ユーザーの名前」が同じ
-    #     　全ての勤怠情報からuser_idが重複しないようにセレクトする。
-    #       セレクトした「attendancesテーブルのuser_id」が「usersテーブルのid」として
-    #       全て取得。
-    @attendance_notices = Attendance.includes(:user).where.not(endtime_at: nil)
-    @attendance_notices.each do |att_notice|
-      @att_notice = att_notice
+    @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id)).where.not(id: current_user)
+    @notice_users.each do |user|
+      @u = user
+      @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
+        @att_notice = att_notice
+      end
     end
   end
   
@@ -120,16 +117,27 @@ class AttendancesController < ApplicationController
   
   # 勤怠変更申請のお知らせ
   def edit_change_attendance
+    @att_update_list = Attendance.where(name: current_user.name).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
     @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
-    @att_update_lists = Attendance.where.not(updated_started_at: nil) || 
-                        Attendance.where.not(updated_finished_at: nil)
-    @att_update_lists.each do |att_up|
+    @att_update_list.each do |att_up|
       @att_up = att_up
     end
   end
 
   def update_change_attendance
-    raise
+    @att_update_list = Attendance.where(name: current_user.name).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
+    change_attendance_params.each do |id, item|
+      if params[:updated_attendances][id][:change] == "true"
+        attendance = Attendance.find(id)
+        attendance.update_attributes!(item)
+        next
+      else
+        flash[:danger] = "変更にチェックを入れてください"
+        redirect_to @user and return
+      end
+    end
+    flash[:success] = "勤怠変更申請のお知らせを変更しました"
+    redirect_to @user
   end
   
   def attendance_edit_log
@@ -148,6 +156,10 @@ class AttendancesController < ApplicationController
     
      def notice_overtime_params
       params.require(:attendance).permit(notice_attendances: [:confirm, :change])[:notice_attendances]
+     end
+     
+     def change_attendance_params
+      params.require(:attendance).permit(updated_attendances: [:note, :confirm, :change])[:updated_attendances]
      end
      
      def updated_time_params

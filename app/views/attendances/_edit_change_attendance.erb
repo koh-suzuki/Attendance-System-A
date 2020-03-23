@@ -2,81 +2,84 @@
 
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
-  <%= form_with(model: @att_update_lists, url: update_change_attendance_user_attendance_path(@user, @att_up), local: true, method: :patch) do |f| %>
-    <% @users.each do |user| %>
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h3 class="modal-title text-center">【<%= user.name %>】からの勤怠変更申請</h3>
-      </div>
-      <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
-        <thead>
-          <tr>
-            <th rowspan="3" colspan="3">日付</th>
-            <th rowspan="3" colspan="3">曜日</th>
-            <th colspan="4">変更前</th>
-            <th colspan="4">変更後</th>
-            <th rowspan="3" width="200px">備考</th>
-            <th rowspan="3">支持者確認㊞</th>
-            <th rowspan="3">変更</th>
-            <th rowspan="3">勤怠を確認する</th>
-          </tr>
-          <tr>
-            <th colspan="2">出社</th>
-            <th colspan="2">退社</th>
-            <th colspan="2">出社</th>
-            <th colspan="2">退社</th>
-            
-          </tr>
-          <tr>
-            <th>時</th>
-            <th>分</th>
-            <th>時</th>
-            <th>分</th>
-            <th>時</th>
-            <th>分</th>
-            <th>時</th>
-            <th>分</th>
-          </tr>
-        </thead>
-        <% @users_changed_at = Attendance.where(user_id: user.id).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil) %>
-        <% @users_changed_at.each do |day| %>
-          <tbody>
+    <%= form_with(model: @att_update_list, url: update_change_attendance_user_attendance_path(@user, @att_up), local: true, method: :patch) do |f| %>
+      <% @users.each do |user| %>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title text-center">【<%= user.name %>】からの勤怠変更申請</h3>
+        </div>
+        <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+          <thead>
             <tr>
-              <!-- 日付 -->
-              <td colspan="3"><%= l(day.worked_on, format: :short) %></td>
-              <!-- 曜日 -->
-              <td colspan="3" class = "<%= css_class(day.worked_on) %>">
-                <%= $days_of_the_week[day.worked_on.wday] %>
-              </td>
-              <!-- 変更前(出/退) -->
-                <!-- 出勤 -->
-              <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-              <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
-                <!-- 退勤 -->
-              <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
-              <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
-              <!-- 変更後(出/退) -->
-                <!-- 出勤 -->
-              <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
-              <td><%= l(day.updated_started_at, format: :minute) if day.updated_started_at.present? %></td>
-                <!-- 退勤 -->
-              <td><%= l(day.updated_finished_at, format: :hour) if day.updated_finished_at.present? %></td>
-              <td><%= l(day.updated_finished_at, format: :minute) if day.updated_finished_at.present? %></td>
-              <!-- 備考 -->
-              <td><%= f.text_field :note, class: "form-control" %></td>
-              <!-- 支持者確認㊞ -->
-              <td><%= f.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
-              <!-- 変更 -->
-              <td><%= f.check_box :change, {class: "change"}, 'true', 'false' %></td>
-              <!-- 勤怠を確認する -->
-              <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
-          </tr>
-          </tbody>
-        <% end %>
-      </table>
+              <th rowspan="3" colspan="3">日付</th>
+              <th rowspan="3" colspan="3">曜日</th>
+              <th colspan="4">変更前</th>
+              <th colspan="4">変更後</th>
+              <th rowspan="3" width="200px">備考</th>
+              <th rowspan="3">支持者確認㊞</th>
+              <th rowspan="3">変更</th>
+              <th rowspan="3">勤怠を確認する</th>
+            </tr>
+            <tr>
+              <th colspan="2">出社</th>
+              <th colspan="2">退社</th>
+              <th colspan="2">出社</th>
+              <th colspan="2">退社</th>
+              
+            </tr>
+            <tr>
+              <th>時</th>
+              <th>分</th>
+              <th>時</th>
+              <th>分</th>
+              <th>時</th>
+              <th>分</th>
+              <th>時</th>
+              <th>分</th>
+            </tr>
+          </thead>
+          <% @per_user_attendances = Attendance.where(user_id: user.id).where(id: @att_update_list) %>
+            <% @per_user_attendances.each do |day| %>
+            <%= f.fields_for "updated_attendances[]", day do |attendance| %>
+              <tbody>
+                <tr>
+                  <!-- 日付 -->
+                  <td colspan="3"><%= l(day.worked_on, format: :short) %></td>
+                  <!-- 曜日 -->
+                  <td colspan="3" class = "<%= css_class(day.worked_on) %>">
+                    <%= $days_of_the_week[day.worked_on.wday] %>
+                  </td>
+                  <!-- 変更前(出/退) -->
+                    <!-- 出勤 -->
+                  <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
+                  <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
+                    <!-- 退勤 -->
+                  <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+                  <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
+                  <!-- 変更後(出/退) -->
+                    <!-- 出勤 -->
+                  <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
+                  <td><%= l(day.updated_started_at, format: :minute) if day.updated_started_at.present? %></td>
+                    <!-- 退勤 -->
+                  <td><%= l(day.updated_finished_at, format: :hour) if day.updated_finished_at.present? %></td>
+                  <td><%= l(day.updated_finished_at, format: :minute) if day.updated_finished_at.present? %></td>
+                  <!-- 備考 -->
+                  <td><%= attendance.text_field :note, class: "form-control" %></td>
+                  <!-- 支持者確認㊞ -->
+                  <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
+                  <!-- 変更 -->
+                  <td><%= attendance.check_box :change, {class: "change"}, 'true', 'false' %></td>
+                  <!-- 勤怠を確認する -->
+                  <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
+              </tr>
+              </tbody>
+            <% end %>
+            <% end %>
+        </table>
+      <% end %>
+      <div class="notice_update_submit"><%= f.submit yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
     <% end %>
-  <% end %>
   </div>
 </div>
