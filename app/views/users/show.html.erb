@@ -192,7 +192,9 @@
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>
-            <td><%= "#{day.confirm}：#{day.name}" if day.name.present? %></td>
+            <td>
+              <%= "#{day.name} へ残業申請中" if day.confirm.blank? && day.endtime_at.present? %>
+            </td>
           </tr>
         <% end %>
       </tbody>

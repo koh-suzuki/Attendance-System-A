@@ -127,9 +127,9 @@ class AttendancesController < ApplicationController
       @att_up = att_up
     end
   end
-  
+
   def update_change_attendance
-    
+    raise
   end
   
   def attendance_edit_log
