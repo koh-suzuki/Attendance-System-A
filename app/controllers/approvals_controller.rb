@@ -15,11 +15,13 @@ class ApprovalsController < ApplicationController
   end
   
   def edit
-    
+    @approval = Approval.find(params[:id])
+    @users = User.where(id: @approval.user_id)
+    @approvals = Approval.all
   end
-  
-    private
 
+  
+  private
     def approval_params
       params.require(:approval).permit(:superior_id, :month_at, :approval_flag)
     end
