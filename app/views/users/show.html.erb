@@ -194,6 +194,7 @@
             <td><%= day.try(:overtime_memo) %></td>
             <td>
               <%= "#{day.name} へ残業申請中" if day.confirm.blank? && day.endtime_at.present? %>
+              <%= "#{day.name} へ残業申請中" if day.updated_started_at.present? && day.updated_finished_at.present? && day.name.present? %>
             </td>
           </tr>
         <% end %>

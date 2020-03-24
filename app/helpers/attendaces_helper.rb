@@ -26,24 +26,6 @@ module AttendacesHelper
     end
   end
   
- 
-  
-   # 不正な値があるか確認する
-  # def attendances_invalid?
-  #   attendances = true
-  #   attendances_params.each do |id, item|
-  #     if item[:started_at].blank? && item[:finished_at].blank?
-  #       next
-  #     elsif item[:started_at].blank? || item[:finished_at].blank?
-  #       attendances = false
-  #       break
-  #     elsif item[:started_at] > item[:finished_at]
-  #       attendances = false
-  #       break
-  #     end
-  #   end
-  #   return attendances
-  # end
   
   def attendances_updated_invalid?
     attendances = true
@@ -61,8 +43,13 @@ module AttendacesHelper
     return attendances
   end
   
-  # def update_attendance_invalid?
-  #   @attendance = Attendance.find(params[:id])
-    
-  # end
+  def users(notice_users)
+    notice_users.each do |user|
+      @u = user
+      @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
+        @att_notice = att_notice
+      end
+    end
+  end
+
 end

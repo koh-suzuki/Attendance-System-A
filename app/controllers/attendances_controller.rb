@@ -85,12 +85,15 @@ class AttendancesController < ApplicationController
   # 残業申請のお知らせモーダル
   def edit_notice_overtime
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id)).where.not(id: current_user)
-    @notice_users.each do |user|
-      @u = user
-      @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
-        @att_notice = att_notice
-      end
-    end
+    users(@notice_users)
+    ### attendances_helper.rb 
+    # 
+    # @notice_users.each do |user|
+    #   @u = user
+    #   @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
+    #     @att_notice = att_notice
+    #   end
+    # end
   end
   
   # 残業申請の更新
