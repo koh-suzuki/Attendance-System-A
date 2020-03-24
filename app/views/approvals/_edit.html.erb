@@ -1,0 +1,43 @@
+<% provide(:button_text, '変更を送信する') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title text-center">【<%=  %>】からの勤怠変更申請</h3>
+        </div>
+        <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+          <thead>
+            <tr>
+              <th rowspan="3" colspan="3">日付</th>
+              <th rowspan="3" colspan="3">曜日</th>
+              <th colspan="4">変更前</th>
+              <th colspan="4">変更後</th>
+              <th rowspan="3" width="200px">備考</th>
+              <th rowspan="3">支持者確認㊞</th>
+              <th rowspan="3">変更</th>
+              <th rowspan="3">勤怠を確認する</th>
+            </tr>
+            <tr>
+              <th colspan="2">出社</th>
+              <th colspan="2">退社</th>
+              <th colspan="2">出社</th>
+              <th colspan="2">退社</th>
+              
+            </tr>
+            <tr>
+              <th>時</th>
+              <th>分</th>
+              <th>時</th>
+              <th>分</th>
+              <th>時</th>
+              <th>分</th>
+              <th>時</th>
+              <th>分</th>
+            </tr>
+          </thead>
+        </table>
+  </div>
+</div>
