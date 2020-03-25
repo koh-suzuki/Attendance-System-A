@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200315134759) do
+ActiveRecord::Schema.define(version: 20200325075511) do
 
   create_table "approvals", force: :cascade do |t|
     t.integer "superior_id"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20200315134759) do
     t.date "month_at"
     t.boolean "approval_flag"
     t.integer "user_id"
+    t.integer "confirm", default: 0
     t.index ["user_id"], name: "index_approvals_on_user_id"
   end
 
@@ -60,14 +61,14 @@ ActiveRecord::Schema.define(version: 20200315134759) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_time", default: "2020-03-14 08:00:00"
-    t.datetime "work_time", default: "2020-03-14 07:30:00"
+    t.datetime "basic_time", default: "2020-03-25 08:00:00"
+    t.datetime "work_time", default: "2020-03-25 07:30:00"
     t.boolean "superior", default: false
     t.integer "employee_number"
     t.string "uid"
-    t.datetime "designated_work_start_time", default: "2020-03-14 09:00:00"
-    t.datetime "designated_work_end_time", default: "2020-03-14 18:00:00"
-    t.datetime "basic_work_time", default: "2020-03-14 08:00:00"
+    t.datetime "designated_work_start_time", default: "2020-03-25 09:00:00"
+    t.datetime "designated_work_end_time", default: "2020-03-25 18:00:00"
+    t.datetime "basic_work_time", default: "2020-03-25 08:00:00"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

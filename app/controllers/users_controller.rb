@@ -65,15 +65,14 @@ class UsersController < ApplicationController
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id)).where.not(id: current_user)
     @notice_users.each do |user|
       @attendances_list = Attendance.where(user_id: user.id).where.not(endtime_at: nil)
+      @endtime_notice_sum = @attendances_list.count
     end
-    @endtime_notice_sum = @attendances_list.count
     # 勤怠変更申請のお知らせ合計
     @att_update_list = Attendance.where(name: current_user.name).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
     @att_update_sum = @att_update_list.count
     # 所属長承認申請（今のユーザーに申請分）の合計
     @approval_list = Approval.where(superior_id: current_user)
     @approval_sum = @approval_list.count
-    @approval = Approval.find(params[:id])
   end
   
   def admin_or_correct_user

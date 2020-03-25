@@ -1,4 +1,5 @@
 class ApprovalsController < ApplicationController
+  # before_action :set_attendance, only: [:edit]
   before_action :set_user, only: [:create, :edit]
   
   def create
@@ -15,8 +16,7 @@ class ApprovalsController < ApplicationController
   end
   
   def edit
-    @approval = Approval.find(params[:id])
-    @users = User.where(id: @approval.user_id)
+    @users = User.where(id: Approval.where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
     @users.each do |user| 
       @approvals = Approval.where(superior_id: @user.id).where(user_id: user.id).where.not(month_at: nil)
       @approvals.each do |approval|
@@ -26,10 +26,12 @@ class ApprovalsController < ApplicationController
   end
   
   def update
+    @users = User.where(id: Approval.where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
+    
   end
   
   private
     def approval_params
-      params.require(:approval).permit(:superior_id, :month_at, :approval_flag)
+      params.require(:approval).permit(updated_approvals:[:superior_id, :month_at, :approval_flag])[:updated_approvals]
     end
 end

@@ -41,7 +41,7 @@
           <!-- 所属長承認申請のお知らせボタン -->
           <% if @approval_list.present? %>
             <p class="notice">
-              <%= link_to "【所属長承認申請のお知らせ】", edit_user_approval_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+              <%= link_to "【所属長承認申請のお知らせ】", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
               <span>
                 <strong>
                   <%= "#{@approval_sum}件の通知があります" %>
@@ -67,7 +67,7 @@
           <% end %>
           
           <!-- 残業申請のお知らせボタン -->
-          <% if @attendances_list.present? %>
+          <% if @notice_users.present? %>
             <p class="notice">
               <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
               <span>
@@ -223,15 +223,15 @@
           <td>
             <% if current_user.superior? && @user.superior == false %>
             <% else %>
-              <%= form_with(model: @approval, url: user_approvals_path(@user), local: true) do |f| %>
+              <%= form_with(model: @approval, url: approvals_create_user_path(@user), local: true) do |f| %>
                 <div class="approval">
                   <p>
                     所属長承認: 
-                    <% if @approval.user_id == @user.id %>
-                      <%= "申請中" %>
-                    <% else %>
+                    <!--if @approval.present? && @approval.user_id == @user.id-->
+                      <!--"申請中"-->
+                    <!--else-->
                       <%= "未" %>
-                    <% end %>
+                    <!--end-->
                   </p>
                     <%= f.collection_select :name, @superiors, :id, :name, include_blank: true %>
                     <%= f.submit "申請", class: "btn btn-primary btn-block btn-md" %>
