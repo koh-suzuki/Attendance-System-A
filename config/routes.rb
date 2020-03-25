@@ -26,8 +26,6 @@ Rails.application.routes.draw do
       get 'attendances/attendance_edit_log'
       get 'attendances/edit_notice_overtime'
       get 'attendances/edit_change_attendance'
-      post 'approvals/create'
-      get 'approvals/edit'
     end
     resources :attendances do
       patch 'update'
@@ -41,7 +39,9 @@ Rails.application.routes.draw do
         patch 'update_notice_overtime'
         # 勤怠変更申請のお知らせモーダルの更新
         patch 'update_change_attendance'
-     end
+      end
+    end
+    resources :approvals do
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

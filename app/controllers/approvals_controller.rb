@@ -17,9 +17,16 @@ class ApprovalsController < ApplicationController
   def edit
     @approval = Approval.find(params[:id])
     @users = User.where(id: @approval.user_id)
-    @approvals = Approval.all
+    @users.each do |user| 
+      @approvals = Approval.where(superior_id: @user.id).where(user_id: user.id).where.not(month_at: nil)
+      @approvals.each do |approval|
+        @ap = approval
+      end
+    end
   end
-
+  
+  def update
+  end
   
   private
     def approval_params
