@@ -26,12 +26,24 @@ class ApprovalsController < ApplicationController
   end
   
   def update
-    @users = User.where(id: Approval.where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
-    
+    @user = User.find(params[:user_id])
+    @approval = Approval.find(params[:id])
+    approval_params.each do |id, item|
+      if params[:approval][:updated_approvals][id][:approval_flag] == "true"
+        approval = Approval.find(id)
+        approval.update_attributes!(item)
+        next
+      else
+        flash[:danger] = "変更にチェックが確認できませんでした。"
+        redirect_to @user and return
+      end
+    end
+    flash[:success] = "1ヶ月分勤怠申請を変更しました"
+    redirect_to @user
   end
   
   private
     def approval_params
-      params.require(:approval).permit(updated_approvals:[:superior_id, :month_at, :approval_flag])[:updated_approvals]
+      params.require(:approval).permit(updated_approvals:[:confirm, :approval_flag])[:updated_approvals]
     end
 end
