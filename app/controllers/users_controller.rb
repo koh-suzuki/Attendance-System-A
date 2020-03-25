@@ -73,6 +73,7 @@ class UsersController < ApplicationController
     # 所属長承認申請（今のユーザーに申請分）の合計
     @approval_list = Approval.where(superior_id: current_user)
     @approval_sum = @approval_list.count
+    @current_approval = Approval.find_by(user_id: @user)
   end
   
   def admin_or_correct_user

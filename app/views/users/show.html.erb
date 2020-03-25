@@ -225,16 +225,16 @@
             <% else %>
               <%= form_with(model: @approval, url: approvals_create_user_path(@user), local: true) do |f| %>
                 <div class="approval">
-                  <p>
+                  <p class="approval-btn">
                     所属長承認: 
-                    <!--if @approval.present? && @approval.user_id == @user.id-->
-                      <!--"申請中"-->
-                    <!--else-->
+                    <% if @current_approval.present? %>
+                     <%= "申請中" %>
+                    <% else %>
                       <%= "未" %>
-                    <!--end-->
+                    <% end %>
                   </p>
-                    <%= f.collection_select :name, @superiors, :id, :name, include_blank: true %>
-                    <%= f.submit "申請", class: "btn btn-primary btn-block btn-md" %>
+                  <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true %></p>
+                  <%= f.submit "申請", class: "btn btn-primary w-50" %>
                 </div>
               <% end %>
             <% end %>

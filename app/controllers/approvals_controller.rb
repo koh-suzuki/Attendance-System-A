@@ -27,7 +27,6 @@ class ApprovalsController < ApplicationController
   
   def update
     @user = User.find(params[:user_id])
-    @approval = Approval.find(params[:id])
     approval_params.each do |id, item|
       if params[:approval][:updated_approvals][id][:approval_flag] == "true"
         approval = Approval.find(id)
