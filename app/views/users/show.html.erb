@@ -227,13 +227,15 @@
                 <div class="approval">
                   <p class="approval-btn">
                     所属長承認: 
-                    <% if @current_approval.present? %>
-                     <%= "申請中" %>
+                    <% if @current_approval.present? && @current_approval.confirm.present? %>
+                      <%= "#{@approval_superior.name}から#{@current_approval.confirm}済" %>
+                    <% elsif @current_approval.present? && @current_approval.confirm.blank? %>
+                      <%= "#{@approval_superior.name}へ申請中" %>
                     <% else %>
                       <%= "未" %>
                     <% end %>
                   </p>
-                  <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true %></p>
+                  <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
                   <%= f.submit "申請", class: "btn btn-primary w-50" %>
                 </div>
               <% end %>

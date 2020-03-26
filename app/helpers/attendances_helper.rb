@@ -1,4 +1,4 @@
-module AttendacesHelper
+module AttendancesHelper
  
   def attendance_state(attendance)
     if Date.current == attendance.worked_on
@@ -30,17 +30,22 @@ module AttendacesHelper
   def attendances_updated_invalid?
     attendances = true
     attendances_params.each do |id, item|
-      if item[:updated_started_at].blank? && item[:updated_finished_at].blank?
-        next
-      elsif item[:updated_started_at].blank? || item[:updated_finished_at].blank?
-        attendances = false
-        break
-      elsif item[:updated_started_at] > item[:updated_finished_at]
+      if item[:name].present?
+        if item[:updated_started_at].blank? && item[:updated_finished_at].blank?
+          next
+        elsif item[:updated_started_at].blank? || item[:updated_finished_at].blank?
+          attendances = false
+          break
+        elsif item[:updated_started_at] > item[:updated_finished_at]
+          attendances = false
+          break
+        end
+        return attendances
+      else
         attendances = false
         break
       end
     end
-    return attendances
   end
   
   def users(notice_users)

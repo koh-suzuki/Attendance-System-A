@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  include AttendacesHelper
+  include AttendancesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime,
                                   :edit_change_attendance, :attendance_edit_log]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime, :update_change_attendance]
@@ -44,18 +44,16 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       if attendances_updated_invalid?
-        updated_time_params.each do |id, item|
+        attendances_params.each do |id, item|
           attendance = Attendance.find(id)
-          if attendance.name.blank? || present? && item[:name].present?
-            attendance.update_attributes!(item)
-          else
-            flash[:danger] = "支持者を選択してください。"
-            redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
-          end
+          attendance.update_attributes!(item)
         end
+          flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+          redirect_to user_url(date: params[:date])
+      else
+        flash[:danger] = "指示者を選択してください。"
+        redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
       end
-      flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-      redirect_to user_url(date: params[:date])
     end
   rescue ActiveRecord::RecordInvalid
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
