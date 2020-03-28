@@ -144,7 +144,7 @@ class AttendancesController < ApplicationController
   
   # 勤怠修正ログ
   def edit_attendance_log
-    @after_attendance_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
+    @updated_attendance_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
   end
 
   
