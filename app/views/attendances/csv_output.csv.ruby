@@ -5,8 +5,8 @@ CSV.generate do |csv|
   @attendance.each do |product|
     csv_column_values = [
       product.worked_on.strftime("%m/%d"),
-      product.started_at.present? ? product.started_at.strftime("%I:%M") : product.started_at,
-      product.finished_at.present? ? product.finished_at.strftime("%I:%M") : product.finished_at
+      product.updated_started_at.present? && product.confirm == "承認" ? product.updated_started_at.strftime("%I:%M") : nil,
+      product.updated_finished_at.present? && product.confirm == "承認" ? product.updated_finished_at.strftime("%I:%M") : nil
     ]
     csv << csv_column_values
   end

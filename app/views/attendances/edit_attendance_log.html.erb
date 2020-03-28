@@ -1,0 +1,34 @@
+<% provide(:tittle, "勤怠編集ログ（承認済）")%>
+<h1>勤怠編集ログ（承認済）</h1>
+<div>
+  <table class="table table-bordered table-condensed table-hover">
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>変更前出社時間</th>
+        <th>変更前退社時間</th>
+        <th>変更後出社時間</th>
+        <th>変更後退社時間</th>
+        <th>承認者</th>
+      </tr>  
+    </thead>
+    <% @after_attendance_list.each do |day| %>
+    <tbody>
+     <tr>
+       <!-- 日付 -->
+       <td><%= l(day.worked_on, format: :short) %></td>
+       <!-- 変更前出社時間 -->
+       <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
+       <!-- 変更前退社時間 -->
+       <td><%= l(day.finished_at, format: :time) if day.started_at.present? %></td>
+       <!-- 変更後出社時間 -->
+       <td><%= l(day.updated_started_at, format: :time) if day.updated_started_at.present? %></td>
+       <!-- 変更後退社時間 -->
+       <td><%= l(day.updated_finished_at, format: :time) if day.updated_finished_at.present? %></td>
+       <!-- 承認者 -->
+       <td></td>
+     </tr>
+    </tbody>
+    <% end %>
+  </table>
+</div>

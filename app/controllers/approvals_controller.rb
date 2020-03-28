@@ -16,7 +16,7 @@ class ApprovalsController < ApplicationController
   end
   
   def edit
-    @users = User.where(id: Approval.where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
+    @users = User.where(id: Approval.where(superior_id: @user.id).where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
     @users.each do |user| 
       @approvals = Approval.where(superior_id: @user.id).where(user_id: user.id).where.not(month_at: nil)
       @approvals.each do |approval|

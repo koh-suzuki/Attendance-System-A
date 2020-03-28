@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   include AttendancesHelper
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_notice_overtime,
-                                  :edit_change_attendance, :attendance_edit_log]
+                                  :edit_change_attendance, :edit_attendance_log]
   before_action :set_attendance, only: [:edit_overtime_app, :update_over_app, :update_notice_overtime, :update_change_attendance]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month]
@@ -118,15 +118,16 @@ class AttendancesController < ApplicationController
   
   # 勤怠変更申請のお知らせ
   def edit_change_attendance
-    @att_update_list = Attendance.where(name: current_user.name).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
+    @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
     @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
     @att_update_list.each do |att_up|
       @att_up = att_up
     end
   end
 
+   # 勤怠変更申請の更新
   def update_change_attendance
-    @att_update_list = Attendance.where(name: current_user.name).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
+    @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
     change_attendance_params.each do |id, item|
       if params[:attendance][:updated_attendances][id][:change] == "true"
         attendance = Attendance.find(id)
@@ -141,7 +142,9 @@ class AttendancesController < ApplicationController
     redirect_to @user
   end
   
-  def attendance_edit_log
+  # 勤怠修正ログ
+  def edit_attendance_log
+    @after_attendance_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
   end
 
   

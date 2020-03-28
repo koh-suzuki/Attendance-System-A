@@ -68,16 +68,17 @@ class UsersController < ApplicationController
       @endtime_notice_sum = @attendances_list.count
     end
     # 勤怠変更申請のお知らせ合計
-    @att_update_list = Attendance.where(name: current_user.name).where.not(updated_started_at: nil) || where.not(updated_finished_at: nil)
+    @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
     @att_update_sum = @att_update_list.count
     # 所属長承認申請（今のユーザーに申請分）の合計
-    @approval_list = Approval.where(superior_id: current_user)
+    @approval_list = Approval.where(superior_id: current_user).where.not(month_at: nil)
     @approval_sum = @approval_list.count
     @current_approvals = Approval.where(user_id: @user)
     @current_approvals.each do |current_approval|
       @current_approval = current_approval
       @approval_superior = User.find_by(id: @current_approval.superior_id)
     end
+    @attendance_csv = Attendance.joins(:user).where(id: Attendance.where(user_id: current_user))
   end
   
   def admin_or_correct_user

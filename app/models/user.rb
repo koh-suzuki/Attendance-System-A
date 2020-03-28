@@ -52,6 +52,14 @@ class User < ApplicationRecord
     end
   end
   
+  def csv_output
+    if self.confirm == "承認"
+      return true
+    else
+      return false
+    end
+  end
+  
   def self.updatable_attributes
     ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time",
      "designated_work_start_time", "designated_work_end_time", "superior", "admin", "password"]
