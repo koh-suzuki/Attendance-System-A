@@ -25,17 +25,23 @@
                 <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td>
                 <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
               <% else %>
-                <td><%= attendance.time_field :started_at, class: "form-control" %></td>
-                <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
+                <!-- 勤怠編集された出退勤時間を判別 -->
+                  <td><%= attendance.time_field :updated_started_at, class: "form-control" %></td>
+                  <td><%= attendance.time_field :updated_finished_at, class: "form-control" %></td>
               <% end %>
               <td><%= attendance.check_box :tommorow_index, {class: "tommorow_index"}, 'true', 'false' %></td>
               <td>
-                <% if day.started_at.present? && day.finished_at.present? %>
-                  <%= working_time(day.started_at, day.finished_at) %>
+                <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
+                  <%= working_time(day.updated_started_at, day.updated_finished_at) %>
                 <% end %>
               </td>
-              <td><%= attendance.text_field :note, class: "form-control" %></td>
-              <td><%= attendance.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></td>
+              <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>
+                <td><%= attendance.text_field :note, readonly: true, class: "form-control" %></td>
+                <td><%= attendance.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></td>
+              <% else %>
+                <td><%= attendance.text_field :note, class: "form-control" %></td>
+                <td><%= attendance.collection_select :name, User.where(superior: true).where.not(name: @user.name), :name, :name, include_blank: true, class: "select" %></td>
+              <% end %>
             </tr>
           <% end %>
         <% end %>

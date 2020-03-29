@@ -1,5 +1,5 @@
 <%= form_with(model: base, local: true) do |f| %>
-  <%= f.label :base_number, class: "label--edit" %>
+  <%= f.label :base_number, "拠点番号", class: "label--edit" %>
   <%= f.number_field :base_number, class: "form-control" %>
   
   <%= f.label :base_name, class: "label--edit" %>

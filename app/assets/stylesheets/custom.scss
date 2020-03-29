@@ -106,9 +106,36 @@ p {
   padding-top: 10%;
 }
 
+.modal-notice-title {
+  text-align: center;
+}
+
 
 /* 残業申請セレクト幅 */ 
 .bootstrap-date {
   display: inline-block;
   width: 40%;
+}
+
+/* 残業申請お知らせモーダル */ 
+#table-attendances {
+  margin-bottom: 20px;
+}
+
+.notice_update_submit {
+  margin-bottom: 20px;
+}
+
+/* 勤怠編集 上長セレクトボックス幅 */
+.select {
+  width: 40%;
+}
+
+/* showpwージ 装束超承申請 */ 
+.approval-btn {
+  margin: 0 0;
+}
+
+.w-50 {
+  width: 50%;
 }

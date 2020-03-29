@@ -11,16 +11,10 @@ class ApplicationController < ActionController::Base
     @user = User.find(params[:id])
   end
   
-  # user_id専用
-  def edit_user_id
+  def set_attendance
     @user = User.find(params[:user_id])
   end
   
-  #attendance_id専用
-  def set_attendance_id
-    @overtime = Attendance.find(params[:attendance_id])
-  end
-
   # ログイン済みのユーザーか確認します。
   def logged_in_user
     unless logged_in?
@@ -39,16 +33,21 @@ class ApplicationController < ActionController::Base
     redirect_to root_url unless current_user.admin?
   end
   
-  
+  def superior_user
+    # 現在のユーザーが上長であるユーザーを取得
+    @superior_user = User.where(superior: true).where(id: current_user)
+    # 上長ユーザーを取得
+    @superiors = User.where.not(id: current_user.id).where(superior: true)
+  end
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
   def set_one_month
-    # @first_day = params[:date].nil? ? Date.current.beginning_of_month : params[:date].to_date
-    @first_day = params[:date].nil? ? Date.current.beginning_of_month : Date.strptime(params[:date], '%Y年%m月%d日')
+    @user = User.find(params[:id])
+    @first_day = params[:date].nil? ? Date.current.beginning_of_month : params[:date].to_date
     @last_day = @first_day.end_of_month
     one_month = [*@first_day..@last_day] # 対象の月の日数を代入します。
     # ユーザーに紐付く一ヶ月分のレコードを検索し取得します。
-   @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
 
     unless one_month.count == @attendances.count # それぞれの件数（日数）が一致するか評価します。
       ActiveRecord::Base.transaction do # トランザクションを開始します。

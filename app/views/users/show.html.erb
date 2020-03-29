@@ -3,13 +3,17 @@
   <div>
     <table class="table table-bordered table-condensed user-table" id="table-attendances">
       <tr>
-        <td>
-          <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
-          &emsp;&emsp;
-          <%= l(@first_day, format: :middle) %>&emsp;時間管理表
-          &emsp;&emsp;
-          <%= link_to "→︎", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
-        </td>
+        <% if current_user.superior? && @user.superior == false %>
+          <td><%= l(@first_day, format: :middle) %>&emsp;時間管理表</td>
+        <% else %>
+          <td>
+            <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
+            &emsp;&emsp;
+            <%= l(@first_day, format: :middle) %>&emsp;時間管理表
+            &emsp;&emsp;
+            <%= link_to "→︎", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
+          </td>
+        <% end %>
         <td rowspam="2">
           指定勤務開始時間　<%= format_basic_info(@user.designated_work_start_time) %></br>
           指定勤務終了時間　<%= format_basic_info(@user.designated_work_end_time) %>
@@ -28,34 +32,78 @@
       </tr>
     </table>
   </div>
-  
-  <% if logged_in? && current_user.superior? %>
-    <div class="superior">
-      <p class="notice">
-        <%= link_to "【所属長承認申請のお知らせ】", "#", class: "superior_tag" %>
-      </p>
-      <p class="notice">
-        <%= link_to "【勤怠変更申請のお知らせ】", "#", class: "superior_tag" %>
-      </p>
-      <p class="notice">
-        <%= link_to "【残業申請のお知らせ】", "#", class: "superior_tag" %>
-      </p>
+    <!-- 所属長承認申請のお知らせボタン -->
+    <% if logged_in? && current_user.superior? %>
+      <% if current_user.superior? && @user.superior == false  %>
+    
+      <% else %>
+        <div class="superior">
+          <!-- 所属長承認申請のお知らせボタン -->
+          <% if @approval_list.present? %>
+            <p class="notice">
+              <%= link_to "【所属長承認申請のお知らせ】", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+              <span>
+                <strong>
+                  <%= "#{@approval_sum}件の通知があります" %>
+                </strong>
+              </span>
+            </p>
+          <% else %>
+            <p class="not_notice">【所属長承認申請のお知らせ】</p>
+          <% end %>
+          
+          <!-- 勤怠変更申請のお知らせボタン -->
+          <% if @att_update_list.present? %>
+            <p class="notice">
+              <%= link_to "【勤怠変更申請のお知らせ】", attendances_edit_change_attendance_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+              <span>
+                <strong>
+                  <%= link_to "#{@att_update_sum}件の通知があります", attendances_edit_change_attendance_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+                </strong>
+              </span>
+            </p>
+          <% else %>
+            <p class="not_notice">【勤怠変更申請のお知らせ】</p
+          <% end %>
+          
+          <!-- 残業申請のお知らせボタン -->
+          <% if @notice_users.present? %>
+            <p class="notice">
+              <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+              <span>
+                <strong>
+                  <%= link_to "#{@endtime_notice_sum}件の通知があります", attendances_edit_notice_overtime_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+                </strong>
+              </span>
+            </p>
+          <% else %>
+              <p class="not_notice">【残業申請のお知らせ】</p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+    
+    <% if current_user.superior? && @user.superior == false  %>
+    <% else %>
+    <div class="btn-users-show">
+      <span><%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %></span>
+      <span><%= link_to "CSV出力", csv_output_attendances_path(format: :csv), class: "btn btn-primary" %></span></br>
+      <%= link_to "勤怠修正ログ（承認済）", attendances_edit_attendance_log_user_path(@user), class: "btn btn-primary" %>
     </div>
-  <% end %>
-  
-  <div class="btn-users-show">
-    <span><%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %></span>
-    <span><%= link_to "CSV出力", csv_output_attendances_path(format: :csv), class: "btn btn-primary" %></span></br>
-    <%= link_to "勤怠修正ログ（承認済）", "#", class: "btn btn-primary" %>
-  </div>
+    <% end %>
   
   <div>
     <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
       <thead>
         <tr>
-          <th rowspan="3">残業申請</th>
-          <th rowspan="3">日付</th>
-          <th rowspan="3">曜日</th>
+          <% if current_user.superior? && @user.superior == false  %>
+            <th rowspan="3" colspan="3">日付</th>
+            <th rowspan="3" colspan="3">曜日</th>
+          <% else %>
+            <th rowspan="3">残業申請</th>
+            <th rowspan="3">日付</th>
+            <th rowspan="3">曜日</th>
+          <% end %>
           <th colspan="7">【実績】</th>
           <th colspan="6">所定外勤務</th>
         </tr>
@@ -67,12 +115,16 @@
           <th colspan="2">終了予定時間</th>
           <th rowspan="2">時間外時間</th>
           <th rowspan="2">業務処理内容</th>
-          <th rowspan="2">支持者確認㊞</th>
+          <th rowspan="2">指示者確認㊞</th>
         </tr>
         <tr>
           <th>時</th>
           <th>分</th>
-          <th></th>
+          <% if current_user.superior? && @user.superior == false  %>
+            <th width="80px"></th>
+          <% else %>
+            <th></th>
+          <% end %>
           <th>時</th>
           <th>分</th>
           <th></th>
@@ -80,84 +132,114 @@
           <th>分</th>
         </tr>
       </thead>
-      
       <tbody>
         <% @attendances.each do |day| %>
           <tr>
-            <td>
-             <%= link_to "残業申請", user_attendance_edit_overtime_app_path(@user, day), remote: true, class: "btn btn-primary btn-md", date: day.worked_on %>
-            </td>
-            <td><%= l(day.worked_on, format: :short) %></td>
-            <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-            <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-            <td><%= l(day.started_at.floor_to(60*15), format: :minute) if day.started_at.present? %></td>
-            <td>
-              <% if btn_text = attendance_state(day) %>
-                <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-block" %>
-              <% end %>
-            </td>
-            <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
-            <td><%= l(day.finished_at.floor_to(60*15), format: :minute) if day.finished_at.present? %></td>
+            <% if current_user.superior? && @user.superior == false  %>
+              <td colspan="3"><%= l(day.worked_on, format: :short) %></td>
+              <td colspan="3" class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+            <% else %>
+              <td>
+                <%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %>
+              </td>
+              <td><%= l(day.worked_on, format: :short) %></td>
+              <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+            <% end %>
+            <% unless day.updated_started_at.present? %>
+              <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
+              <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
+            <% else %>
+              <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
+              <td><%= l(day.updated_started_at, format: :minute) if day.updated_started_at.present? %></td>
+            <% end %>
+            <% if current_user.superior? && @user.superior == false  %>
+              <td></td>
+            <% else %>
+              <td>
+                <% if btn_text = attendance_state(day) %>
+                  <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-block" %>
+                <% end %>
+              </td>
+            <% end %>
+            <% unless day.updated_finished_at.present? %>
+              <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+              <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
+            <% else %>
+              <td><%= l(day.updated_finished_at, format: :hour) %></td>
+              <td><%= l(day.updated_finished_at, format: :minute) %></td>
+            <% end %>
             <td></td>
             <td>
-              <% if day.started_at.present? && day.finished_at.present? %>
-                <%= str_times = working_time(day.started_at, day.finished_at) %>
+              <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
+                <%= str_times = working_time(day.updated_started_at, day.updated_finished_at) %>
                 <% @total_working_time = @total_working_time.to_f + str_times.to_f %>
               <% end %>
             </td>
             <td><%= day.note %></td>
             <!-- 終了予定時間 -->
-            <td>
+            <td><!-- 終了予定時間（時） -->
               <% if day.tommorow_index == true %>
                 <%= day.endtime_at.tomorrow.strftime("%H") if day.endtime_at.present? %>
               <% else %>
                 <%= day.endtime_at.strftime("%H") if day.endtime_at.present? %>
               <% end %>
             </td>
-            <td>
+            <td> <!-- 終了予定時間（分） -->
               <% if day.tommorow_index == true %>
                 <%= day.endtime_at.tomorrow.strftime("%M") if day.endtime_at.present? %>
               <% else %>
                 <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
               <% end %>
             </td>
+            <!-- 時間外時間 -->
             <td>
-              <% if day.endtime_at.present? && day.finished_at.present? %>
-                <%= format("%.2f", Time.at(work_end_time(day)).utc.strftime('%H')) %>
+              <% if day.endtime_at.present? %>
+                <%= over_time(day.endtime_at.strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S")) %>
+              <% else %>
+  
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>
-            <td><%= "申請中：#{day.name}" if day.name.present? %></td>
+            <td>
+              <%= "#{day.name} へ残業申請中" if day.name.present? && day.endtime_at.present? %>
+              <%= "#{day.name} へ勤怠変更申請中" if day.updated_started_at.present? && day.updated_finished_at.present? && day.name.present? %>
+            </td>
           </tr>
         <% end %>
       </tbody>
       
       <tfoot>
         <tr>
-          <td rowspan="3"></td>
-          <td colspan="2" rowspam="3"></td>
+          <% if current_user.superior? && @user.superior == false %>
+            <td rowspan="3" colspan="3"></td>
+            <td colspan="3" rowspam="3"></td>
+          <% else %>
+            <td rowspan="3"></td>
+            <td colspan="2" rowspam="3"></td>
+          <% end %>
           <td colspan="6" rowspam="3"></td>
           <td rowspam="3"><%= format("%.2f", @total_working_time.to_f) %></td>
           <td colspan="5" rowspam="3"></td>
           <td>
-            <div class="approval">
-              所属長承認　未
-              <div class="dropdown">
-                 <!--切替ボタンの設定 -->
-                <button type="button" class="btn btn-default btn-lg btn-block dropdown-toggle" id="dropdownMenuButton" 
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="caret pull-right"></span>
-                </button>
-               
-                 <!--ドロップメニューの設定 -->
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <option><%= @user.name %></option>
-                </div> 
-              </div>
-              <div>
-                <%= link_to "申請", "#", class: "btn btn-primary btn-block btn-lg" %>
-              </div>
-            </div>
+            <% if current_user.superior? && @user.superior == false %>
+            <% else %>
+              <%= form_with(model: @approval, url: approvals_create_user_path(@user), local: true) do |f| %>
+                <div class="approval">
+                  <p class="approval-btn">
+                    所属長承認: 
+                    <% if @current_approval.present? && @current_approval.confirm.present? %>
+                      <%= "#{@approval_superior.name}から#{@current_approval.confirm}済" %>
+                    <% elsif @current_approval.present? && @current_approval.confirm.blank? %>
+                      <%= "#{@approval_superior.name}へ申請中" %>
+                    <% else %>
+                      <%= "未" %>
+                    <% end %>
+                  </p>
+                  <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
+                  <%= f.submit "申請", class: "btn btn-primary w-50" %>
+                </div>
+              <% end %>
+            <% end %>
           </td>
         </tr>
       </tfoot>
@@ -165,4 +247,7 @@
   </div>
 </div>
 
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_change_attendance" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_notice_overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit_overtime_app" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

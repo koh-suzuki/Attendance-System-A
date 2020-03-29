@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
+  has_many :approvals, dependent: :destroy
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
   validates :name, presence: true, length: { maximum: 50 }
@@ -51,10 +52,18 @@ class User < ApplicationRecord
     end
   end
   
+  def csv_output
+    if self.confirm == "承認"
+      return true
+    else
+      return false
+    end
+  end
+  
   def self.updatable_attributes
     ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time",
      "designated_work_start_time", "designated_work_end_time", "superior", "admin", "password"]
   end
   
-
+  enum confirm: { "なし" => 1, "申請中" => 2, "承認" => 3, "否認" => 4 }
 end

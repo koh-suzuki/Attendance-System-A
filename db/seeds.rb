@@ -10,7 +10,7 @@ User.create!(name: "Sample User",
              admin: true,
              )
 
-User.create!(name: "Superior User",
+User.create!(name: "上長A",
              email: "superior@email.com",
              password: "password",
              affiliation: "上長部",
@@ -22,7 +22,7 @@ User.create!(name: "Superior User",
              superior: true,
              admin: false)
              
-User.create!(name: "Superior User-2",
+User.create!(name: "上長B",
              email: "superior2@email.com",
              password: "password",
              affiliation: "上長部",

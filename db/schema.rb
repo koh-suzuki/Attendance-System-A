@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200108094629) do
+ActiveRecord::Schema.define(version: 20200325075511) do
+
+  create_table "approvals", force: :cascade do |t|
+    t.integer "superior_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "month_at"
+    t.boolean "approval_flag"
+    t.integer "user_id"
+    t.integer "confirm", default: 0
+    t.index ["user_id"], name: "index_approvals_on_user_id"
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -24,7 +35,12 @@ ActiveRecord::Schema.define(version: 20200108094629) do
     t.string "overtime_memo"
     t.string "name"
     t.datetime "endtime_at"
-    t.string "supporter"
+    t.boolean "change"
+    t.integer "suppoter"
+    t.integer "confirm", default: 0
+    t.integer "approval_id"
+    t.datetime "updated_started_at"
+    t.datetime "updated_finished_at"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -45,14 +61,14 @@ ActiveRecord::Schema.define(version: 20200108094629) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_time", default: "2020-01-27 08:00:00"
-    t.datetime "work_time", default: "2020-01-27 07:30:00"
+    t.datetime "basic_time", default: "2020-03-28 08:00:00"
+    t.datetime "work_time", default: "2020-03-28 07:30:00"
     t.boolean "superior", default: false
     t.integer "employee_number"
     t.string "uid"
-    t.datetime "designated_work_start_time", default: "2020-01-27 09:00:00"
-    t.datetime "designated_work_end_time", default: "2020-01-27 18:00:00"
-    t.datetime "basic_work_time", default: "2020-01-27 08:00:00"
+    t.datetime "designated_work_start_time", default: "2020-03-28 09:00:00"
+    t.datetime "designated_work_end_time", default: "2020-03-28 18:00:00"
+    t.datetime "basic_work_time", default: "2020-03-28 08:00:00"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

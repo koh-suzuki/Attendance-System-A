@@ -1,0 +1,39 @@
+<% provide(:button_text, '変更を送信する') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <%= form_with(model: @approvals, url: user_approval_path(@user, @ap), local: true, method: :patch) do |f| %>
+      <% @users.each do |user| %>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title text-center">【<%= user.name %>】からの1ヶ月分勤怠申請</h3>
+          </div>
+          <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+            <thead>
+              <tr>
+                <th>月</th>
+                <th>指示者確認㊞</th>
+                <th>変更</th>
+                <th>勤怠を確認する</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @approvals.each do |approval| %>
+                <%= f.fields_for "updated_approvals[]", approval do |a|  %>
+                <tr>
+                  <td><%= l(approval.month_at, format: :month) %></td>
+                  <td><%= a.select :confirm, Approval.confirms.keys.to_a, include_blank: true %></td>
+                  <td><%= a.check_box :approval_flag, {class: "approval_flag"}, 'true', 'false' %></td>
+                  <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
+                </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+        <div class="notice_update_submit"><%= f.submit yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
+      <% end %>
+  </div>
+</div>

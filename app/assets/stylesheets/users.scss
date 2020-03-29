@@ -14,7 +14,15 @@
 .notice {
   margin-top: 0px;
   margin-bottom: 0px;
+  color: #ff0000;  /* red */
 }
+
+.not_notice {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+
 
 /* ユーザー情報下ボタン */
 
@@ -26,12 +34,17 @@
 
 /* 勤怠画面上長タグ*/ 
 .superior_tag {
-  color: #333333;
+  color: red; 
+  text-decoration: none;
 }
 
 a.superior_tag:hover {
-  color: #9d9d9d;
+  color: red;
   text-decoration: none;
+}
+
+.notice span {
+  border: 2px solid red; color: red;
 }
 
 /* ユーザ一覧 */

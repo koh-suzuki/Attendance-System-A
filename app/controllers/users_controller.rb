@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info]
   before_action :set_one_month, only: :show
   before_action :admin_or_correct_user, only: :show
+  before_action :superior_user, only: :show
 
   def index
     @users = User.all
@@ -60,24 +61,29 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
+    # 残業申請のお知らせ合計
+    @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id)).where.not(id: current_user)
+    @notice_users.each do |user|
+      @attendances_list = Attendance.where(user_id: user.id).where.not(endtime_at: nil)
+      @endtime_notice_sum = @attendances_list.count
+    end
+    # 勤怠変更申請のお知らせ合計
+    @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
+    @att_update_sum = @att_update_list.count
+    # 所属長承認申請（今のユーザーに申請分）の合計
+    @approval_list = Approval.where(superior_id: current_user).where.not(month_at: nil)
+    @approval_sum = @approval_list.count
+    @current_approvals = Approval.where(user_id: @user)
+    @current_approvals.each do |current_approval|
+      @current_approval = current_approval
+      @approval_superior = User.find_by(id: @current_approval.superior_id)
+    end
+    @attendance_csv = Attendance.joins(:user).where(id: Attendance.where(user_id: current_user))
   end
   
-  # def edit_basic_info
-  # end
-  
-  # def update_basic_info
-  #   if @user.update_attributes(basic_params)
-  #     flash[:success] = "#{@user.name}の基本情報を更新しました。"
-  #   else
-  #     flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
-  #   end
-  #   redirect_to users_url
-  # end
-  
-  
   def admin_or_correct_user
-    unless current_user?(@user) || current_user.admin?
-      flash[:danger] = "残念でした！"
+    unless current_user?(@user) || current_user.admin? || current_user.superior?
+      flash[:danger] = "ログインしてください。"
       redirect_to(root_url)
     end
   end

@@ -18,5 +18,10 @@ ja:
           worked_on: 日付
           started_at: 出勤時間
           finished_at: 退勤時間
+          change: 変更
           note: 備考
           user: ユーザーID
+        base:
+          base_number: 拠点番号
+          base_name: 拠点名
+          base_attendance: 拠点種類

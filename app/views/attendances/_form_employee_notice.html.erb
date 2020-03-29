@@ -1,0 +1,38 @@
+<h3 class="modal-notice-title">【<%= @user.name %>からの残業申請】</h3>
+   <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>曜日</th>
+        <th>終了予定時間</th>
+        <th>指定勤務終了時間</th>
+        <th>時間外時間</th>
+        <th>業務処理内容</th>
+        <th>指示者確認㊞</th>
+        <th>変更</th>
+        <th>勤怠を確認する</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users_notice.each do |user| %>
+        <tr>
+          <td><%= l(user.worked_on, format: :short) %></td>
+          <td class= "<%= css_class(user.worked_on) %>"><%= $days_of_the_week[user.worked_on.wday] %></td>
+          <td><%= l(user.endtime_at, format: :time) %></td>
+          <td><%= format_basic_info(@user.designated_work_end_time) %></td>
+          <td>
+            <% if user.endtime_at.present? && user.finished_at.present? %>
+              <%= format("%.2f", Time.at(work_end_time(user)).utc.strftime('%H')) %>
+            <% end %>
+          </td>
+          <td><%= user.overtime_memo %></td>
+          <td><%= user.name %></td>
+          <td><%= f.check_box :change, {class: "change"}, 'true', 'false' %></td>
+          <td><%= f.submit "確認", class: "btn btn-primary btn-md" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="center">
+    <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
+  </div>
