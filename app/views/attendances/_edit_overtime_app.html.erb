@@ -26,11 +26,17 @@
               </thead>
               <tbody>
                 <tr>
+                  <!-- 日付 -->
                   <td><%= l(day.worked_on, format: :short) %></td>
+                  <!-- 曜日 -->
                   <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+                  <!-- 終了予定時間 -->
                   <td><%= f.time_select :endtime_at, {}, class: 'form-control bootstrap-date' %></td>
+                  <!-- 翌日 -->
                   <td><%= f.check_box :tommorow_index, {class: "tommorow_index"}, 'true', 'false' %></td>
+                  <!-- 業務処理内容 -->
                   <td><%= f.text_field :overtime_memo, :size => "20", class: "form-control" %></td>
+                  <!-- 支持者確認㊞ -->
                   <% unless current_user.superior? %>
                     <td><%= f.collection_select :name,  @superiors, :name, :name, :prompt =>"上長を選択してください。" %></td>
                   <% else %>

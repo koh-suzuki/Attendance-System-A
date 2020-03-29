@@ -194,7 +194,7 @@
             <!-- 時間外時間 -->
             <td>
               <% if day.endtime_at.present? %>
-                <%= over_time(day.endtime_at.strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S")) %>
+                <%= over_time(day.endtime_at.strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S"), day) %>
               <% else %>
   
               <% end %>
