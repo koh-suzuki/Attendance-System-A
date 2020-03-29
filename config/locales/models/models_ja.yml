@@ -21,3 +21,7 @@ ja:
           change: 変更
           note: 備考
           user: ユーザーID
+        base:
+          base_number: 拠点番号
+          base_name: 拠点名
+          base_attendance: 拠点種類
