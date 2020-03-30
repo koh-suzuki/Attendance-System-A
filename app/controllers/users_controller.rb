@@ -55,9 +55,14 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    @user.destroy
-    flash[:success] = "User deleted.."
-    redirect_to users_url
+    if @user.admin?
+      flash[:danger] = "管理者は削除できません"
+      redirect_to users_url
+    else
+      @user.destroy
+      flash[:success] = "User deleted.."
+      redirect_to users_url
+    end
   end
 
   def show
