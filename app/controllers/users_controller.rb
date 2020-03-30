@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   before_action :rejection_admin, only: [:show, :edit_one_month]
 
   def index
-    @users = User.all
+    @users = User.all.order('id ASC')
   end
  
   def import
