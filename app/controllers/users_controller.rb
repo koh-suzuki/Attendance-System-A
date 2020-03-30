@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   before_action :set_one_month, only: :show
   before_action :admin_or_correct_user, only: :show
   before_action :superior_user, only: :show
+  before_action :rejection_admin, only: [:show, :edit_one_month]
 
   def index
     @users = User.all
