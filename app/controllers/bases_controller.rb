@@ -1,8 +1,10 @@
 class BasesController < ApplicationController
   before_action :set_base, only: [:update, :show, :destroy]
+  before_action :logged_in_user, only: [:index, :update, :show, :destroy]
+  before_action :admin_user, only: [:index, :update, :show, :destroy]
 
   def index
-    @bases = Base.all
+    @bases = Base.all.order('id ASC')
   end
   
   def new
