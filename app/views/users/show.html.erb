@@ -141,13 +141,19 @@
               <!-- 曜日 -->
               <td colspan="3" class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <% else %>
+<<<<<<< HEAD
               <!-- 残業申請 -->
+=======
+>>>>>>> ordinary-people
               <% if Date.current < day.worked_on %>
                 <td><%= link_to "残業申請", "#", remote: true, disabled: true, class: "btn btn-primary btn-md" %></td>
               <% else %>
                 <td><%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %></td>
               <% end %>
+<<<<<<< HEAD
               <!-- 日付 -->
+=======
+>>>>>>> ordinary-people
               <td><%= l(day.worked_on, format: :short) %></td>
               <!-- 曜日 -->
               <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
