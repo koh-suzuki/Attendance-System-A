@@ -236,7 +236,11 @@
                     <% end %>
                   </p>
                   <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
-                  <%= f.submit "申請", class: "btn btn-primary w-50" %>
+                  <% if Date.current.next_month < @last_day %>
+                    <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
+                  <% else %>
+                    <%= f.submit "申請", class: "btn btn-primary w-50" %>
+                  <% end %>
                 </div>
               <% end %>
             <% end %>
