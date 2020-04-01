@@ -1,6 +1,10 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="container">
+    <% if current_user && current_user.admin? %>
+      <%= link_to "勤怠システム", "#", id: "logo" %>
+    <% else %>
       <%= link_to "勤怠システム", current_user, id: "logo" %>
+    <% end %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
         <% if !logged_in? %>

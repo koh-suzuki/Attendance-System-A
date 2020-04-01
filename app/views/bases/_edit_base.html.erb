@@ -1,4 +1,5 @@
 <%= form_with(model: base, local: true) do |f| %>
+<%= render "shared/error_messages", model: f.object %>
   <%= f.label :base_number, "拠点番号", class: "label--edit" %>
   <%= f.number_field :base_number, class: "form-control" %>
   

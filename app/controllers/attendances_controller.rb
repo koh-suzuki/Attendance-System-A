@@ -7,6 +7,7 @@ class AttendancesController < ApplicationController
   before_action :set_one_month, only: [:edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :superior_user, only: [:edit_overtime_app, :edit_change_attendance]
+  before_action :rejection_admin, only: [:show, :edit_one_month]
   
   require 'csv'
   require 'rails/all'

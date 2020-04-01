@@ -1,8 +1,11 @@
 class BasesController < ApplicationController
   before_action :set_base, only: [:update, :show, :destroy]
+  before_action :logged_in_user, only: [:index, :update, :show, :destroy]
+  before_action :admin_user, only: [:index, :update, :show, :destroy]
 
   def index
-    @bases = Base.all
+    @bases = Base.all.order('id ASC')
+    @base = Base.new
   end
   
   def new
@@ -15,7 +18,8 @@ class BasesController < ApplicationController
       flash[:success] = "拠点情報を作成しました。"
       redirect_to bases_url
     else
-      flash[:notice] = "拠点情報の作成に失敗しました。"
+      flash[:danger] = "拠点情報の作成に失敗しました。"
+      @bases = Base.all.order('id ASC')
       render :index
     end
   end

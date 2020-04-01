@@ -32,6 +32,11 @@ class ApplicationController < ActionController::Base
   def admin_user
     redirect_to root_url unless current_user.admin?
   end
+
+
+  def rejection_admin
+    redirect_to root_url if current_user.admin
+  end
   
   def superior_user
     # 現在のユーザーが上長であるユーザーを取得

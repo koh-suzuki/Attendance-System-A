@@ -1,7 +1,7 @@
 <% if model.errors.any? %>
 <div id="error_explanation">
   <div class="alert alert-danger">
-    入力エラーが<%= model.errors.count %>件ありました。
+    入力エラーが<%= pluralize(model.errors.count) %>件ありました。
   </div>
   <ul>
     <% model.errors.full_messages.each do |msg| %>

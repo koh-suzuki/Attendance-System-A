@@ -21,6 +21,7 @@ module AttendancesHelper
     end
   end
   
+  
   def css_class(wo)
     case $days_of_the_week[wo.wday]
     when '土'
