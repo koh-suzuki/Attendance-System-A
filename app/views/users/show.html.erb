@@ -136,15 +136,23 @@
         <% @attendances.each do |day| %>
           <tr>
             <% if current_user.superior? && @user.superior == false  %>
+              <!-- 日付 -->
               <td colspan="3"><%= l(day.worked_on, format: :short) %></td>
+              <!-- 曜日 -->
               <td colspan="3" class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <% else %>
-              <td>
-                <%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %>
-              </td>
+              <!-- 残業申請 -->
+              <% if Date.current < day.worked_on %>
+                <td><%= link_to "残業申請", "#", remote: true, disabled: true, class: "btn btn-primary btn-md" %></td>
+              <% else %>
+                <td><%= link_to "残業申請", edit_overtime_app_user_attendance_path(@user, day), remote: true, class: "btn btn-primary btn-md" %></td>
+              <% end %>
+              <!-- 日付 -->
               <td><%= l(day.worked_on, format: :short) %></td>
+              <!-- 曜日 -->
               <td class = "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
             <% end %>
+            <!-- 出社 -->
             <% unless day.updated_started_at.present? %>
               <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
               <td><%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %></td>
@@ -152,6 +160,7 @@
               <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
               <td><%= l(day.updated_started_at.floor_to(15.minutes), format: :minute) if day.updated_started_at.present? %></td>
             <% end %>
+            <!-- 出社&退社ボタン -->
             <% if current_user.superior? && @user.superior == false  %>
               <td></td>
             <% else %>
@@ -161,6 +170,7 @@
                 <% end %>
               </td>
             <% end %>
+            <!-- 退社 -->
             <% unless day.updated_finished_at.present? %>
               <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
               <td><%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %></td>
@@ -169,12 +179,14 @@
               <td><%= l(day.updated_finished_at.floor_to(15.minutes), format: :minute) %></td>
             <% end %>
             <td></td>
+            <!-- 在社時間 -->
             <td>
               <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
                 <%= str_times = working_time(day.updated_started_at, day.updated_finished_at) %>
                 <% @total_working_time = @total_working_time.to_f + str_times.to_f %>
               <% end %>
             </td>
+            <!-- 備考 -->
             <td><%= day.note %></td>
             <!-- 終了予定時間 -->
             <td><!-- 終了予定時間（時） -->
@@ -199,7 +211,9 @@
               
               <% end %>
             </td>
+            <!-- 業務処理内容 -->
             <td><%= day.try(:overtime_memo) %></td>
+            <!-- 指示者確認㊞ -->
             <td>
               <%= "#{day.name} へ残業申請中" if day.name.present? && day.endtime_at.present? %>
               <%= "#{day.name} へ勤怠変更申請中" if day.updated_started_at.present? && day.updated_finished_at.present? && day.name.present? %>
@@ -236,7 +250,11 @@
                     <% end %>
                   </p>
                   <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
-                  <%= f.submit "申請", class: "btn btn-primary w-50" %>
+                  <% if Date.current.next_month < @last_day %>
+                    <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
+                  <% else %>
+                    <%= f.submit "申請", class: "btn btn-primary w-50" %>
+                  <% end %>
                 </div>
               <% end %>
             <% end %>
