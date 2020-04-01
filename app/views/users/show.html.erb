@@ -147,10 +147,10 @@
             <% end %>
             <% unless day.updated_started_at.present? %>
               <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-              <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
+              <td><%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %></td>
             <% else %>
               <td><%= l(day.updated_started_at, format: :hour) if day.updated_started_at.present? %></td>
-              <td><%= l(day.updated_started_at, format: :minute) if day.updated_started_at.present? %></td>
+              <td><%= l(day.updated_started_at.floor_to(15.minutes), format: :minute) if day.updated_started_at.present? %></td>
             <% end %>
             <% if current_user.superior? && @user.superior == false  %>
               <td></td>
@@ -163,10 +163,10 @@
             <% end %>
             <% unless day.updated_finished_at.present? %>
               <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
-              <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
+              <td><%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %></td>
             <% else %>
               <td><%= l(day.updated_finished_at, format: :hour) %></td>
-              <td><%= l(day.updated_finished_at, format: :minute) %></td>
+              <td><%= l(day.updated_finished_at.floor_to(15.minutes), format: :minute) %></td>
             <% end %>
             <td></td>
             <td>
@@ -186,17 +186,17 @@
             </td>
             <td> <!-- 終了予定時間（分） -->
               <% if day.tommorow_index == true %>
-                <%= day.endtime_at.tomorrow.strftime("%M") if day.endtime_at.present? %>
+                <%= day.endtime_at.floor_to(15.minutes).tomorrow.strftime("%M") if day.endtime_at.present? %>
               <% else %>
-                <%= day.endtime_at.strftime("%M") if day.endtime_at.present? %>
+                <%= day.endtime_at.floor_to(15.minutes).strftime("%M") if day.endtime_at.present? %>
               <% end %>
             </td>
             <!-- 時間外時間 -->
             <td>
               <% if day.endtime_at.present? %>
-                <%= over_time(day.endtime_at.strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S"), day) %>
+                <% before_overtime = over_time(day.endtime_at.floor_to(15.minutes).strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S"), day) %>
               <% else %>
-  
+              
               <% end %>
             </td>
             <td><%= day.try(:overtime_memo) %></td>

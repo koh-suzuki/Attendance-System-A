@@ -21,6 +21,14 @@ module AttendancesHelper
     end
   end
   
+  def next_overtime(endtime, before, day)
+    if day.tommorow_index = true
+      format("%.2f", ((((Time.parse(endtime) - Time.parse(before)) + Time.parse(endtime)) / 60) / 60.0) + 24)
+    else
+      format("%.2f", ((((Time.parse(endtime) - Time.parse(before)) + Time.parse(endtime)) / 60) / 60.0))
+    end
+  end
+  
   def css_class(wo)
     case $days_of_the_week[wo.wday]
     when '土'
