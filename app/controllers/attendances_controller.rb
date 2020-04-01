@@ -49,13 +49,10 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id)
           attendance.update_attributes!(item)
         end
-          flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-          redirect_to user_url(date: params[:date])
-      else
-        flash[:danger] = "指示者を選択してください。"
-        redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
       end
     end
+    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+    redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
       redirect_to attendances_edit_one_month_user_url(date: params[:date])
@@ -84,15 +81,12 @@ class AttendancesController < ApplicationController
   # 残業申請のお知らせモーダル
   def edit_notice_overtime
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id)).where.not(id: current_user)
-    users(@notice_users)
-    ### attendances_helper.rb 
-    # 
-    # @notice_users.each do |user|
-    #   @u = user
-    #   @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
-    #     @att_notice = att_notice
-    #   end
-    # end
+    @notice_users.each do |user|
+      @u = user
+      @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
+        @att_notice = att_notice
+      end
+    end
   end
   
   # 残業申請の更新

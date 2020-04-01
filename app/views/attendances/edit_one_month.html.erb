@@ -19,27 +19,39 @@
         <% @attendances.each do |day| %>
           <%= f.fields_for "attendances[]", day do |attendance| %>
             <tr>
+              <!-- 日付 -->
               <td><%= l(day.worked_on, format: :short) %></td>
+              <!-- 曜日 -->
               <td class= "<%= css_class(day.worked_on) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
               <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>
+                <!-- 出社 -->
                 <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td>
+                <!-- 退社 -->
                 <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
               <% else %>
                 <!-- 勤怠編集された出退勤時間を判別 -->
-                  <td><%= attendance.time_field :updated_started_at, class: "form-control" %></td>
-                  <td><%= attendance.time_field :updated_finished_at, class: "form-control" %></td>
+                <!-- 出社 -->
+                <td><%= attendance.time_field :updated_started_at, class: "form-control" %></td>
+                <!-- 退社 -->
+                <td><%= attendance.time_field :updated_finished_at, class: "form-control" %></td>
               <% end %>
+              <!-- 翌日 -->
               <td><%= attendance.check_box :tommorow_index, {class: "tommorow_index"}, 'true', 'false' %></td>
+              <!-- 在社時間 -->
               <td>
                 <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
                   <%= working_time(day.updated_started_at, day.updated_finished_at) %>
                 <% end %>
               </td>
               <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>
+                <!-- 備考 -->
                 <td><%= attendance.text_field :note, readonly: true, class: "form-control" %></td>
+                <!-- 支持者確認㊞ -->
                 <td><%= attendance.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></td>
               <% else %>
+                <!-- 備考 -->
                 <td><%= attendance.text_field :note, class: "form-control" %></td>
+                <!-- 支持者確認㊞ -->
                 <td><%= attendance.collection_select :name, User.where(superior: true).where.not(name: @user.name), :name, :name, include_blank: true, class: "select" %></td>
               <% end %>
             </tr>

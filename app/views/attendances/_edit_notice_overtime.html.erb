@@ -47,11 +47,7 @@
                     <td><%= format_basic_info(@u.designated_work_end_time) %></td>
                     <!-- 時間外時間 -->
                     <td>
-                      <% if att_notice.endtime_at.present? %>
-                        <%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), @u.designated_work_end_time.strftime("%H:%M:%S")) %>
-                      <% else %>
-                        <!-- endtime_atはありません。 -->
-                      <% end %>
+                    <%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), @u.designated_work_end_time.strftime("%H:%M:%S"), att_notice) if att_notice.endtime_at.present? %>
                     </td>
                     <!-- 業務処理内容 -->
                     <td><%= att_notice.try(:overtime_memo) %></td>
