@@ -72,7 +72,11 @@ class UsersController < ApplicationController
     @notice_users.each do |user|
       @attendances_list = Attendance.where(user_id: user.id).where.not(endtime_at: nil)
       @endtime_notice_sum = @attendances_list.count
+      @attendances_list.each do |att_notice|
+        @att_notice = att_notice
+      end
     end
+    
     # 勤怠変更申請のお知らせ合計
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
     @att_update_sum = @att_update_list.count

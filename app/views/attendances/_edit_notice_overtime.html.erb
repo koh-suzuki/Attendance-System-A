@@ -46,9 +46,7 @@
                     <!-- 指定勤務終了時間 -->
                     <td><%= format_basic_info(@u.designated_work_end_time) %></td>
                     <!-- 時間外時間 -->
-                    <td>
-                    <%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), @u.designated_work_end_time.strftime("%H:%M:%S"), att_notice) if att_notice.endtime_at.present? %>
-                    </td>
+                    <td><%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), @u.designated_work_end_time.strftime("%H:%M:%S"), att_notice)  if att_notice.endtime_at.present? %></td>
                     <!-- 業務処理内容 -->
                     <td><%= att_notice.try(:overtime_memo) %></td>
                     <!-- 指示者確認㊞ -->
