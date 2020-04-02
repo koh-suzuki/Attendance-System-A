@@ -68,6 +68,7 @@
           
           <!-- 残業申請のお知らせボタン -->
           <% if @notice_users.present? %>
+            <% unless @att_notice.confirm == "承認" %>
             <p class="notice">
               <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
               <span>
@@ -76,6 +77,9 @@
                 </strong>
               </span>
             </p>
+            <% else %>
+              <p class="not_notice">【残業申請のお知らせ】</p>
+            <% end %>
           <% else %>
               <p class="not_notice">【残業申請のお知らせ】</p>
           <% end %>
