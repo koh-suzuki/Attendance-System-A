@@ -1,0 +1,19 @@
+<% if day.name.present? && day.endtime_at.present? %>
+  <% if day.confirm == "承認" || day.confirm == "否認" %>
+    <p><%= day.name %>が<strong><%= yield(:endtime_instruction) %>申請<%= day.confirm %>済</strong></p>
+  <% elsif day.confirm == "申請中" %>
+    <p><%= day.name %>へ<%= yield(:endtime_instruction) %><strong><%= day.confirm %></strong></p>
+  <% else %>
+  <!-- なし -->
+  <% end %>
+<% end %>
+
+<% if (day.updated_started_at.present? && day.updated_finished_at.present?) && day.name.present? %>
+  <% if day.confirm == "承認" || day.confirm == "否認" %>
+    <p><%= day.name %>が<strong><%= yield(:change_attendance_instruction) %><%= day.confirm %>済</strong></p>
+  <% elsif day.confirm == "申請中" %>
+    <p><%= day.name %>へ<%= yield(:change_attendance_instruction) %><strong><%= day.confirm %></strong></p>
+  <% else %>
+  <!-- なし -->
+  <% end %>
+<% end %>
