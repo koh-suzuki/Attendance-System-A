@@ -80,6 +80,10 @@ class UsersController < ApplicationController
     # 勤怠変更申請のお知らせ合計
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
     @att_update_sum = @att_update_list.count
+    @att_update_list.each do |att_up|
+      @att_up = att_up
+    end
+    
     # 所属長承認申請（今のユーザーに申請分）の合計
     @approval_list = Approval.where(superior_id: current_user).where.not(month_at: nil)
     @approval_sum = @approval_list.count
