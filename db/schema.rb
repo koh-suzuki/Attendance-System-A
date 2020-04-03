@@ -35,7 +35,8 @@ ActiveRecord::Schema.define(version: 20200325075511) do
     t.string "overtime_memo"
     t.string "name"
     t.datetime "endtime_at"
-    t.boolean "change", default: false, null: false
+    t.boolean "overtime_check", default: false, null: false
+    t.boolean "attendance_change_check", default: false, null: false
     t.integer "suppoter"
     t.integer "confirm", default: 0, null: false
     t.integer "approval_id"
