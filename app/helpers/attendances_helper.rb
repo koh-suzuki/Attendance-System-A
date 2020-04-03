@@ -55,8 +55,8 @@ module AttendancesHelper
 
   def users(notice_users)
     notice_users.each do |user|
-      attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false)
-      attendance_notices.each do |att_notice|
+      @notice_overtimes = Attendance.where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false)
+      @notice_overtimes.each do |att_notice|
         @att_notice = att_notice
       end
     end
