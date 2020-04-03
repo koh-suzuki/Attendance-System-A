@@ -81,12 +81,7 @@ class AttendancesController < ApplicationController
   # 残業申請のお知らせモーダル
   def edit_notice_overtime
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id)).where.not(id: current_user)
-    @notice_users.each do |user|
-      @u = user
-      @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).each do |att_notice|
-        @att_notice = att_notice
-      end
-    end
+    users(@notice_users)
   end
   
   # 残業申請の更新
@@ -94,12 +89,10 @@ class AttendancesController < ApplicationController
     # 前提:form_withのurl引数（@user）はbefore_actionの
     #      set_userによって「上長」のユーザー情報を得る。
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
-    @notice_users.each do |user|
-      @attendance_notices = Attendance.where.not(endtime_at: nil).where(user_id: user.id)
-    end
+    users(@notice_users)
       notice_overtime_params.each do |id, item|
         attendance = Attendance.find(id)
-        if params[:attendance][:notice_attendances][id][:change] == "true"
+        if params[:attendance][:notice_attendances][id][:overtime_check] == "true"
           attendance.update_attributes!(item)
         end
       end
@@ -120,7 +113,7 @@ class AttendancesController < ApplicationController
   def update_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
     change_attendance_params.each do |id, item|
-      if params[:attendance][:updated_attendances][id][:change] == "true"
+      if params[:attendance][:updated_attendances][id][:attendance_change_check] == "true"
         attendance = Attendance.find(id)
         attendance.update_attributes!(item)
       end
@@ -146,7 +139,7 @@ class AttendancesController < ApplicationController
     end
     
      def notice_overtime_params
-      params.require(:attendance).permit(notice_attendances: [:confirm, :change])[:notice_attendances]
+      params.require(:attendance).permit(notice_attendances: [:confirm, :overtime_check])[:notice_attendances]
      end
      
      def change_attendance_params

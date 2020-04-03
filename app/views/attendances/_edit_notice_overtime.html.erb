@@ -6,12 +6,13 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h3 class="modal-title text-center">【<%= @u.name %>】からの残業申請</h3>
     </div>
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
           <%= form_with(model: @attendance_notices, url: update_notice_overtime_user_attendance_path(@user, @att_notice), local: true, method: :patch) do |f| %>
+          <% @notice_users.each do |user| %>
+          <h3 class="modal-title text-center">【<%= user.name %>】からの残業申請</h3>
           <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
             <thead>
               <tr>
@@ -27,9 +28,10 @@
               </tr>
             </thead>
             
-            <tbody>
-              <% @attendance_notices.each do |att_notice| %>
-               <%= f.fields_for "notice_attendances[]", att_notice do |attendance| %>
+            <% @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false) %>
+            <% @attendance_notices.each do |att_notice| %>
+              <%= f.fields_for "notice_attendances[]", att_notice do |attendance| %>
+              <tbody>
                 <tr>
                   <!-- 日付 -->
                   <td><%= l(att_notice.worked_on, format: :short) %></td>
@@ -44,22 +46,23 @@
                       <% end %>
                     </td>
                     <!-- 指定勤務終了時間 -->
-                    <td><%= format_basic_info(@u.designated_work_end_time) %></td>
+                    <td><%= format_basic_info(user.designated_work_end_time) %></td>
                     <!-- 時間外時間 -->
-                    <td><%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), @u.designated_work_end_time.strftime("%H:%M:%S"), att_notice)  if att_notice.endtime_at.present? %></td>
+                    <td><%= over_time(att_notice.endtime_at.strftime("%H:%M:%S"), user.designated_work_end_time.strftime("%H:%M:%S"), att_notice)  if att_notice.endtime_at.present? %></td>
                     <!-- 業務処理内容 -->
                     <td><%= att_notice.try(:overtime_memo) %></td>
                     <!-- 指示者確認㊞ -->
                     <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
                     <!-- 変更 -->
-                    <td><%= attendance.check_box :change, {class: "change"}, 'true', 'false' %></td>
+                    <td><%= attendance.check_box :overtime_check, {class: "change"}, 'true', 'false' %></td>
                     <!-- 勤怠を確認する -->
-                    <td><%= link_to "確認", user_path(@u.id), class: "btn btn-primary btn-md" %></td>
+                    <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
                 </tr>
-                <% end %>
+              </tbody>
               <% end %>
-            </tbody>
+            <% end %>
           </table>
+          <% end %>
           <div class="notice_update_submit"><%= f.submit yield(:button_text), class: "btn btn-primary btn-lg center-block" %></div>
           <% end %>
         </div>

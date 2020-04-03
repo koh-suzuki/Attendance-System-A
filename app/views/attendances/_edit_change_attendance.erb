@@ -40,7 +40,7 @@
               <th>分</th>
             </tr>
           </thead>
-          <% @per_user_attendances = Attendance.where(user_id: user.id).where(id: @att_update_list).where(change: false) %>
+          <% @per_user_attendances = Attendance.where(user_id: user.id).where(id: @att_update_list).where(attendance_change_check: false) %>
             <% @per_user_attendances.each do |day| %>
             <%= f.fields_for "updated_attendances[]", day do |attendance| %>
               <tbody>
@@ -70,7 +70,7 @@
                   <!-- 支持者確認㊞ -->
                   <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
                   <!-- 変更 -->
-                  <td><%= attendance.check_box :change, {class: "change"}, 'true', 'false' %></td>
+                  <td><%= attendance.check_box :attendance_change_check, {class: "change"}, 'true', 'false' %></td>
                   <!-- 勤怠を確認する -->
                   <td><%= link_to "確認", user_path(user.id), class: "btn btn-primary btn-md" %></td>
               </tr>
