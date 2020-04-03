@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20200325075511) do
     t.date "month_at"
     t.boolean "approval_flag"
     t.integer "user_id"
-    t.integer "confirm", default: 0
+    t.integer "confirm", default: 0, null: false
     t.index ["user_id"], name: "index_approvals_on_user_id"
   end
 
@@ -35,9 +35,9 @@ ActiveRecord::Schema.define(version: 20200325075511) do
     t.string "overtime_memo"
     t.string "name"
     t.datetime "endtime_at"
-    t.boolean "change"
+    t.boolean "change", default: false, null: false
     t.integer "suppoter"
-    t.integer "confirm", default: 0
+    t.integer "confirm", default: 0, null: false
     t.integer "approval_id"
     t.datetime "updated_started_at"
     t.datetime "updated_finished_at"
