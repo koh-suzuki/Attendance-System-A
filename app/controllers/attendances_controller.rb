@@ -101,10 +101,6 @@ class AttendancesController < ApplicationController
         attendance = Attendance.find(id)
         if params[:attendance][:notice_attendances][id][:change] == "true"
           attendance.update_attributes!(item)
-          next
-        else
-          flash[:danger] = "変更にチェックを入れてください"
-          redirect_to @user and return
         end
       end
       flash[:success] = "残業申請のお知らせを変更しました"
@@ -127,10 +123,6 @@ class AttendancesController < ApplicationController
       if params[:attendance][:updated_attendances][id][:change] == "true"
         attendance = Attendance.find(id)
         attendance.update_attributes!(item)
-        next
-      else
-        flash[:danger] = "変更にチェックを入れてください"
-        redirect_to @user and return
       end
     end
     flash[:success] = "勤怠変更申請のお知らせを変更しました"

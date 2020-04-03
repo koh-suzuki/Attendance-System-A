@@ -40,7 +40,7 @@
               <th>分</th>
             </tr>
           </thead>
-          <% @per_user_attendances = Attendance.where(user_id: user.id).where(id: @att_update_list) %>
+          <% @per_user_attendances = Attendance.where(user_id: user.id).where(id: @att_update_list).where(change: false) %>
             <% @per_user_attendances.each do |day| %>
             <%= f.fields_for "updated_attendances[]", day do |attendance| %>
               <tbody>
