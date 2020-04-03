@@ -224,6 +224,8 @@
                     <p><%= day.name %>が<strong><%= yield(:endtime_instruction) %>申請<%= day.confirm %>済</strong></p>
                   <% elsif day.confirm == "申請中" %>
                     <p><%= day.name %>へ<%= yield(:endtime_instruction) %><strong><%= day.confirm %></strong></p>
+                  <% elsif day.confirm == nil %>
+                    <p><%= day.name %>へ<%= yield(:endtime_instruction) %>申請中</p>
                   <% else %>
                   <!-- なし -->
                   <% end %>
