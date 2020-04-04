@@ -52,6 +52,19 @@ module AttendancesHelper
       end
     end
   end
+  
+  def overtime_params_updated_invalid?
+    if @attendance.updated_finished_at.present?
+      if (params[:attendance]["endtime_at(4i)"].to_i > @worktime.hour) ||
+          params[:attendance][:tommorow_index] == "true"
+        return true
+      else
+        return false
+      end
+    else
+     return false
+    end
+  end
 
   def users(notice_users)
     notice_users.each do |user|

@@ -220,7 +220,7 @@
             <!-- 時間外時間 -->
             <td>
               <% if day.endtime_at.present? %>
-                <% before_overtime = over_time(day.endtime_at.floor_to(15.minutes).strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S"), day) %>
+                <%= over_time(day.endtime_at.floor_to(15.minutes).strftime("%H:%M:%S"), @user.designated_work_end_time.strftime("%H:%M:%S"), day) %>
               <% else %>
               <% end %>
             </td>

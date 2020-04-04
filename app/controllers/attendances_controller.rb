@@ -68,12 +68,17 @@ class AttendancesController < ApplicationController
   def update_over_app
     @worktime = @user.designated_work_end_time
     @attendance = Attendance.find(params[:id])
-    @attendance.update(overtime_params)
-    if @attendance.name.blank?
-      flash[:danger] = "上長が選択されていません"
-      render edit_overtime_app
+    if overtime_params_updated_invalid?
+      @attendance.update(overtime_params)
+      if @attendance.name.blank?
+        flash[:danger] = "上長が選択されていません"
+        render edit_overtime_app
+      else
+        flash[:success] = "残業申請しました"
+        redirect_to @user
+      end
     else
-      flash[:success] = "残業申請しました"
+      flash[:danger] = "【実績】が未入力か残業申請情報に不正な入力があるため、残業申請できませんでした。"
       redirect_to @user
     end
   end
@@ -84,20 +89,20 @@ class AttendancesController < ApplicationController
     users(@notice_users)
   end
   
-  # 残業申請の更新
+  # 残業申請お知らせの更新
   def update_notice_overtime
     # 前提:form_withのurl引数（@user）はbefore_actionの
     #      set_userによって「上長」のユーザー情報を得る。
     @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
     users(@notice_users)
-      notice_overtime_params.each do |id, item|
-        attendance = Attendance.find(id)
-        if params[:attendance][:notice_attendances][id][:overtime_check] == "true"
-          attendance.update_attributes!(item)
-        end
+    notice_overtime_params.each do |id, item|
+      attendance = Attendance.find(id)
+      if params[:attendance][:notice_attendances][id][:overtime_check] == "true"
+        attendance.update_attributes!(item)
       end
-      flash[:success] = "残業申請のお知らせを変更しました"
-      redirect_to @user
+    end
+    flash[:success] = "残業申請のお知らせを変更しました"
+    redirect_to @user
   end
   
   # 勤怠変更申請のお知らせ
