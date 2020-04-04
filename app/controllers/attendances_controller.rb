@@ -44,15 +44,19 @@ class AttendancesController < ApplicationController
   
   def update_one_month
     ActiveRecord::Base.transaction do
+      attendances_params.each do |id, item|
+        @att = Attendance.find(id)
+        @att.update_attributes!(item)
+        @att.update!(attendance_change_flag: true)
+      end
       if attendances_updated_invalid?
-        attendances_params.each do |id, item|
-          attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
-        end
+        flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+        redirect_to user_url(date: params[:date])
+      else
+        flash[:info] = "1ヶ月分の勤怠情報の更新は出社・退社時間が必須情報となります。"
+        redirect_to user_url(date: params[:date])
       end
     end
-    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-    redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
       redirect_to attendances_edit_one_month_user_url(date: params[:date])
@@ -136,7 +140,7 @@ class AttendancesController < ApplicationController
   
   private
     def attendances_params
-      params.require(:user).permit(attendances: [:updated_started_at, :updated_finished_at, :started_at, :finished_at, :tommorow_index, :note, :name])[:attendances]
+      params.require(:user).permit(:attendance_change_flag, attendances: [:updated_started_at, :updated_finished_at, :tommorow_index, :note, :name])[:attendances]
     end
     
     def overtime_params

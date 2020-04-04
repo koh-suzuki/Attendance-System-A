@@ -34,23 +34,18 @@ module AttendancesHelper
   
   def attendances_updated_invalid?
     attendances = true
-    attendances_params.each do |id, item|
-      if item[:name].present?
-        if item[:updated_started_at].blank? && item[:updated_finished_at].blank?
-          next
-        elsif item[:updated_started_at].blank? || item[:updated_finished_at].blank?
+      if @att.name.present?
+        if @att.updated_started_at.blank? && @att.updated_finished_at.blank?
           attendances = false
-          break
-        elsif item[:updated_started_at] > item[:updated_finished_at]
+        elsif @att.updated_started_at.blank? || @att.updated_finished_at.blank?
           attendances = false
-          break
+        elsif @att.name.blank?
+          attendances = false
         end
         return attendances
       else
         attendances = false
-        break
       end
-    end
   end
   
   def overtime_params_updated_invalid?
