@@ -35,7 +35,12 @@ class AttendancesController < ApplicationController
   end
   
   def csv_output
-    @attendance = Attendance.joins(:user).where(id: Attendance.where(user_id: current_user))
+    raise
+    user = User.find_by(id: current_user)
+    @first_day = params[:date].to_date
+    @last_day = @first_day.end_of_month
+    @attendance = user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    # @attendance = Attendance.joins(:user).where(id: Attendance.where(worked_on: @first_day..@last_day).where(user_id: current_user))
     send_data render_to_string, filename: "attendances.csv", type: :csv
   end
   
@@ -133,6 +138,7 @@ class AttendancesController < ApplicationController
   
   # 勤怠修正ログ
   def edit_attendance_log
+    raise
     @updated_attendance_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
   end
 

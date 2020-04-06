@@ -14,9 +14,14 @@ class UsersController < ApplicationController
  
   def import
     unless params[:file].blank?
-      # 保存と結果のメッセージを取得して表示
-      User.import(params[:file])
-      flash[:info] = "CSVファイルをインポートしました。"
+      if params[:file] == ".csv"
+        # 保存と結果のメッセージを取得して表示
+        User.import(params[:file])
+        flash[:info] = "CSVファイルをインポートしました。"
+        redirect_to users_path
+      else
+        flash[:danger] = "読込めませんでした"
+      end
     else
       flash[:danger] = "読み込むCSVファイルをセットしてください"
     end
