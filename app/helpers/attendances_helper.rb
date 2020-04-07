@@ -61,6 +61,20 @@ module AttendancesHelper
     end
   end
 
+  # 残業申請のお知らせモーダルの更新バリデーション
+  def overtime_notice_updated_invalid?
+    items = []
+    notice_overtime_params.each do |id, item|
+      # attendance = Attendance.find(id)
+      items << item[:overtime_check]
+    end
+    if  items.all?{|i| i == "false"}
+      return false
+    else
+      return true
+    end
+  end
+
   def users(notice_users)
     notice_users.each do |user|
       @notice_overtimes = Attendance.where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false)
