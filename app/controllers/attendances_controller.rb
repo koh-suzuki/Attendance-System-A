@@ -113,12 +113,12 @@ class AttendancesController < ApplicationController
       flash[:info] = "残業申請の変更を通知しました。</br>※変更にチェックがない申請は更新されていません。".html_safe
       redirect_to @user
     else
-      flash[:danger] = "残業申請の変更ができませんでした。</br>※残業申請の変更チェックボックスが選択されていません。"
+      flash[:danger] = "残業申請の変更ができませんでした。</br>※変更チェックボックスが選択されていません。"
       redirect_to @user
     end
   end
   
-  # 勤怠変更申請のお知らせ
+  # 勤怠変更申請のお知らせモーダル表示
   def edit_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
     @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
@@ -127,17 +127,22 @@ class AttendancesController < ApplicationController
     end
   end
 
-   # 勤怠変更申請の更新
+   # 勤怠変更申請お知らせモーダルの更新
   def update_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
-    change_attendance_params.each do |id, item|
-      attendance = Attendance.find(id)
-      if params[:attendance][:updated_attendances][id][:attendance_change_check] == "true"
-        attendance.update_attributes!(item)
+    if ochange_attendance_updated_invalid?
+      change_attendance_params.each do |id, item|
+        attendance = Attendance.find(id)
+        if params[:attendance][:updated_attendances][id][:attendance_change_check] == "true"
+          attendance.update_attributes!(item)
+        end
       end
+      flash[:success] = "勤怠変更申請のお知らせを変更しました"
+      redirect_to @user
+    else
+      flash[:danger] = "勤怠変更申請の変更ができませんでした。</br>※変更チェックボックスが選択されていません。"
+      redirect_to @user
     end
-    flash[:success] = "勤怠変更申請のお知らせを変更しました"
-    redirect_to @user
   end
   
   # 勤怠修正ログ
@@ -162,7 +167,7 @@ class AttendancesController < ApplicationController
      end
      
      def change_attendance_params
-      params.require(:attendance).permit(updated_attendances: [:note, :confirm, :change])[:updated_attendances]
+      params.require(:attendance).permit(updated_attendances: [:note, :confirm, :attendance_change_check])[:updated_attendances]
      end
      
      def updated_time_params

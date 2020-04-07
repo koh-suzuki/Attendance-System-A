@@ -75,6 +75,20 @@ module AttendancesHelper
     end
   end
 
+  # 勤怠変更申請のお知らせモーダルの更新バリデーション
+  def ochange_attendance_updated_invalid?
+    items = []
+    change_attendance_params.each do |id, item|
+    # attendance = Attendance.find(id)
+      items << item[:attendance_change_check]
+    end
+    if  items.all?{|i| i == "false"}
+      return false
+    else
+      return true
+    end
+  end
+
   def users(notice_users)
     notice_users.each do |user|
       @notice_overtimes = Attendance.where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false)
