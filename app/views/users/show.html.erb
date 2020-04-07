@@ -42,12 +42,12 @@
         <div class="superior">
           <!-- 所属長承認申請のお知らせボタン -->
           <% if @approval_list.present? %>
-            <% unless @att_notice.confirm == "承認" %>
+            <% unless @approval.confirm == "承認" || @approval.confirm == "否認" %>
               <p class="notice">
                 <%= link_to "【所属長承認申請のお知らせ】", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
                 <span>
                   <strong>
-                    <%= "#{@approval_sum}件の通知があります" %>
+                    <%= link_to "#{@approval_sum}件の通知があります", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
                   </strong>
                 </span>
               </p>
@@ -60,7 +60,7 @@
           
           <!-- 勤怠変更申請のお知らせボタン -->
           <% if @att_update_list.present? %>
-            <% unless @att_up.confirm == "承認" %>
+            <% unless @att_up.confirm == "承認" || @att_up.confirm == "否認" %>
               <p class="notice">
                 <%= link_to "【勤怠変更申請のお知らせ】", attendances_edit_change_attendance_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
                 <span>
@@ -78,7 +78,7 @@
           
           <!-- 残業申請のお知らせボタン -->
           <% if @attendances_list.present? %>
-            <% unless @att_notice.confirm == "承認" %>
+            <% unless @att_notice.confirm == "承認" || @att_notice.confirm == "否認" %>
             <p class="notice">
               <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
               <span>
@@ -232,23 +232,23 @@
                 <!-- 残業申請 -->
                 <% if day.name.present? && day.endtime_at.present? %>
                   <% if day.confirm == "承認" || day.confirm == "否認" %>
-                    <p><%= day.name %>が<strong>【<%= yield(:endtime_instruction) %>申請 : <%= day.confirm %>済】</strong></p>
+                    <p><%= day.name %>が<strong>【<%= yield(:endtime_instruction) %>申請 : <strong><%= day.confirm %>済</strong>】</p>
                   <% elsif day.confirm == "申請中" %>
                     <p><%= day.name %>へ<%= 【yield(:endtime_instruction) %> : <strong><%= day.confirm %></strong>】</p>
                   <% else %>
-                    <p><%= day.name %>へ【<%= yield(:endtime_instruction) %>申請中】</p>
+                    <p><%= day.name %>へ【<%= yield(:endtime_instruction) %>：<strong>申請中</strong>】</p>
                   <% end %>
                 <% end %>
                 <!-- 勤怠変更申請 -->
                 <% if (day.attendance_change_flag == true) && day.name.present? %>
                   <% if day.confirm == "承認" || day.confirm == "否認" %>
-                    <p><%= day.name %>が<strong>【<%= yield(:change_attendance_instruction) %>申請 : <%= day.confirm %>済】</strong></p>
+                    <p><%= day.name %>が【<%= yield(:change_attendance_instruction) %>申請 : <strong><%= day.confirm %>済</strong>】</p>
                   <% elsif day.confirm == "申請中" %>
-                    <p><%= day.name %>へ<%= 【yield(:change_attendance_instruction) %> : <strong><%= day.confirm %></strong>】</p>
+                    <p><%= day.name %>へ【<%= yield(:change_attendance_instruction) %> : <strong><%= day.confirm %></strong>】</p>
                   <% elsif day.endtime_at.present? && (day.attendance_change_flag == false) %>
                     <p></p>
                   <% else %>
-                    <p><%= day.name %>へ【<%= yield(:change_attendance_instruction) %>申請中】</p>
+                    <p><%= day.name %>へ【<%= yield(:change_attendance_instruction) %>：<strong>申請中</strong>】</p>
                   <% end %>
                 <% end %>
               </div>
@@ -276,20 +276,25 @@
                 <div class="approval">
                   <p class="approval-btn">
                     所属長承認: 
-                    <% if @current_approval.present? && @current_approval.confirm.present? %>
+                    <% if @current_approval.present? && (@current_approval.confirm == "承認" || @current_approval.confirm == "否認") %>
                       <%= "#{@approval_superior.name}から#{@current_approval.confirm}済" %>
-                    <% elsif @current_approval.present? && @current_approval.confirm.blank? %>
+                    <% elsif @current_approval.present? && (@current_approval.confirm == "申請中" || @current_approval.superior_id.present?) %>
                       <%= "#{@approval_superior.name}へ申請中" %>
                     <% else %>
                       <%= "未" %>
                     <% end %>
                   </p>
+                <% if @current_approvals.present? && @current_approval.approval_flag == false %>
+                  <p class="approval-btn"><%= f.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></p>
+                    <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
+                <% else %>
                   <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
                   <% if Date.current.next_month < @last_day %>
                     <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
                   <% else %>
                     <%= f.submit "申請", class: "btn btn-primary w-50" %>
                   <% end %>
+                <% end %>
                 </div>
               <% end %>
             <% end %>

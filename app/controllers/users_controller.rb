@@ -90,7 +90,10 @@ class UsersController < ApplicationController
     end
     
     # 所属長承認申請（今のユーザーに申請分）の合計
-    @approval_list = Approval.where(superior_id: current_user).where.not(month_at: nil)
+    @approval_list = Approval.where(superior_id: current_user).where.not(month_at: nil).where(approval_flag: false)
+    @approval_list.each do |approval|
+      @approval = approval
+    end
     @approval_sum = @approval_list.count
     @current_approvals = Approval.where(user_id: @user)
     @current_approvals.each do |current_approval|

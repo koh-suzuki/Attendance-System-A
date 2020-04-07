@@ -18,7 +18,7 @@ class ApprovalsController < ApplicationController
   def edit
     @users = User.where(id: Approval.where(superior_id: @user.id).where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
     @users.each do |user| 
-      @approvals = Approval.where(superior_id: @user.id).where(user_id: user.id).where.not(month_at: nil)
+      @approvals = Approval.where(superior_id: @user.id).where(user_id: user.id).where.not(month_at: nil).where(approval_flag: false)
       @approvals.each do |approval|
         @ap = approval
       end
@@ -33,7 +33,7 @@ class ApprovalsController < ApplicationController
         approval.update_attributes!(item)
         next
       else
-        flash[:danger] = "変更にチェックが確認できませんでした。"
+        flash[:danger] = "変更にチェックがありません。"
         redirect_to @user and return
       end
     end
