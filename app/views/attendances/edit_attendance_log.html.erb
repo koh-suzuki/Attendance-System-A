@@ -14,20 +14,22 @@
     </thead>
     <% @updated_attendance_list.each do |day| %>
     <tbody>
-     <tr>
-       <!-- 日付 -->
-       <td><%= l(day.worked_on, format: :short) %></td>
-       <!-- 変更前出社時間 -->
-       <td><%= l(day.started_at, format: :time) if day.started_at.present? && day.confirm == "承認" %></td>
-       <!-- 変更前退社時間 -->
-       <td><%= l(day.finished_at, format: :time) if day.started_at.present? && day.confirm == "承認" %></td>
-       <!-- 変更後出社時間 -->
-       <td><%= l(day.updated_started_at, format: :time) if day.updated_started_at.present? && day.confirm == "承認" %></td>
-       <!-- 変更後退社時間 -->
-       <td><%= l(day.updated_finished_at, format: :time) if day.updated_finished_at.present? && day.confirm == "承認" %></td>
-       <!-- 承認者 -->
-       <td><%= day.name if day.confirm == "承認" %></td>
-     </tr>
+      <% if day.confirm == "承認" %>
+        <tr>
+          <!-- 日付 -->
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <!-- 変更前出社時間 -->
+          <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
+          <!-- 変更前退社時間 -->
+          <td><%= l(day.finished_at, format: :time) if day.started_at.present? %></td>
+          <!-- 変更後出社時間 -->
+          <td><%= l(day.updated_started_at, format: :time) if day.updated_started_at.present? %></td>
+          <!-- 変更後退社時間 -->
+          <td><%= l(day.updated_finished_at, format: :time) if day.updated_finished_at.present? %></td>
+          <!-- 承認者 -->
+          <td><%= day.name %></td>
+        </tr>
+      <% end %>
     </tbody>
     <% end %>
   </table>
