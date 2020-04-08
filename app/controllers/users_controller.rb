@@ -21,6 +21,7 @@ class UsersController < ApplicationController
         redirect_to users_path
       else
         flash[:danger] = "読込めませんでした"
+        redirect_to users_path
       end
     else
       flash[:danger] = "読み込むCSVファイルをセットしてください"
