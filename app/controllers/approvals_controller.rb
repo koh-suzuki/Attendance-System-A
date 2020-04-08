@@ -25,6 +25,18 @@ class ApprovalsController < ApplicationController
     end
   end
   
+  def approval_invalid?
+    items = []
+    approval_params.each do |id, item|
+      items << item[:approval_flag]
+    end
+    if items.all?{|i| i == "false"}
+      return false
+    else
+      return true
+    end
+  end
+  
   def update
     @user = User.find(params[:user_id])
     if approval_invalid?
@@ -41,6 +53,8 @@ class ApprovalsController < ApplicationController
       redirect_to @user
     end
   end
+  
+  
   
   private
     def approval_params
