@@ -40,7 +40,7 @@
               <!-- 在社時間 -->
               <td>
                 <% if day.updated_started_at.present? && day.updated_finished_at.present? %>
-                  <%= working_time(day.updated_started_at, day.updated_finished_at) %>
+                  <%= working_time(day.updated_started_at, day.updated_finished_at, day) %>
                 <% end %>
               </td>
               <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>

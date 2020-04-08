@@ -1,6 +1,7 @@
 class ApprovalsController < ApplicationController
-  # before_action :set_attendance, only: [:edit]
   before_action :set_user, only: [:create, :edit]
+  before_action :logged_in_user, only: [:create, :edit, :update, :approval_invalid?]
+
   
   def create
     @attendance = @user.attendances.find_by(user_id: @user.id)

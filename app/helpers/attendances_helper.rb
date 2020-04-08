@@ -8,8 +8,12 @@ module AttendancesHelper
     false
   end
   
-  def working_time(start, finish)
-    format("%.2f", (((finish - start) / 60) / 60.0))
+  def working_time(start, finish, day)
+    if day.tommorow_index == true
+      format("%.2f", (((finish - start) / 60) / 60.0) + 24)
+    else
+      format("%.2f", (((finish - start) / 60) / 60.0))
+    end
   end
   
   # 時間外時間の計算
@@ -33,19 +37,34 @@ module AttendancesHelper
   
   
   def attendances_updated_invalid?
-    attendances = true
-      if @att.name.present?
-        if @att.updated_started_at.blank? && @att.updated_finished_at.blank?
+      attendances = true
+      attendances_params.each do |id, item|
+        if item[:updated_started_at].blank? && item[:updated_finished_at].blank?
+          next
+        elsif item[:updated_started_at].blank? || item[:updated_finished_at].blank?
           attendances = false
-        elsif @att.updated_started_at.blank? || @att.updated_finished_at.blank?
+          break
+        elsif item[:tommorow_index] == "false" && item[:updated_started_at] > item[:updated_finished_at]
           attendances = false
-        elsif @att.name.blank?
-          attendances = false
+          break
         end
-        return attendances
-      else
-        attendances = false
       end
+      return attendances
+
+    # attendances = true
+    # raise
+    #   if @att.name.present?
+    #     if @att.updated_started_at.blank? && @att.updated_finished_at.blank?
+    #       attendances = false
+    #     elsif @att.updated_started_at.blank? || @att.updated_finished_at.blank?
+    #       attendances = false
+    #     elsif @att.name.blank?
+    #       attendances = false
+    #     end
+    #     return attendances
+    #   else
+    #     attendances = false
+    #   end
   end
   
   def overtime_params_updated_invalid?

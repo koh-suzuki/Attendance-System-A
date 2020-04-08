@@ -48,22 +48,28 @@ class AttendancesController < ApplicationController
   
   def update_one_month
     ActiveRecord::Base.transaction do
-      attendances_params.each do |id, item|
-        @att = Attendance.find(id)
-        @att.update_attributes!(item)
-        @att.update!(attendance_change_flag: true)
-      end
       if attendances_updated_invalid?
+        attendances_params.each do |id, item|
+          attendance = Attendance.find(id)
+          if attendance.attendance_change_check == true
+            attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
+                                          before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
+            attendance.update_attributes!(item)
+          else
+            attendance.update_attributes!(item)
+            attendance.update!(attendance_change_flag: true)
+          end
+        end
         flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-        redirect_to user_url(date: params[:date])
+        redirect_to user_url(@user, date: params[:date])
       else
-        flash[:info] = "1ヶ月分の勤怠情報の更新は出社・退社時間が必須情報となります。"
-        redirect_to user_url(date: params[:date])
+        flash[:danger] = "不正な入力情報がありました、再入力してください。"
+        redirect_to user_url(@user, date: params[:date])
       end
     end
   rescue ActiveRecord::RecordInvalid
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-      redirect_to attendances_edit_one_month_user_url(date: params[:date])
+      redirect_to attendances_edit_one_month_user_path(@user, date: params[:date])
   end
 
    # 残業申請のモーダル
@@ -147,8 +153,7 @@ class AttendancesController < ApplicationController
   
   # 勤怠修正ログ
   def edit_attendance_log
-    raise
-    @updated_attendance_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
+    @updated_attendance_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(user_id: current_user)
   end
 
   
