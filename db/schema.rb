@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20200325075511) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "tommorow_index"
+    t.boolean "tommorow_index", default: false, null: false
     t.string "overtime_memo"
     t.string "name"
     t.datetime "endtime_at"
