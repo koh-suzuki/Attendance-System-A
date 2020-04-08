@@ -54,6 +54,8 @@ class ApprovalsController < ApplicationController
     end
   end
   
+  
+  
   private
     def approval_params
       params.require(:approval).permit(updated_approvals:[:confirm, :approval_flag])[:updated_approvals]
