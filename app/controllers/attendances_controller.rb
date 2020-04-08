@@ -51,8 +51,14 @@ class AttendancesController < ApplicationController
       if attendances_updated_invalid?
         attendances_params.each do |id, item|
           attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
-          attendance.update!(attendance_change_flag: true)
+          if attendance.attendance_change_check == true
+            attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
+                                          before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
+            attendance.update_attributes!(item)
+          else
+            attendance.update_attributes!(item)
+            attendance.update!(attendance_change_flag: true)
+          end
         end
         flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
         redirect_to user_url(@user, date: params[:date])

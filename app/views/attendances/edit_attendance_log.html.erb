@@ -19,9 +19,9 @@
           <!-- 日付 -->
           <td><%= l(day.worked_on, format: :short) %></td>
           <!-- 変更前出社時間 -->
-          <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
+          <td><%= day.before_started_at.present? ? l(day.before_started_at, format: :time) : nil %></td>
           <!-- 変更前退社時間 -->
-          <td><%= l(day.finished_at, format: :time) if day.started_at.present? %></td>
+          <td><%= day.started_at.present? ? l(day.before_finished_at, format: :time) : nil %></td>
           <!-- 変更後出社時間 -->
           <td><%= l(day.updated_started_at, format: :time) if day.updated_started_at.present? %></td>
           <!-- 変更後退社時間 -->
