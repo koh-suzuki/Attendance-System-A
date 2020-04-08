@@ -20,7 +20,8 @@
               </tr>
             </thead>
             <tbody>
-              <% @approvals.each do |approval| %>
+              <% @approval_list = Approval.where(superior_id: @user.id).where(user_id: user.id).where.not(month_at: nil).where(approval_flag: false) %>
+              <% @approval_list.each do |approval| %>
                 <%= f.fields_for "updated_approvals[]", approval do |a|  %>
                 <tr>
                   <td><%= l(approval.month_at, format: :month) %></td>

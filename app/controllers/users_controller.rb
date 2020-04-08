@@ -95,7 +95,7 @@ class UsersController < ApplicationController
       @approval = approval
     end
     @approval_sum = @approval_list.count
-    @current_approvals = Approval.where(user_id: @user)
+    @current_approvals = Approval.where(user_id: current_user)
     @current_approvals.each do |current_approval|
       @current_approval = current_approval
       @approval_superior = User.find_by(id: @current_approval.superior_id)
