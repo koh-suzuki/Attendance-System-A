@@ -12,7 +12,7 @@
           <th>翌日</th>
           <th>在社時間</th>
           <th>備考</th>
-          <th>支持者確認㊞</th>
+          <th>指示者確認㊞</th>
         </tr>
       </thead>
       <tbody>
@@ -46,12 +46,12 @@
               <% if(!current_user.admin? || current_user.admin?) && (Date.current < day.worked_on) %>
                 <!-- 備考 -->
                 <td><%= attendance.text_field :note, readonly: true, class: "form-control" %></td>
-                <!-- 支持者確認㊞ -->
+                <!-- 指示者確認㊞ -->
                 <td><%= attendance.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></td>
               <% else %>
                 <!-- 備考 -->
                 <td><%= attendance.text_field :note, class: "form-control" %></td>
-                <!-- 支持者確認㊞ -->
+                <!-- 指示者確認㊞ -->
                 <td><%= attendance.collection_select :name, User.where(superior: true).where.not(name: @user.name), :name, :name, include_blank: true, class: "select" %></td>
               <% end %>
             </tr>
