@@ -17,9 +17,11 @@
       <div><%= user.name %></div>
       <div>
         <span>|</span>
+        <% unless user.admin %>
           <%= link_to "削除", user, method: :delete,
               data: { confirm: "削除してよろしいですか？" },
               class: "btn btn-primary" %>
+        <% end %>
       </div>
       
       <div class="panel-group" id="accordion">

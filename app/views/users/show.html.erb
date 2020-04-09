@@ -41,13 +41,13 @@
       <% else %>
         <div class="superior">
           <!-- 所属長承認申請のお知らせボタン -->
-          <% if @approval_list.present? %>
-            <% unless @approval.confirm == "承認" || @approval.confirm == "否認" %>
+          <% if @approval_notice_lists.present? %>
+            <% unless @superior_approval.confirm == "承認" || @superior_approval.confirm == "否認" %>
               <p class="notice">
                 <%= link_to "【所属長承認申請のお知らせ】", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
                 <span>
                   <strong>
-                    <%= link_to "#{@approval_sum}件の通知があります", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
+                    <%= link_to "#{@approval_notice_sum}件の通知があります", approvals_edit_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
                   </strong>
                 </span>
               </p>
@@ -272,19 +272,23 @@
           <td>
             <% if current_user.superior? && @user.superior == false %>
             <% else %>
-              <%= form_with(model: @approval_list, url: approvals_create_user_path(@user), local: true) do |f| %>
+              <%= form_with(model: @approval_list, url: approvals_create_user_path(@user, @first_day), local: true) do |f| %>
                 <div class="approval">
                   <p class="approval-btn">
                     所属長承認: 
-                    <% if @current_approval.present? && (@current_approval.confirm == "承認" || @current_approval.confirm == "否認") %>
-                      <%= @approval_superior.name %>【<strong><%= @current_approval.confirm %>済</strong>】
-                    <% elsif @current_approval.present? && (@current_approval.confirm == "申請中" || @current_approval.superior_id.present?) %>
-                      <%= @approval_superior.name %>【<strong>申請中</strong>】 
+                    <% if @approval_list.present? %>
+                      <% if (@approval.confirm == "承認" || @approval.confirm == "否認") && @approval.approval_flag == false %>
+                        <%= @approval_superior.name %>【<strong><%= @approval.confirm %>済</strong>】
+                      <% elsif (@approval.confirm == "申請中" || @approval.superior_id.present?) && @approval.approval_flag == false %>
+                        <%= @approval_superior.name %>【<strong>申請中</strong>】
+                      <% else %>
+                        <%= "未" %>
+                      <% end %>
                     <% else %>
                       <%= "未" %>
                     <% end %>
                   </p>
-                <% if @current_approvals.present? && @current_approval.approval_flag == false && @current_approval.month_at.present? %>
+                <% if @approval_list.present? && @approval.approval_flag == false && @approval.month_at.present? %>
                   <p class="approval-btn"><%= f.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></p>
                     <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
                 <% else %>
