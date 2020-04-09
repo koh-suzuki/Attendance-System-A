@@ -4,10 +4,9 @@ class ApprovalsController < ApplicationController
 
   
   def create
-    @attendance = @user.attendances.find_by(user_id: @user.id)
-    @approval = @user.approvals.build(superior_id: params[:approval][:name], month_at: @attendance.worked_on)
-    if params[:approval][:name].present?
-      @approval.save
+    if approval_name_params.present?
+      @approval_create = @user.approvals.build(superior_id: params[:approval][:name], month_at: params[:format])
+      @approval_create.save
       flash[:success] = "1ヶ月分の勤怠申請をしました。"
       redirect_to user_path(@user)
     else
@@ -58,6 +57,13 @@ class ApprovalsController < ApplicationController
   
   
   private
+    def approval_format_params
+      params.permit(:format)
+    end
+    def approval_name_params
+      params.require(:approval).permit(:name)
+    end
+  
     def approval_params
       params.require(:approval).permit(updated_approvals:[:confirm, :approval_flag])[:updated_approvals]
     end

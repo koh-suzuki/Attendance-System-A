@@ -90,17 +90,22 @@ class UsersController < ApplicationController
       @att_up = att_up
     end
     
-    # 所属長承認申請（今のユーザーに申請分）の合計
-    @approval_list = Approval.where(superior_id: current_user).where.not(month_at: nil).where(approval_flag: false)
+    # 所属長承認
+    @attendance = Attendance.find_by(worked_on: @first_day)
+      # 所属長承認申請するリスト
+    @approval_list = Approval.where(month_at: @first_day).where(approval_flag: false).where(user_id: current_user)
     @approval_list.each do |approval|
       @approval = approval
+      @approval_superior = User.find_by(id: @approval.superior_id)
     end
-    @approval_sum = @approval_list.count
-    @current_approvals = Approval.where(user_id: current_user)
-    @current_approvals.each do |current_approval|
-      @current_approval = current_approval
-      @approval_superior = User.find_by(id: @current_approval.superior_id)
+      # 所属長承認申請されたリスト(上長)
+    @approval_notice_lists = Approval.where.not(month_at: nil).where(approval_flag: false).where(superior_id: current_user)
+    @approval_notice_lists.each do |app|
+      @superior_approval = app
     end
+    @approval_notice_sum = @approval_notice_lists.count
+
+    # CSVインポート
     @attendance_csv = Attendance.joins(:user).where(id: Attendance.where(user_id: current_user))
   end
   
