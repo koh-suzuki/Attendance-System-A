@@ -277,9 +277,9 @@
                   <p class="approval-btn">
                     所属長承認: 
                     <% if @approval_list.present? %>
-                      <% if @approval.confirm == "承認" || @approval.confirm == "否認" %>
+                      <% if (@approval.confirm == "承認" || @approval.confirm == "否認") && @approval.approval_flag == false %>
                         <%= @approval_superior.name %>【<strong><%= @approval.confirm %>済</strong>】
-                      <% elsif @approval.confirm == "申請中" || @approval.superior_id.present? %>
+                      <% elsif (@approval.confirm == "申請中" || @approval.superior_id.present?) && @approval.approval_flag == false %>
                         <%= @approval_superior.name %>【<strong>申請中</strong>】
                       <% else %>
                         <%= "未" %>

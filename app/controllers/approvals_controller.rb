@@ -4,7 +4,7 @@ class ApprovalsController < ApplicationController
 
   
   def create
-    if approval_name_params.present?
+    if params[:approval][:name].present?
       @approval_create = @user.approvals.build(superior_id: params[:approval][:name], month_at: params[:format])
       @approval_create.save
       flash[:success] = "1ヶ月分の勤怠申請をしました。"
