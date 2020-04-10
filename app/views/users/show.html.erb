@@ -78,7 +78,7 @@
           
           <!-- 残業申請のお知らせボタン -->
           <% if @attendances_list.present? %>
-            <% unless @att_notice.confirm == "承認" || @att_notice.confirm == "否認" %>
+            <% unless @att_notice.overtime_confirm == "承認" || @att_notice.overtime_confirm == "否認" %>
             <p class="notice">
               <%= link_to "【残業申請のお知らせ】", attendances_edit_notice_overtime_user_path(@user), remote: true, :style=>"color:red;", class: "superior_tag" %>
               <span>
@@ -231,10 +231,10 @@
               <div class="instruction">
                 <!-- 残業申請 -->
                 <% if day.name.present? && day.endtime_at.present? %>
-                  <% if day.confirm == "承認" || day.confirm == "否認" %>
-                    <p><%= day.name %>【<%= yield(:endtime_instruction) %> : <strong><%= day.confirm %>済</strong>】</p>
-                  <% elsif day.confirm == "申請中" %>
-                    <p><%= day.name %><%= 【yield(:endtime_instruction) %> : <strong><%= day.confirm %></strong>】</p>
+                  <% if day.overtime_confirm == "承認" || day.overtime_confirm == "否認" %>
+                    <p><%= day.name %>【<%= yield(:endtime_instruction) %> : <strong><%= day.overtime_confirm %></strong>】</p>
+                  <% elsif day.overtime_confirm == "申請中" %>
+                    <p><%= day.name %>【<%= yield(:endtime_instruction) %> : <strong><%= day.overtime_confirm %></strong>】</p>
                   <% else %>
                     <p><%= day.name %>【<%= yield(:endtime_instruction) %>：<strong>申請中</strong>】</p>
                   <% end %>
@@ -242,7 +242,7 @@
                 <!-- 勤怠変更申請 -->
                 <% if (day.attendance_change_flag == true) && day.name.present? %>
                   <% if day.confirm == "承認" || day.confirm == "否認" %>
-                    <p><%= day.name %>【<%= yield(:change_attendance_instruction) %> : <strong><%= day.confirm %>済</strong>】</p>
+                    <p><%= day.name %>【<%= yield(:change_attendance_instruction) %> : <strong><%= day.confirm %></strong>】</p>
                   <% elsif day.confirm == "申請中" %>
                     <p><%= day.name %>【<%= yield(:change_attendance_instruction) %> : <strong><%= day.confirm %></strong>】</p>
                   <% elsif day.endtime_at.present? && (day.attendance_change_flag == false) %>
@@ -278,7 +278,7 @@
                     所属長承認: 
                     <% if @approval_list.present? %>
                       <% if (@approval.confirm == "承認" || @approval.confirm == "否認") && @approval.approval_flag == false %>
-                        <%= @approval_superior.name %>【<strong><%= @approval.confirm %>済</strong>】
+                        <%= @approval_superior.name %>【<strong><%= @approval.confirm %></strong>】
                       <% elsif (@approval.confirm == "申請中" || @approval.superior_id.present?) && @approval.approval_flag == false %>
                         <%= @approval_superior.name %>【<strong>申請中</strong>】
                       <% else %>

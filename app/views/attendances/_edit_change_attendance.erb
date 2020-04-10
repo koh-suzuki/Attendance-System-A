@@ -68,7 +68,7 @@
                   <!-- 備考 -->
                   <td><%= attendance.text_field :note, class: "form-control" %></td>
                   <!-- 支持者確認㊞ -->
-                  <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
+                  <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true, selected: nil %></td>
                   <!-- 変更 -->
                   <td><%= attendance.check_box :attendance_change_check, {class: "change"}, 'true', 'false' %></td>
                   <!-- 勤怠を確認する -->

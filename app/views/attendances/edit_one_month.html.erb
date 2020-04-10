@@ -52,7 +52,7 @@
                 <!-- 備考 -->
                 <td><%= attendance.text_field :note, class: "form-control" %></td>
                 <!-- 指示者確認㊞ -->
-                <td><%= attendance.collection_select :name, User.where(superior: true).where.not(name: @user.name), :name, :name, include_blank: true, class: "select" %></td>
+                <td><%= attendance.collection_select :name, User.where(superior: true).where.not(name: @user.name), :name, :name, include_blank: true, selected: nil, class: "select" %></td>
               <% end %>
             </tr>
           <% end %>

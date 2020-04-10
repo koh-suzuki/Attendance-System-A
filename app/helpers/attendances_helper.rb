@@ -35,7 +35,7 @@ module AttendancesHelper
     end
   end
   
-  
+  # 勤怠編集のバリデーション
   def attendances_updated_invalid?
       attendances = true
       attendances_params.each do |id, item|
@@ -50,27 +50,15 @@ module AttendancesHelper
         end
       end
       return attendances
-
-    # attendances = true
-    # raise
-    #   if @att.name.present?
-    #     if @att.updated_started_at.blank? && @att.updated_finished_at.blank?
-    #       attendances = false
-    #     elsif @att.updated_started_at.blank? || @att.updated_finished_at.blank?
-    #       attendances = false
-    #     elsif @att.name.blank?
-    #       attendances = false
-    #     end
-    #     return attendances
-    #   else
-    #     attendances = false
-    #   end
   end
   
+  # ###
+  
+  # 残業申請の更新バリデーション
   def overtime_params_updated_invalid?
     if @attendance.updated_finished_at.present? || @attendance.finished_at.present?
-      if (params[:attendance]["endtime_at(4i)"].to_i > @worktime.hour) ||
-          params[:attendance][:tommorow_index] == "true"
+      if ((params[:attendance]["endtime_at(4i)"].to_i > @worktime.hour) ||
+          params[:attendance][:tommorow_index] == "true")
         return true
       else
         return false
@@ -79,6 +67,7 @@ module AttendancesHelper
      return false
     end
   end
+  
 
   # 残業申請のお知らせモーダルの更新バリデーション
   def overtime_notice_updated_invalid?
@@ -95,7 +84,7 @@ module AttendancesHelper
   end
 
   # 勤怠変更申請のお知らせモーダルの更新バリデーション
-  def ochange_attendance_updated_invalid?
+  def change_attendance_updated_invalid?
     items = []
     change_attendance_params.each do |id, item|
     # attendance = Attendance.find(id)

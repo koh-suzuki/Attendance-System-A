@@ -51,16 +51,18 @@ class AttendancesController < ApplicationController
       if attendances_updated_invalid?
         attendances_params.each do |id, item|
           attendance = Attendance.find(id)
-          if attendance.attendance_change_check == true
-            attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
-                                          before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
-            attendance.update_attributes!(item)
-          else
-            attendance.update_attributes!(item)
-            attendance.update!(attendance_change_flag: true)
+          if item[:name].present?
+            if attendance.attendance_change_check == true
+              attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
+                                            before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
+              attendance.update_attributes!(item)
+            else
+              attendance.update_attributes!(item)
+              attendance.update!(attendance_change_flag: true, confirm: "申請中")
+            end
           end
         end
-        flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+        flash[:success] = "1ヶ月分の勤怠情報を更新しました。</br>※上長が未選択のものは更新されません。".html_safe 
         redirect_to user_url(@user, date: params[:date])
       else
         flash[:danger] = "不正な入力情報がありました、再入力してください。"
@@ -83,16 +85,17 @@ class AttendancesController < ApplicationController
     @worktime = @user.designated_work_end_time
     @attendance = Attendance.find(params[:id])
     if overtime_params_updated_invalid?
-      @attendance.update(overtime_params)
-      if @attendance.name.blank?
+      if params[:attendance][:name].blank?
         flash[:danger] = "上長が選択されていません"
-        render edit_overtime_app
+        redirect_to @user
       else
+        @attendance.update(overtime_params)
+        @attendance.update(overtime_confirm: "申請中", overtime_check: false)
         flash[:success] = "残業申請しました"
         redirect_to @user
       end
     else
-      flash[:danger] = "【実績】が未入力か残業申請情報に不正な入力があるため、残業申請できませんでした。"
+      flash[:danger] = "申請情報に不正な入力があるため、残業申請できませんでした。"
       redirect_to @user
     end
   end
@@ -113,13 +116,13 @@ class AttendancesController < ApplicationController
       notice_overtime_params.each do |id, item|
         attendance = Attendance.find(id)
         if params[:attendance][:notice_attendances][id][:overtime_check] == "true"
-          attendance.update_attributes!(item)
+          attendance.update_attributes(item)
         end
       end
-      flash[:info] = "残業申請の変更を通知しました。</br>※変更にチェックがない申請は更新されていません。".html_safe
+      flash[:success] = "残業申請の変更を通知しました。</br>※変更にチェックがない申請は更新されていません。".html_safe
       redirect_to @user
     else
-      flash[:danger] = "残業申請の変更ができませんでした。</br>※変更チェックボックスが選択されていません。"
+      flash[:danger] = "残業申請の変更ができませんでした。</br>※変更チェックボックスが選択されません。"
       redirect_to @user
     end
   end
@@ -136,14 +139,14 @@ class AttendancesController < ApplicationController
    # 勤怠変更申請お知らせモーダルの更新
   def update_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
-    if ochange_attendance_updated_invalid?
+    if change_attendance_updated_invalid?
       change_attendance_params.each do |id, item|
         attendance = Attendance.find(id)
         if params[:attendance][:updated_attendances][id][:attendance_change_check] == "true"
-          attendance.update_attributes!(item)
+          attendance.update_attributes(item)
         end
       end
-      flash[:success] = "勤怠変更申請のお知らせを変更しました"
+      flash[:success] = "勤怠変更申請のお知らせを変更しました。</br>※変更にチェックがないものは更新されません。"
       redirect_to @user
     else
       flash[:danger] = "勤怠変更申請の変更ができませんでした。</br>※変更チェックボックスが選択されていません。"
@@ -168,7 +171,7 @@ class AttendancesController < ApplicationController
     end
     
      def notice_overtime_params
-      params.require(:attendance).permit(notice_attendances: [:confirm, :overtime_check])[:notice_attendances]
+      params.require(:attendance).permit(notice_attendances: [:overtime_confirm, :overtime_check])[:notice_attendances]
      end
      
      def change_attendance_params
