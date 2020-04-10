@@ -52,7 +52,7 @@
                     <!-- 業務処理内容 -->
                     <td><%= att_notice.try(:overtime_memo) %></td>
                     <!-- 指示者確認㊞ -->
-                    <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true %></td>
+                    <td><%= attendance.select :overtime_confirm, Attendance.confirms.keys.to_a, include_blank: true, selected: nil %></td>
                     <!-- 変更 -->
                     <td><%= attendance.check_box :overtime_check, {class: "change"}, 'true', 'false' %></td>
                     <!-- 勤怠を確認する -->

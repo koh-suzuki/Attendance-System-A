@@ -35,7 +35,7 @@ module AttendancesHelper
     end
   end
   
-  
+  # 勤怠編集のバリデーション
   def attendances_updated_invalid?
       attendances = true
       attendances_params.each do |id, item|
@@ -50,22 +50,9 @@ module AttendancesHelper
         end
       end
       return attendances
-
-    # attendances = true
-    # raise
-    #   if @att.name.present?
-    #     if @att.updated_started_at.blank? && @att.updated_finished_at.blank?
-    #       attendances = false
-    #     elsif @att.updated_started_at.blank? || @att.updated_finished_at.blank?
-    #       attendances = false
-    #     elsif @att.name.blank?
-    #       attendances = false
-    #     end
-    #     return attendances
-    #   else
-    #     attendances = false
-    #   end
   end
+  
+  # ###
   
   def overtime_params_updated_invalid?
     if @attendance.updated_finished_at.present? || @attendance.finished_at.present?
