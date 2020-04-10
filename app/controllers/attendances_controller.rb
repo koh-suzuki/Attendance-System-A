@@ -50,9 +50,8 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do
       if attendances_updated_invalid?
         attendances_params.each do |id, item|
-          raise
-          if item[]
           attendance = Attendance.find(id)
+          if item[:name].present?
             if attendance.attendance_change_check == true
               attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
                                             before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
