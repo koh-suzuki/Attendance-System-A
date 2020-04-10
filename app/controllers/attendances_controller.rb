@@ -50,14 +50,17 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do
       if attendances_updated_invalid?
         attendances_params.each do |id, item|
+          raise
+          if item[]
           attendance = Attendance.find(id)
-          if attendance.attendance_change_check == true
-            attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
-                                          before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
-            attendance.update_attributes!(item)
-          else
-            attendance.update_attributes!(item)
-            attendance.update!(attendance_change_flag: true)
+            if attendance.attendance_change_check == true
+              attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
+                                            before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
+              attendance.update_attributes!(item)
+            else
+              attendance.update_attributes!(item)
+              attendance.update!(attendance_change_flag: true)
+            end
           end
         end
         flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
@@ -136,11 +139,11 @@ class AttendancesController < ApplicationController
    # 勤怠変更申請お知らせモーダルの更新
   def update_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name)
-    if ochange_attendance_updated_invalid?
+    if change_attendance_updated_invalid?
       change_attendance_params.each do |id, item|
         attendance = Attendance.find(id)
         if params[:attendance][:updated_attendances][id][:attendance_change_check] == "true"
-          attendance.update_attributes!(item)
+          attendance.update_attributes(item)
         end
       end
       flash[:success] = "勤怠変更申請のお知らせを変更しました"

@@ -38,7 +38,7 @@ class Attendance < ApplicationRecord
   # end
   
   def name_invalid
-    errors.add(:name, "が必要です") if name.blank? && (updated_started_at.present? || updated_finished_at.present?)
+    # errors.add(:name, "が必要です") if name.blank? && (updated_started_at.present? || updated_finished_at.present?)
   end
   
   enum confirm: { "申請中" => 1, "承認" => 2, "否認" => 3 }
