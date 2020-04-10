@@ -14,19 +14,19 @@ class UsersController < ApplicationController
  
   def import
     unless params[:file].blank?
-      if params[:file] == ".csv"
+      if File.extname(params[:file].original_filename) == ".csv"
         # 保存と結果のメッセージを取得して表示
         User.import(params[:file])
         flash[:info] = "CSVファイルをインポートしました。"
         redirect_to users_path
       else
-        flash[:danger] = "読込めませんでした"
+        flash[:danger] = "読み込み可能なファイルはCSV形式のみです"
         redirect_to users_path
       end
     else
       flash[:danger] = "読み込むCSVファイルをセットしてください"
-    end
       redirect_to users_path
+    end
   end
   
   def index_attendance
@@ -105,7 +105,6 @@ class UsersController < ApplicationController
     end
       # 所属長承認申請合計
     @approval_notice_sum = @approval_notice_lists.count
-    
     
 
     # CSVインポート

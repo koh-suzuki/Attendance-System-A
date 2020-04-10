@@ -95,7 +95,7 @@ class AttendancesController < ApplicationController
         redirect_to @user
       end
     else
-      flash[:danger] = "【実績】が未入力か残業申請情報に不正な入力があるため、残業申請できませんでした。"
+      flash[:danger] = "申請情報に不正な入力があるため、残業申請できませんでした。"
       redirect_to @user
     end
   end

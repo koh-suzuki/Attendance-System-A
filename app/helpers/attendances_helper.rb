@@ -54,10 +54,11 @@ module AttendancesHelper
   
   # ###
   
+  # 残業申請の更新バリデーション
   def overtime_params_updated_invalid?
     if @attendance.updated_finished_at.present? || @attendance.finished_at.present?
-      if (params[:attendance]["endtime_at(4i)"].to_i > @worktime.hour) ||
-          params[:attendance][:tommorow_index] == "true"
+      if ((params[:attendance]["endtime_at(4i)"].to_i > @worktime.hour) ||
+          params[:attendance][:tommorow_index] == "true")
         return true
       else
         return false
@@ -66,6 +67,7 @@ module AttendancesHelper
      return false
     end
   end
+  
 
   # 残業申請のお知らせモーダルの更新バリデーション
   def overtime_notice_updated_invalid?
