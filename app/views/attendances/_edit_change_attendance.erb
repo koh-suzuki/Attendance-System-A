@@ -66,7 +66,7 @@
                     <td><%= day.updated_finished_at.present? ? l(day.updated_finished_at, format: :hour) : nil %></td>
                     <td><%= day.updated_finished_at.present? ? l(day.updated_finished_at, format: :minute) : nil %></td>
                   <!-- 備考 -->
-                  <td><%= attendance.text_field :note, class: "form-control" %></td>
+                  <td><%= attendance.text_field :note, readonly: true, class: "form-control" %></td>
                   <!-- 支持者確認㊞ -->
                   <td><%= attendance.select :confirm, Attendance.confirms.keys.to_a, include_blank: true, selected: nil %></td>
                   <!-- 変更 -->
