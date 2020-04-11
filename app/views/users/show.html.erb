@@ -278,7 +278,7 @@
                     所属長承認: 
                     <% if @approval_list.present? %>
                       <% if (@approval.confirm == "承認" || @approval.confirm == "否認") && @approval.approval_flag == false %>
-                        <%= @approval_superior.name %>【<strong><%= @approval.confirm %></strong>】
+                        <%= @approval_superior.name %>【<strong><%= @approval.confirm %>済</strong>】
                       <% elsif (@approval.confirm == "申請中" || @approval.superior_id.present?) && @approval.approval_flag == false %>
                         <%= @approval_superior.name %>【<strong>申請中</strong>】
                       <% else %>
@@ -288,12 +288,23 @@
                       <%= "未" %>
                     <% end %>
                   </p>
-                <% if @approval_list.present? && @approval.approval_flag == false && @approval.month_at.present? %>
-                  <p class="approval-btn"><%= f.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></p>
+                <% if @approval_list.present? %>
+                  <!-- 申請中以外の承認結果 -->
+                  <% unless @approval.confirm == "申請中" %> 
+                    <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
+                    <!-- 次月以降は操作不能 -->
+                    <% if (Date.current.next_month < @last_day) %>
+                      <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
+                    <% else %>
+                      <%= f.submit "申請", class: "btn btn-primary w-50" %>
+                    <% end %>
+                  <% else %><!-- 承認&否認 -->
+                    <p class="approval-btn"><%= f.collection_select :name, {}, {}, {}, {}, disabled: true, class: "select" %></p>
                     <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
-                <% else %>
+                  <% end %>
+                <% else %><!-- 申請情報がない場合はここから -->
                   <p class="approval-btn"><%= f.collection_select :name, @superiors, :id, :name, include_blank: true, class: "select" %></p>
-                  <% if Date.current.next_month < @last_day %>
+                  <% if (Date.current.next_month < @last_day) %>
                     <%= f.submit "申請", disabled: true, class: "btn btn-primary w-50" %>
                   <% else %>
                     <%= f.submit "申請", class: "btn btn-primary w-50" %>

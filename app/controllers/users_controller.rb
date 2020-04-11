@@ -99,7 +99,7 @@ class UsersController < ApplicationController
       @approval_superior = User.find_by(id: @approval.superior_id)
     end
       # 所属長承認申請お知らせリスト(上長)
-    @approval_notice_lists = Approval.where.not(month_at: nil).where(approval_flag: false).where(superior_id: current_user)
+    @approval_notice_lists = Approval.where(confirm: "申請中").where(approval_flag: false).where(superior_id: current_user)
     @approval_notice_lists.each do |app|
       @superior_approval = app
     end
