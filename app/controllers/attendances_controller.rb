@@ -110,7 +110,7 @@ class AttendancesController < ApplicationController
   def update_notice_overtime
     # 前提:form_withのurl引数（@user）はbefore_actionの
     #      set_userによって「上長」のユーザー情報を得る。
-    @notice_users = User.where(id: Attendance.where.not(endtime_at: nil).select(:user_id))
+    @notice_users = User.where(id: Attendance.where(overtime_check: false).where.not(endtime_at: nil).select(:user_id))
     users(@notice_users)
     if overtime_notice_updated_invalid?
       notice_overtime_params.each do |id, item|
@@ -130,7 +130,7 @@ class AttendancesController < ApplicationController
   # 勤怠変更申請のお知らせモーダル表示
   def edit_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
-    @users = User.where(id: Attendance.where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
+    @users = User.where(id: Attendance.where(attendance_change_check: false).where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
     @att_update_list.each do |att_up|
       @att_up = att_up
     end

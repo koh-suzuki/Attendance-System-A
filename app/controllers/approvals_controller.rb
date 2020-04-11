@@ -5,10 +5,14 @@ class ApprovalsController < ApplicationController
   
   def create
     if params[:approval][:name].present?
-      @approval_create = @user.approvals.build(superior_id: params[:approval][:name], month_at: params[:format])
-      @approval_create.save
-      flash[:success] = "1ヶ月分の勤怠申請をしました。"
-      redirect_to user_path(@user)
+      @approval_create = @user.approvals.build(superior_id: params[:approval][:name], month_at: params[:format], confirm: "申請中")
+      if @approval_create.save
+        flash[:success] = "1ヶ月分の勤怠申請をしました。"
+        redirect_to user_path(@user)
+      else
+        flash[:danger] = "1ヶ月分の勤怠申請に失敗しました。"
+        redirect_to user_path(@user)
+      end
     else
       flash[:danger] = "所属長を選択してください。"
       redirect_to user_path(@user)
@@ -16,7 +20,7 @@ class ApprovalsController < ApplicationController
   end
   
   def edit
-    @users = User.where(id: Approval.where(superior_id: @user.id).where(approval_flag: false).where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
+    @users = User.where(id: Approval.where(superior_id: @user.id).where(confirm: "申請中").where.not(month_at: nil).select(:user_id)).where.not(id: current_user)
     @users.each do |user| 
       @approvals = Approval.where(superior_id: @user.id).where.not(month_at: nil)
       @approvals.each do |approval|
@@ -43,7 +47,7 @@ class ApprovalsController < ApplicationController
       approval_params.each do |id, item|
       approval = Approval.find(id)
         if params[:approval][:updated_approvals][id][:approval_flag] == "true"
-          approval.update_attributes(item)
+          approval.update_attributes(confirm: item[:confirm], approval_flag: false)
         end
       end
       flash[:success] = "1ヶ月分勤怠申請を変更しました"
