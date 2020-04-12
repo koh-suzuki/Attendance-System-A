@@ -53,9 +53,9 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id)
           if item[:name].present?
             if attendance.attendance_change_check == true
-              attendance.update_attributes!(attendance_change_flag: true, attendance_change_check: false, confirm: "申請中",
-                                            before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
               attendance.update_attributes!(item)
+              attendance.update_attributes!(attendance_change_check: false, confirm: "申請中",
+                                            before_started_at: attendance.updated_started_at, before_finished_at: attendance.updated_finished_at)
             else
               attendance.update_attributes!(item)
               attendance.update!(attendance_change_flag: true, confirm: "申請中")
@@ -130,7 +130,7 @@ class AttendancesController < ApplicationController
   # 勤怠変更申請のお知らせモーダル表示
   def edit_change_attendance
     @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: @user.name)
-    @users = User.where(id: Attendance.where(attendance_change_check: false).where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
+    @users = User.where(id: Attendance.where(name: current_user.name).where(attendance_change_check: false).where(attendance_change_flag: true).where.not(updated_started_at: nil).select(:user_id)).where.not(id: current_user)
     @att_update_list.each do |att_up|
       @att_up = att_up
     end

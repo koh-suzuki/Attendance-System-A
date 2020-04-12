@@ -28,7 +28,7 @@
               </tr>
             </thead>
             
-            <% @attendance_notices = Attendance.where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false) %>
+            <% @attendance_notices = Attendance.where(name: current_user.name).where(user_id: user.id).where.not(endtime_at: nil).where(overtime_check: false) %>
             <% @attendance_notices.each do |att_notice| %>
               <%= f.fields_for "notice_attendances[]", att_notice do |attendance| %>
               <tbody>

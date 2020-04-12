@@ -84,7 +84,7 @@ class UsersController < ApplicationController
     end
     
     # 勤怠変更申請のお知らせ合計
-    @att_update_list = Attendance.where.not(updated_started_at: nil).or(Attendance.where.not(updated_finished_at: nil)).where(name: current_user.name).where(attendance_change_check: true)
+    @att_update_list = Attendance.where(attendance_change_check: false).where(attendance_change_flag: true).where(name: current_user.name)
     @att_update_sum = @att_update_list.count
     @att_update_list.each do |att_up|
       @att_up = att_up
