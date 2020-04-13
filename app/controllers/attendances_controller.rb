@@ -86,17 +86,26 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     if overtime_params_updated_invalid?
       if params[:attendance][:name].blank?
-        flash[:danger] = "上長が選択されていません"
+        flash[:danger] = "上長が選択されていません。"
         redirect_to @user
       else
         @attendance.update(overtime_params)
         @attendance.update(overtime_confirm: "申請中", overtime_check: false)
-        flash[:success] = "残業申請しました"
+        flash[:success] = "残業申請しました。"
         redirect_to @user
       end
     else
-      flash[:danger] = "申請情報に不正な入力があるため、残業申請できませんでした。"
-      redirect_to @user
+      if @attendance.updated_finished_at.blank?
+        flash[:danger] = "退社時間が未入力です。"
+        redirect_to @user
+      elsif ((params[:attendance]["endtime_at(4i)"].to_i < @worktime.hour) &&
+              params[:attendance][:tommorow_index] == "false")
+        flash[:danger] = "指定勤務終了時間より早い終了予定時間は無効です。"
+        redirect_to @user
+      else
+        flash[:danger] = "申請情報に不正な入力があるため、残業申請できませんでした。"
+        redirect_to @user
+      end
     end
   end
   
